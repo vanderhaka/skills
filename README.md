@@ -37,6 +37,7 @@ Primary references used:
 ```text
 skills/
 └── .curated/
+    ├── cap/
     ├── code-review/
     ├── safe-feature-slice/
     ├── skill-repo-maintainer/
@@ -51,6 +52,7 @@ templates/
 
 ## Curated Skills
 
+- `cap` — verify, commit, and push intended work safely without sweeping unrelated files.
 - `code-review` — unified review workflow with correctness, safety, tests, and maintainability lanes.
 - `safe-feature-slice` — unified plan-and-execute workflow for invariant-preserving feature work.
 - `thin-slice-plan` — planning-only workflow for dependency-ordered slice plans.

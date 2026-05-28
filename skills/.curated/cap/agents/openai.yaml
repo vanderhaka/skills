@@ -1,0 +1,4 @@
+interface:
+  display_name: "Cap"
+  short_description: "Verify, commit, and push safely"
+  default_prompt: "Use $cap to verify the intended work, repair safe deterministic check failures, commit only the right files, push safely, and report concise evidence."
