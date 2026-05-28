@@ -1,0 +1,4 @@
+interface:
+  display_name: "Skill Repo Maintainer"
+  short_description: "Maintain a public Codex skills catalog"
+  default_prompt: "Use $skill-repo-maintainer to add or refine a public-safe Codex skill in this repository."
