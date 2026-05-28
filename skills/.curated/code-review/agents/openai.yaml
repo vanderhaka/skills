@@ -1,0 +1,4 @@
+interface:
+  display_name: "Code Review"
+  short_description: "Unified review workflow with specialist routing."
+  default_prompt: "Use $code-review to review the current changes, return high-confidence findings with evidence and verification, and recommend the right next workflow such as $safe-feature-slice for fixes."

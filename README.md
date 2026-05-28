@@ -37,19 +37,25 @@ Primary references used:
 ```text
 skills/
 └── .curated/
-    └── skill-repo-maintainer/
-        ├── SKILL.md
-        ├── agents/openai.yaml
-        ├── references/
-        │   └── public-safety-checklist.md
-        └── scripts/
-            └── audit_skill_repo.py
+    ├── code-review/
+    ├── safe-feature-slice/
+    ├── skill-repo-maintainer/
+    ├── thermo-nuclear-code-quality-review/
+    └── thin-slice-plan/
 scripts/
 └── validate_skills.py
 templates/
 └── basic-skill/
     └── SKILL.md
 ```
+
+## Curated Skills
+
+- `code-review` — unified review workflow with correctness, safety, tests, and maintainability lanes.
+- `safe-feature-slice` — unified plan-and-execute workflow for invariant-preserving feature work.
+- `thin-slice-plan` — planning-only workflow for dependency-ordered slice plans.
+- `thermo-nuclear-code-quality-review` — strict maintainability review for file sprawl, spaghetti branching, and abstraction quality.
+- `skill-repo-maintainer` — maintain and public-safety-check this skills repository.
 
 ## Install A Skill
 
@@ -82,4 +88,3 @@ python3 skills/.curated/skill-repo-maintainer/scripts/audit_skill_repo.py .
 ```
 
 5. Review public safety before pushing.
-
