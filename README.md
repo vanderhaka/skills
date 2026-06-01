@@ -40,11 +40,13 @@ skills/
     ├── bug-ripple/
     ├── cap/
     ├── code-review/
+    ├── grill-me/
     ├── handoff/
     ├── launch-critical-sweep/
     ├── one-major-issue/
     ├── safe-feature-slice/
     ├── skill-repo-maintainer/
+    ├── tdd-plan-grill/
     ├── thermo-nuclear-code-quality-review/
     └── thin-slice-plan/
 scripts/
@@ -57,12 +59,14 @@ templates/
 ## Curated Skills
 
 - `bug-ripple` — diagnose one bug, then run a bounded sibling-bug blast-radius review.
-- `cap` — verify, commit, and push intended work safely without sweeping unrelated files.
+- `cap` — verify, commit, and push intended work safely without sweeping unrelated files, with a focused fast mode for tiny changes.
 - `code-review` — unified review workflow with correctness, safety, tests, and maintainability lanes.
+- `grill-me` — interview relentlessly about a plan or design until material decisions are resolved.
 - `handoff` — write or resume concise project handoffs without overwriting repo conventions.
 - `launch-critical-sweep` — find confirmed P0/P1 launch blockers before go-live.
 - `one-major-issue` — find at most one confirmed high-impact issue and hand it to a safe fix slice.
 - `safe-feature-slice` — unified plan-and-execute workflow for invariant-preserving feature work.
+- `tdd-plan-grill` — stress-test a TDD plan before implementation and update it for `$tdd-deep`.
 - `thin-slice-plan` — planning-only workflow for dependency-ordered slice plans.
 - `thermo-nuclear-code-quality-review` — strict maintainability review for file sprawl, spaghetti branching, and abstraction quality.
 - `skill-repo-maintainer` — maintain and public-safety-check this skills repository.

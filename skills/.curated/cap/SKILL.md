@@ -1,6 +1,6 @@
 ---
 name: cap
-description: Run repo-appropriate checks, actively repair safe verification failures until the repo is green when possible, commit only the intended files or necessary repair files with Conventional Commit messages, and push safely. Use when the user says cap, asks to commit and push, or wants one flow that checks, commits, and pushes without sweeping unrelated changes into the commit.
+description: Run repo-appropriate checks, actively repair safe verification failures until the repo is green when possible, commit only the intended files or necessary repair files with Conventional Commit messages, and push safely. Use when the user says cap, asks to commit and push, wants one flow that checks, commits, and pushes without sweeping unrelated changes into the commit, or asks for cap fast / fast cap for a tiny focused-change push.
 ---
 
 # Cap
@@ -27,6 +27,13 @@ The preferred end state is a green verification run, not a report about why the 
 - `cap dry-run` means: run the cap flow up to the point where it would mutate git or remote state, then stop.
 - In dry-run mode, inspect scope, choose verification commands, run safe read-only checks when useful, identify env drift, propose staging, and draft the commit message.
 - In dry-run mode, do not stage, commit, push, deploy, create branches, mutate continuity files, or run auto-fix commands.
+- `cap fast`, `fast cap`, or `/cap fast` means: commit and push a tiny, clearly bounded change with focused verification instead of the full repo suite.
+- Fast mode is appropriate for docs, skills, copy, metadata, narrowly scoped tests, or a one-file change where the affected behavior is obvious and directly checkable.
+- Fast mode still requires preflight, exact staging, staged-diff review, secret review, commit, freshness guard, and safe push.
+- In fast mode, run only checks that directly prove the changed files. Examples: skill folder validation for skill edits, markdown/link/format checks for docs when configured, or the smallest focused unit/type/lint command covering a small source change.
+- Do not use fast mode for migrations or schemas, auth, permissions, security boundaries, billing, payment flows, production config, env vars, dependency or lockfile changes, public API contracts, broad refactors, or any user-visible runtime behavior without a focused smoke test.
+- If fast mode discovers broader impact, lacks a meaningful focused check, or hits a failure outside the tiny scope, escalate to normal cap or stop and explain the missing evidence before committing.
+- Dry-run still prevents git and remote mutation when combined with fast mode.
 - `cap only` means: only commit changes made in this session or the explicitly requested file set.
 - If that file set is ambiguous from the thread or git state, ask which files to include.
 - If `cap only` conflicts with a needed baseline repair outside that file set, ask whether to create a separate repair commit first or stop without committing.
@@ -88,6 +95,15 @@ Push-default policy:
 ### 2. Verification and Env Sync Check
 
 Run code verification and the Vercel env-var sync check in parallel when they are independent.
+
+Fast mode:
+
+- Start from the changed files and identify the smallest verification command that proves the intended behavior or packaging contract.
+- For Codex skill changes, prefer `python3 ~/.codex/skills/.system/skill-creator/scripts/quick_validate.py <skill-folder>` when available, plus the repo's skill validator or public-safety audit when publishing a skills repository.
+- For docs-only changes, use configured markdown, link, formatting, or repository validators if they exist; if none exist, use staged-diff review plus public-safety or spell/link spot checks relevant to the change.
+- For a tiny source-code change, run the most focused test, typecheck, lint, or smoke that covers the touched path. Use full cap if no focused command gives meaningful coverage.
+- Record every full-suite check intentionally omitted under the Fast Mode output section.
+- Do not let fast mode hide a known red baseline. If the repo already documents a required cap command for the changed surface, either run it or explicitly report why this request is being handled as a focused exception.
 
 Parallel safety:
 
@@ -382,6 +398,11 @@ Use this structure:
 - Files to commit: ...
 - Excluded unrelated changes: ...
 - Verification repairs: <list or "none">
+
+### Fast Mode
+- Active: yes | no
+- Focused checks run: ...
+- Full-suite checks omitted: <list or "none">
 
 ### Checks
 - Lint: PASS | FAIL | SKIPPED
