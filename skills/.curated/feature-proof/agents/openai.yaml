@@ -1,0 +1,4 @@
+interface:
+  display_name: "Feature Proof"
+  short_description: "Final requirement-level feature proof"
+  default_prompt: "Use $feature-proof to audit this orchestrated feature before marking it complete."

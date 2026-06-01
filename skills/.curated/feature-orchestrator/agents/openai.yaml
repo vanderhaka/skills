@@ -1,0 +1,4 @@
+interface:
+  display_name: "Feature Orchestrator"
+  short_description: "Parallel dependency-graph feature delivery"
+  default_prompt: "Use $feature-orchestrator to build this feature through a tracked dependency graph with parallel agents and strict RGR gates."

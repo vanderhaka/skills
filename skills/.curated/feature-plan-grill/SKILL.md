@@ -1,0 +1,41 @@
+---
+name: feature-plan-grill
+description: Pre-execution review stage for feature-orchestrator plans. Use to stress-test plans/<feature-slug>/plan.md and progress.md for missing decisions, monolithic nodes, unsafe parallelism, weak RGR tests, missing gates, shared-state collisions, and unverifiable completion before workers launch.
+---
+
+# Feature Plan Grill
+
+## Purpose
+
+Challenge the canonical feature graph before code is written. This stage is adversarial about the plan, not the user.
+
+## Workflow
+
+1. Read `plans/<feature-slug>/plan.md`, `progress.md`, and `decisions.md`.
+2. Inspect the relevant codebase surface; do not ask questions the repo can answer.
+3. Review the plan across:
+   - completeness against the feature brief
+   - node size and behavior clarity
+   - dependency graph correctness
+   - parallel safety and write boundaries
+   - risk tiers and unsafe outcomes
+   - RED/GREEN/REFACTOR strength
+   - repo/browser/boundary/migration gates
+   - final proof and behavior preservation confidence
+4. Ask focused plan-changing questions in rounds only when needed.
+5. Write `plans/<feature-slug>/grill-review.md`.
+6. Update `plan.md` and `progress.md` only after decisions are resolved or safe assumptions are recorded.
+
+## Verdicts
+
+- `PASS`: ready for worker launch.
+- `PASS WITH RISKS`: usable, with non-critical risks recorded.
+- `BLOCKED`: missing decisions or prerequisites prevent safe launch.
+- `FAIL`: graph is unsafe, too broad, unverifiable, or likely to cause shared-state collisions.
+
+## Rules
+
+- Prefer concrete plan edits over vague warnings.
+- Do not let workers start on unresolved product decisions.
+- Do not accept parallel groups that share write files, migrations, package locks, test DBs, deploys, or git state.
+- Do not mark a plan ready if progress can be marked done without evidence.

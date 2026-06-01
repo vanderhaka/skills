@@ -9,6 +9,7 @@ Codex skills are normal folders that can live in a Git repository. The portable 
 ```text
 skill-name/
 ├── SKILL.md
+├── README.md                # plain-English human overview
 ├── agents/openai.yaml        # optional UI metadata
 ├── scripts/                  # optional deterministic helpers
 ├── references/               # optional docs loaded only when needed
@@ -25,6 +26,7 @@ description: What this skill does, and the exact situations that should trigger 
 ```
 
 Keep `SKILL.md` lean. Put long docs in `references/`, repeatable code in `scripts/`, and output templates or media in `assets/`.
+Each curated skill also has a plain-English `README.md` so humans can quickly understand what the skill is for before installing it.
 
 Primary references used:
 
@@ -40,8 +42,16 @@ skills/
     ├── bug-ripple/
     ├── cap/
     ├── code-review/
+    ├── feature-graph-plan/
+    ├── feature-integrator/
+    ├── feature-intake-grill/
+    ├── feature-orchestrator/
+    ├── feature-plan-grill/
+    ├── feature-proof/
+    ├── feature-slice-worker/
     ├── grill-me/
     ├── handoff/
+    ├── issue-fix-strategy/
     ├── launch-critical-sweep/
     ├── one-major-issue/
     ├── safe-feature-slice/
@@ -61,8 +71,16 @@ templates/
 - `bug-ripple` — diagnose one bug, then run a bounded sibling-bug blast-radius review.
 - `cap` — verify, commit, and push intended work safely without sweeping unrelated files, with a focused fast mode for tiny changes.
 - `code-review` — unified review workflow with correctness, safety, tests, and maintainability lanes.
+- `feature-orchestrator` — coordinate whole-feature delivery through one canonical graph, progress file, parallel-safe worker waves, and final proof.
+- `feature-intake-grill` — clear product, data, permission, money, migration, external-contract, and live-risk decisions before graph planning.
+- `feature-graph-plan` — turn a feature brief and decisions into RGR-ready dependency graph nodes, waves, write boundaries, and gates.
+- `feature-plan-grill` — stress-test a feature dependency graph before worker launch.
+- `feature-slice-worker` — execute one graph node with Red-Green-Refactor and required verification gates.
+- `feature-integrator` — verify worker reports, update canonical progress, and advance dependency waves.
+- `feature-proof` — run final requirement-level proof and behavior-preservation reporting before completion.
 - `grill-me` — interview relentlessly about a plan or design until material decisions are resolved.
 - `handoff` — write or resume concise project handoffs without overwriting repo conventions.
+- `issue-fix-strategy` — chat-only executive triage for any issue source, with priority, fix approach, proof, and next-step routing.
 - `launch-critical-sweep` — find confirmed P0/P1 launch blockers before go-live.
 - `one-major-issue` — find at most one confirmed high-impact issue and hand it to a safe fix slice.
 - `safe-feature-slice` — unified plan-and-execute workflow for invariant-preserving feature work.

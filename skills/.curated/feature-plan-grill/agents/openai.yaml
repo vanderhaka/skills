@@ -1,0 +1,4 @@
+interface:
+  display_name: "Feature Plan Grill"
+  short_description: "Stress-test the graph before launch"
+  default_prompt: "Use $feature-plan-grill to harden the feature graph before worker launch."

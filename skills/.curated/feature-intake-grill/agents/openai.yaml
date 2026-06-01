@@ -1,0 +1,4 @@
+interface:
+  display_name: "Feature Intake Grill"
+  short_description: "Clarify decisions before orchestration"
+  default_prompt: "Use $feature-intake-grill to clear feature decisions before building the dependency graph."
