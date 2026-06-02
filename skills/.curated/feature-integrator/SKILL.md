@@ -17,6 +17,7 @@ Accept or reject worker outputs and advance the dependency graph. This stage is 
    - dependencies were satisfied before work began
    - RED, GREEN, REFACTOR, and required gates have evidence
    - browser/boundary/migration skips have explicit reasons
+   - defaults applied by the worker are routine and inferable from repo conventions, existing product patterns, framework norms, standard engineering practice, or strong UX/UI/product judgment
    - no unrelated work was absorbed
 3. Run integration checks when workers touched shared contracts, generated types, routes, schemas, or UI flows.
 4. Update `progress.md`:
@@ -33,3 +34,4 @@ Accept or reject worker outputs and advance the dependency graph. This stage is 
 - Do not merge outputs that collide on files or contracts without local integration proof.
 - Do not advance dependent nodes until prerequisite progress is accepted.
 - Do not hide failed gates behind notes.
+- Do not bounce routine defaults back to the user during integration; accept them when evidence and product taste support them, record them in `decisions.md` if they matter for future workers, and only block on material missing decisions.

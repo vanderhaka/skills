@@ -2,7 +2,7 @@
 
 ## What This Skill Does
 
-`feature-graph-plan` turns a feature brief and decisions into an executable dependency graph. It is the planning stage that prepares work for `feature-orchestrator` workers.
+`feature-graph-plan` turns a feature brief, explicit decisions, and strongly inferred defaults into an executable dependency graph. It is the planning stage that prepares work for `feature-orchestrator` workers.
 
 ## Use It When
 
@@ -13,7 +13,7 @@
 
 ## How It Works
 
-The skill reads the feature request, decisions, relevant source evidence, and graph reference material. It creates or updates `plans/<feature-slug>/plan.md` and `progress.md` with small graph nodes that can be tested and assigned safely.
+The skill reads the feature request, decisions, relevant source evidence, and graph reference material. It applies routine technical, UX, UI, and product-taste defaults before marking anything decision-needed, then creates or updates `plans/<feature-slug>/plan.md` and `progress.md` with small graph nodes that can be tested and assigned safely.
 
 Each node names the actor, behavior, invariant, previous behavior to preserve, dependencies, write boundaries, RED/GREEN/REFACTOR plan, and required gates.
 

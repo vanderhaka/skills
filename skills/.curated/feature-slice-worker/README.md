@@ -13,7 +13,7 @@
 
 ## How It Works
 
-The worker reads the assigned node, decisions, worker contract, and relevant source files. It writes or locates the failing test first, proves the RED failure, makes the smallest GREEN fix, refactors only after tests pass, then runs required repo, browser, boundary, and migration gates.
+The worker reads the assigned node, decisions, worker contract, and relevant source files. It applies inferable technical, UX, UI, and product-taste defaults inside the node, writes or locates the failing test first, proves the RED failure, makes the smallest GREEN fix, refactors only after tests pass, then runs required repo, browser, boundary, and migration gates.
 
 ## What You Get
 

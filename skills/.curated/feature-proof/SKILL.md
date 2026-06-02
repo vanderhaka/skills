@@ -20,6 +20,7 @@ Prove the whole feature is complete. This stage must audit the original requeste
    - database/migration state
    - API/provider evidence
    - logs or runtime artifacts
+   - safe defaults recorded in `decisions.md` or worker reports
 4. Run final verification:
    - targeted tests for changed areas
    - full test suite when practical
@@ -45,4 +46,5 @@ Use lower confidence when evidence is indirect, skips are material, previous int
 - Do not redefine success around completed work.
 - Do not use narrow tests as proof of broad requirements.
 - Do not treat missing evidence as pass.
+- Do not fail proof solely because a routine technical, UX, UI, or product-taste default was inferred instead of explicitly approved. Fail or block only when the inferred default is unsupported by repo evidence, contradicts the requested product intent, or crosses a material business/ops boundary.
 - Record skipped checks and residual risk plainly.

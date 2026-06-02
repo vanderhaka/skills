@@ -11,6 +11,7 @@ Launch a worker only when:
 - Write boundaries are disjoint from every other active worker.
 - Shared-state risks are absent or intentionally single-threaded.
 - Product/business decisions needed for the node are resolved.
+- Routine technical, UX, UI, and product-taste defaults inside the node are either recorded already or can be inferred from repo conventions and strong senior-engineer judgment.
 
 ## Worker Brief Template
 
@@ -24,6 +25,7 @@ Feature:
 Core invariant:
 Previous intended behaviors:
 Intentional behavior changes:
+Defaults applied:
 
 Node:
 Tier:
@@ -37,6 +39,11 @@ Dependencies already satisfied:
 Allowed write scope:
 Must not touch:
 Shared-state risks:
+
+Decision handling:
+- Apply routine technical, UX, UI, and product-taste defaults without asking, when they are inferable from repo conventions, nearby UI, framework norms, standard engineering practice, or strong product judgment.
+- Do not invent or change material product intent, brand strategy, money, permissions, ownership, state semantics, destructive behavior, data model direction, external contracts, customer-visible records, or live operational risk.
+- If a material decision is missing, stop and report `BLOCKED` with the smallest concrete question and the safest recommended answer.
 
 Required loop:
 1. RED - write/locate failing behavior test and prove it fails for the intended reason.
@@ -57,6 +64,7 @@ Return:
 - Repo gate commands/results
 - Browser/boundary/migration evidence or skipped reason
 - Previous behaviors preserved and evidence
+- Defaults applied during implementation
 - Residual risk
 - Recommendation: DONE | BLOCKED | NEEDS ATTENTION
 ```
@@ -92,6 +100,9 @@ Completed:
 - Confidence:
 
 ## Residual Risk
+- ...
+
+## Defaults Applied
 - ...
 
 ## Handoff Notes

@@ -20,27 +20,32 @@ Implement one assigned graph node safely. The worker owns the node implementatio
 
 1. Confirm dependencies are satisfied and write boundaries are clear.
 2. If another worker owns the same files or shared mutable state, stop and report `BLOCKED`.
-3. RED:
+3. Apply inferable defaults inside the node before implementation:
+   - use repo conventions, existing product patterns, framework norms, standard engineering practice, and strong UX/UI/product judgment
+   - do not ask about routine technical, UX, UI, or product-taste choices
+   - stop only for material missing decisions that could change product intent, brand strategy, money, permissions, ownership, state semantics, destructive behavior, data model direction, external contracts, customer-visible records, or live operational risk
+   - record defaults applied in the worker report
+4. RED:
    - write or locate the failing behavior/characterization test first
    - map acceptance criteria to assertions
    - cover regression guards
    - prove failure is for the intended reason
-4. GREEN:
+5. GREEN:
    - make the smallest code change
    - rerun targeted tests
    - do not refactor yet
-5. REFACTOR:
+6. REFACTOR:
    - clean only touched code when low risk
    - rerun targeted tests
-6. Repo Gate:
+7. Repo Gate:
    - run targeted tests
    - run typecheck/lint/build when required by the node or repo
-7. Browser Gate:
+8. Browser Gate:
    - required for user-visible nodes via Codex in-app browser when available
-8. Boundary/Migration Gate:
+9. Boundary/Migration Gate:
    - run DB/API/filesystem/third-party/auth/payment checks when required
    - run non-destructive migrations when required and safe
-9. Write or return an `agent-runs/<node>-<attempt>.md` report.
+10. Write or return an `agent-runs/<node>-<attempt>.md` report.
 
 ## Rules
 
@@ -48,4 +53,6 @@ Implement one assigned graph node safely. The worker owns the node implementatio
 - Do not spawn child agents.
 - Do not revert unrelated changes.
 - Do not weaken assertions, mock the dangerous part, or widen scope.
+- Do not block on inferable defaults. Use strong senior-engineer judgment and record what you decided.
+- Do not make material product/business/ops decisions. Report `BLOCKED` with the smallest concrete question and safest recommended answer.
 - Do not mark `DONE`; recommend `DONE`, `BLOCKED`, or `NEEDS ATTENTION` with evidence.
