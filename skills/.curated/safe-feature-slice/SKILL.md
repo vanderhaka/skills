@@ -315,6 +315,18 @@ Review against these questions:
 - Would this still work if two requests happen at the same time?
 - Does this slice break the feature spine or shared contract?
 
+Then run a separate structural maintainability pass, especially when the diff touches shared routes/services, grows large files, adds tooling, or threads new state through an existing workflow:
+
+- Is there a simpler reframing that would delete branches, helpers, modes, or repeated plumbing while preserving behavior?
+- Did feature-specific logic leak into a shared route, proxy, service, renderer, or helper that now knows too much?
+- Did the change duplicate a canonical loader, renderer, policy, or truth table instead of testing or reusing the existing one?
+- Did it add special-case conditionals to an already busy flow where a dedicated model, policy, or boundary would be clearer?
+- Did it make an already-large file absorb more concerns, or push a file past roughly 1000 lines without a strong structural reason?
+- Did it introduce loose object shapes, optionality, casts, or fallback parsing where an explicit typed boundary would be safer?
+- Do new scripts or test tools write artifacts into the repo root or unignored paths instead of a contained, ignored output directory?
+
+Treat evidence-backed structural regressions as review findings, not cosmetic nits. A correctness-only `PASS` is not enough when the implementation creates likely future regressions, hides duplicated truth, or normalizes artifact sprawl. Use `PASS WITH RISKS` for contained debt with a clear follow-up; use `FAIL` when the structure already caused or strongly enables a user-visible, data, auth, deploy, or workflow regression.
+
 For code reviews, lead with concrete findings and file/line references. Classify confirmed unsafe paths separately from hypotheses and missing-test risks.
 
 ## Hard Rules

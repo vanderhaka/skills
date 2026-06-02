@@ -199,6 +199,32 @@ Never parallelize:
 
 For every implementation slice, list the intended independent worker ownership. Default worker config is model `gpt-5.5`, medium reasoning, fastest available medium profile when the runtime exposes speed/profile controls. For every `parallel-safe` slice, list write boundaries and evidence expected from a specialist agent.
 
+When a slice is safe for cheap code-writing agents, make the handoff explicit instead of relying on the worker to infer product or contract semantics. DeepSeek is one current provider adapter, not the stable interface. The stable handoff is an `AgentTaskContract`.
+
+## Agent Task Contract Readiness
+
+Before a slice can be marked eligible for cheap-agent execution, remove ambiguity from the handoff:
+
+- Semantic delta count is `1`. If there are multiple runtime behavior changes, split the slice.
+- Write surface is exact file paths. Directories require a reason and a bounded file pattern.
+- Runtime contract table exists for code that changes behavior.
+- Edge-case matrix exists for every optional field, branch, status, external result, or error mode the slice touches.
+- JavaScript/object-shape slices explicitly distinguish absent properties from own properties with value `undefined` wherever that changes output shape.
+- Previous-behavior preservation list exists and is testable.
+- Must-not-touch list includes generated files, migrations, lockfiles, package manifests, unrelated tests, shared contracts, and any cross-slice files.
+- Parent validator is stronger than the agent acceptance command when quality risk exists.
+- Model routing is explicit as provider/model/count/fallback data.
+- Candidate strategy is explicit, such as tournament, mixed-model tournament, single-candidate baseline, or stronger-model/manual implementation.
+
+Model routing guidance:
+
+- `deepseek-v4-flash`: isolated pure functions, small test additions, deterministic transforms, low-risk UI display/copy/layout, and slices with a complete runtime contract table.
+- `deepseek-v4-pro`: moderate domain logic, branch-heavy service helpers, multi-case tests, and slices where flash failed once but scope remains narrow.
+- `gpt-5.5`: contract-heavy runtime behavior, auth/ownership, state transitions, cross-file design, migrations, external integration semantics, or ambiguous domain rules.
+- `not-cheap-agent`: product decisions, live-data operations, broad refactors, dependency graph changes, deploys, package/lockfile edits, shared migrations, or any slice that cannot be validated without stronger judgment before writing.
+
+If a slice cannot satisfy this gate, split it further, mark it `blocked`, or route it to a stronger model.
+
 ## Plan File Template
 
 Use this structure for `plans/<feature-slug>/slice-plan.md`:
@@ -335,6 +361,9 @@ Runtime verification:
 
 Exit evidence:
 [commands, screenshots, logs, DB checks, or code references required before done]
+
+AgentTaskContract:
+[eligible/not eligible, model routing, semantic delta count, runtime contract table, edge-case matrix, read scope, exact allowed writes, must-not-touch list, task prompt, acceptance commands, parent verification, failure policy]
 ```
 
 ## Progress Discipline
@@ -413,6 +442,7 @@ When asked to review an existing plan:
 
 - check whether every slice has actor, action, invariant, unsafe outcomes, dependencies, verification, and exit evidence
 - check whether every implementation slice separates intentional behaviour changes from previous intended behaviours that should remain true
+- check whether every cheap-agent-eligible implementation slice has an `AgentTaskContract` with a semantic delta count, runtime contract table, edge-case matrix, parent validator, and explicit model route
 - identify monolithic slices that should be split
 - identify missing dependency gates and shared-state risks
 - identify places where progress could be marked done without proof
