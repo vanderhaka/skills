@@ -103,7 +103,7 @@ Allowed gate statuses: `TODO`, `IN_PROGRESS`, `DONE`, `SKIPPED`, `BLOCKED`.
 
 ## `decisions.md`
 
-Record every user decision and every safe default that affects scope:
+Record every user decision and every safe default applied without asking, so the user can quickly review what was decided for them:
 
 ```markdown
 # Decisions: {feature-slug}

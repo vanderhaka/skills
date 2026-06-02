@@ -80,9 +80,15 @@ Assumptions:
 Out of scope:
 ```
 
-Ask only for decisions that repo evidence cannot answer and that could change permissions, ownership, money, state transitions, destructive behavior, data model, migration direction, external contracts, customer-visible records, or live-data risk.
+Before asking, run the decision list yourself. Use repo evidence, existing docs, tests, schema, nearby implementation, framework norms, standard engineering practice, and strong UX/UI/product judgment to make every routine or strongly inferred decision first.
 
-Batch routine defaults. Do not delegate unresolved product decisions to workers.
+Ask only for remaining decisions that repo evidence and strong product judgment cannot answer and that could change permissions, ownership, money, state transitions, destructive behavior, data model, migration direction, external contracts, customer-visible records, live-data risk, product intent, brand strategy, or specific business logic.
+
+Do not ask the user to confirm routine technical, UX, UI, or product-taste defaults unless the feature creates a credible exception. Defaults include ordinary validation shape, error handling, transient retries, idempotency mechanics, accessibility defaults, test placement, logging level, formatting, framework-standard file organization, notification badge color/placement, empty/loading/error states, sensible default sorting, standard affordances, and normal visual hierarchy.
+
+After each user answer, repeat the loop: infer newly clear defaults, update `decisions.md` and the working brief, then ask only the remaining material decision. Continue until the only unresolved items are explicitly blocked graph nodes.
+
+Do not delegate unresolved product decisions to workers. Record routine defaults in `decisions.md` for quick user review instead of interrupting for approval.
 
 ### 3. Build The Dependency Graph
 

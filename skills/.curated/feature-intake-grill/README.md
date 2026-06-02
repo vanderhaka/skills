@@ -13,7 +13,7 @@
 
 ## How It Works
 
-The skill reads enough repo evidence to avoid wasting the user's time. It builds a decision map across actors, data ownership, money, state transitions, migrations, integrations, customer-visible records, and UX recovery paths. It asks only material questions and records safe defaults when the answer is routine.
+The skill reads enough repo evidence to avoid wasting the user's time. It builds a decision map across actors, data ownership, money, state transitions, migrations, integrations, customer-visible records, and UX recovery paths. It applies routine technical, UX, UI, and product-taste defaults first, asks only the remaining material questions, repeats that loop after each answer, and records both user decisions and defaults applied.
 
 ## What You Get
 

@@ -13,9 +13,9 @@
 
 ## How It Works
 
-The skill reads `plan.md`, `progress.md`, and `decisions.md`, then inspects the relevant codebase surface. It reviews completeness, node size, dependencies, write boundaries, risk tiers, RGR plans, gates, and final proof expectations.
+The skill reads `plan.md`, `progress.md`, and `decisions.md`, then inspects the relevant codebase surface. It reviews completeness, node size, dependencies, write boundaries, risk tiers, RGR plans, gates, and final proof expectations. It applies routine technical, UX, UI, and product-taste defaults before asking questions and asks only for material plan-changing decisions.
 
-It writes a `grill-review.md` and updates the plan only after safe assumptions or decisions are resolved.
+It writes a `grill-review.md` summarizing both user decisions and defaults applied, then updates the plan only after safe assumptions or material decisions are resolved.
 
 ## What You Get
 

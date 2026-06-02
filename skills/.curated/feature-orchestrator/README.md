@@ -14,7 +14,7 @@
 
 ## How It Works
 
-The skill creates or reuses `plans/<feature-slug>/`. It records decisions, builds a dependency graph, launches every safe unblocked worker wave, verifies worker reports, updates progress, and runs final proof before marking the feature complete.
+The skill creates or reuses `plans/<feature-slug>/`. It records decisions, applies routine technical, UX, UI, and product-taste defaults before asking the user anything, builds a dependency graph, launches every safe unblocked worker wave, verifies worker reports, updates progress, and runs final proof before marking the feature complete.
 
 The stage skills are:
 
