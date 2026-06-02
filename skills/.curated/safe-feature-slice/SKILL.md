@@ -115,6 +115,71 @@ If classification is ambiguous, prefer the safest reversible path:
 | "Review this PR for payment state safety" | `single-slice` if PR is narrow, otherwise `needs-plan` | Classify after the initial read. |
 | "Implement all remaining slices" | `planned-slice` | Execute the next eligible slice, then keep going until the required slice set is done, skipped, or blocked. |
 
+## Blocker Triage Gate
+
+When a blocker is discovered during a plan, slice, verification node, browser proof, test run, deploy watch, or review, stop it from becoming a vague note. Triage it before expanding the active slice.
+
+Classify the blocker as one or more of:
+
+- product decision
+- repo bug
+- test or verification failure
+- env or data drift
+- migration, RLS, schema, or permission drift
+- external service, connector, access, billing, or quota issue
+- unsafe live-data or destructive-change risk
+
+Record the blocker with enough evidence that another workflow can act without rediscovering it:
+
+- affected plan node, slice, route, or feature
+- exact symptom
+- repro command, URL, or user action
+- expected behavior
+- actual behavior
+- concise log excerpt or error text
+- suspected files, migrations, services, or external system
+- why it blocks the graph or slice
+- explicit unblock condition
+
+Route the blocker deliberately:
+
+- If it is small, deterministic, and inside the active slice, fix it inside the slice and keep the evidence with that slice.
+- If it blocks future work but is outside the active slice, add or update the blocker row and do not silently expand scope.
+- If diagnosis is unclear, cross-cutting, or likely to need prioritization, hand it to `issue-fix-strategy` with the handoff packet below.
+- If it needs product, business, route, permission, or lifecycle input, mark it `decision-needed` and ask the smallest useful question.
+- If it needs live data, auth, role, billing, production config, destructive migration, or external account mutation, pause for explicit approval.
+
+Use this `issue-fix-strategy` handoff packet when routing a blocker:
+
+```text
+Blocker:
+[short title]
+
+Affected node or slice:
+[plan node, route, or slice id]
+
+Symptom:
+[what failed]
+
+Repro:
+[command, URL, or browser action]
+
+Expected:
+[expected behavior]
+
+Actual:
+[actual behavior and concise error]
+
+Suspected cause:
+[files, migrations, services, env, provider, or unknown]
+
+Why it blocks:
+[which future work cannot proceed safely]
+
+Unblock condition:
+[what evidence means this is resolved]
+```
+
 ## Interview Gate
 
 After the initial read, decide whether the slice is specified enough to proceed safely.
