@@ -1,13 +1,15 @@
 ---
 name: bug-ripple
-description: Diagnose one reported bug, define its root cause and blast radius, then run a read-only sibling-bug ripple sweep with parallel Codex agents when explicitly authorized and available. Use when the user says bug ripple, sibling bugs, what else could break, fix and sweep, or asks for likely related failures after a bug.
+description: Diagnose one reported bug, define its root cause and blast radius, then run a strict, findings-first, read-only sibling-bug ripple sweep with parallel Codex agents when explicitly authorized and available. Use when the user says bug ripple, sibling bugs, what else could break, fix and sweep, or asks for likely related failures after a bug.
 ---
 
 # Bug Ripple
 
 ## Purpose
 
-Use this skill when one concrete bug is a signal that nearby code may contain related failures. First diagnose the reported bug precisely, then search the same mental-model gap and feature area for sibling bugs. The default output is a report and fix menu, not code changes.
+Use this skill when one concrete bug is a signal that nearby code may contain related failures. First diagnose the reported bug precisely, then search the same mental-model gap and feature area for sibling bugs. The default output is a findings-first report and fix menu, not code changes.
+
+The review posture is strict but bounded. Be blunt about confirmed risk, bad invariants, weak tests, and messy structure that makes sibling bugs likely. Do not turn this into a repo-wide maintainability review, and do not pad the report with speculative nits.
 
 ## Hard Rules
 
@@ -18,6 +20,8 @@ Use this skill when one concrete bug is a signal that nearby code may contain re
 5. Current framework, SDK, API, cloud, payment, browser, or standards claims need current primary docs, Context7, or official docs before being treated as confirmed.
 6. Report confirmed or strongly evidenced bugs only. Label hypotheses as hypotheses and keep them out of the primary fix menu unless they are cheap and important to verify.
 7. If no sibling bugs are found, say that plainly. Never pad the report with style nits, speculative edge cases, or generic best practices.
+8. Be demanding about severity and structure. Do not soften data, auth, money, destructive-action, or common-path regressions because the fix is awkward. If the bug reveals avoidable branching, unclear ownership, cast-heavy contracts, or duplicated logic that materially increases sibling-bug risk, call that out as part of the finding.
+9. Harshness is for evidence and prioritization, not theater. Use direct language, but every hard call must be backed by file/line evidence, a realistic trigger, user impact, and a narrow verification path.
 
 Read-only checks are allowed only when they do not write snapshots, update generated files, mutate a shared database, call external write APIs, or depend on destructive setup/teardown. If a useful check may write state, describe it as a proposed prove-it check instead of running it during the review.
 
@@ -46,6 +50,7 @@ Do this yourself before any fanout. The ripple is only as good as the root-cause
    - exact assertion shape
 5. Identify the minimal fix, but do not apply it.
 6. Check whether tests already cover the intended behavior.
+7. Decide whether the original bug is a one-off mistake or a structural signal. Structural signals include scattered special cases, unclear ownership boundaries, loose object shapes, unsafe casts, silent fallbacks, non-atomic state changes, duplicated helpers, and framework/provider assumptions hidden in UI or shared code.
 
 If the original bug cannot be confirmed or reduced to a concrete root-cause hypothesis, stop before ripple fanout. Report the missing evidence and the single best next verification step; do not search for sibling bugs from a vague failure.
 
@@ -61,6 +66,7 @@ Where: path/to/file.ext:line
 Prove-it test: `expect(...).toBe(...)` currently ...
 Suggested fix: ...
 Existing coverage: covered / missing / unclear
+Structural signal: one-off / likely pattern / unclear
 Assumptions: ...
 ```
 
@@ -114,6 +120,7 @@ Recommended lanes:
 7. UI/runtime surface: routing, server/client boundaries, form pending states, cache invalidation.
 8. Test coverage: missing characterization tests and assertions needed before fixing.
 9. Skeptical pass: dedupe, false positives, and whether findings are actually user-impacting.
+10. Structural signal pass: only when the original bug suggests architecture or maintainability caused the failure; look for sibling-prone complexity in the scoped blast radius, not broad style issues.
 
 If fewer lanes apply, skip irrelevant lanes and report why.
 
@@ -143,7 +150,8 @@ Required method:
 2. Search for the diagnosed root-cause pattern and closely related failure modes.
 3. Use current primary docs or Context7 for version-specific framework/API claims.
 4. Report only realistic bugs with file:line evidence and a prove-it assertion.
-5. If you find nothing, say "No sibling issues found."
+5. Be strict about structural causes when they materially increase bug risk: unclear invariants, wrong ownership layer, duplicated logic, scattered branches, unsafe casts, or non-atomic state transitions.
+6. If you find nothing, say "No sibling issues found."
 
 Return:
 - Findings, each with severity, file:line, user impact, cause, short snippet or symbol, fix idea, and prove-it assertion.
@@ -167,13 +175,25 @@ A finding qualifies for the main report only when it has:
 - a prove-it assertion or reproduction sketch
 - a narrow fix idea
 
+Keep the bar high and the language plain. A bug-ripple finding is not "maybe cleaner"; it is "this can fail because..." or "this structure hides the same failure mode because...".
+
 Severity:
 
-- CRITICAL: data loss, unauthorized access, money movement/fulfillment error, destructive action, app-wide outage, or live launch blocker.
-- HIGH: common user path broken, persistent data corruption risk, security boundary weakening, broken payment/auth/integration path.
-- MEDIUM: realistic edge case, degraded workflow, missing recovery, or test gap likely to hide regression.
+- BLOCKER: should not ship/merge/launch as-is; data loss, unauthorized access, money movement/fulfillment error, destructive action, app-wide outage, or live launch blocker.
+- MAJOR: should fix before merge unless consciously accepted; common user path broken, persistent data corruption risk, security boundary weakening, broken payment/auth/integration path, or structure that makes a Tier 1 failure hard to reason about.
+- MODERATE: real issue with a realistic trigger; degraded workflow, missing recovery, brittle boundary, or test gap likely to hide regression.
 
-Do not include LOW severity items in the fix menu. Put them in notes only if useful.
+Do not include MINOR/LOW items in the fix menu. Put them in notes only if useful.
+
+Structural findings qualify only when they are tied to the diagnosed bug pattern or materially expand the blast radius. Examples worth reporting:
+
+- the same invariant is reimplemented in multiple places and one copy is already wrong
+- a shared helper accepts loose shapes or silent fallbacks that mask invalid state
+- a UI/server/provider boundary relies on casts, nullable modes, or ad-hoc branching that can repeat the original failure
+- a state transition is split across branches or async steps where partial state creates a sibling bug
+- feature-specific logic has leaked into a shared path and now bypasses the intended guard
+
+Do not report broad preferences such as naming, formatting, file length, or "could be cleaner" unless they directly hide or reproduce the failure mode.
 
 ## Phase 5: Merge and Report
 
@@ -187,6 +207,8 @@ Use this output shape:
 Mode: parallel fanout / partial fanout / single-agent fallback
 Agents or lanes completed: ...
 Agents or lanes failed/skipped: ...
+Verdict: BLOCKED / FAIL / PASS WITH RISKS / NO SIBLING BUGS FOUND
+Hard call: the most important decision from the review in one direct sentence
 
 ### Original Bug
 - What's broken:
@@ -194,6 +216,7 @@ Agents or lanes failed/skipped: ...
 - Where:
 - Suggested fix:
 - Test coverage:
+- Structural signal:
 
 ### Blast Radius
 - Files/directories searched:
@@ -202,6 +225,9 @@ Agents or lanes failed/skipped: ...
 ### Confirmed Sibling Bugs
 | # | Severity | File:Line | Found By | Issue | Fix |
 |---|---|---|---|---|---|
+
+### Structural Risk In The Blast Radius
+Only include if it directly increases sibling-bug risk.
 
 ### Strong Hypotheses
 Only include if important and clearly labeled.

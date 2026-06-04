@@ -1,4 +1,4 @@
 interface:
   display_name: "Bug Ripple"
-  short_description: "Find sibling bugs after one confirmed bug"
-  default_prompt: "Use $bug-ripple to diagnose this bug, confirm the root cause, and run a bounded read-only blast-radius sweep for sibling failures. End with a fix menu; do not edit code unless I approve selected fixes."
+  short_description: "Run a strict sibling-bug sweep"
+  default_prompt: "Use $bug-ripple to diagnose this bug harshly, define the blast radius, and search for sibling failures without broadening into a repo-wide review."

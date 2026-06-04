@@ -53,6 +53,7 @@ skills/
     ├── handoff/
     ├── issue-fix-strategy/
     ├── launch-critical-sweep/
+    ├── logic-ripple/
     ├── one-major-issue/
     ├── safe-feature-slice/
     ├── skill-repo-maintainer/
@@ -68,7 +69,7 @@ templates/
 
 ## Curated Skills
 
-- `bug-ripple` — diagnose one bug, then run a bounded sibling-bug blast-radius review.
+- `bug-ripple` — diagnose one bug, then run a strict bounded sibling-bug blast-radius review.
 - `cap` — verify, commit, and push intended work safely without sweeping unrelated files, with a focused fast mode for tiny changes.
 - `code-review` — unified review workflow with correctness, safety, tests, and maintainability lanes.
 - `feature-orchestrator` — coordinate whole-feature delivery through one canonical graph, progress file, parallel-safe worker waves, and final proof.
@@ -82,6 +83,7 @@ templates/
 - `handoff` — write or resume concise project handoffs without overwriting repo conventions.
 - `issue-fix-strategy` — chat-only executive triage for any issue source, with priority, fix approach, proof, and next-step routing.
 - `launch-critical-sweep` — find confirmed P0/P1 launch blockers before go-live.
+- `logic-ripple` — map every surface touched by a business-rule change before fixing or canonicalizing it.
 - `one-major-issue` — find at most one confirmed high-impact issue and hand it to a safe fix slice.
 - `safe-feature-slice` — unified plan-and-execute workflow for invariant-preserving feature work.
 - `tdd-plan-grill` — stress-test a TDD plan before implementation and update it for `$tdd-deep`.
