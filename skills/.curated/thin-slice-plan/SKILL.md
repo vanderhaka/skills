@@ -1,6 +1,6 @@
 ---
 name: thin-slice-plan
-description: Planning-only workflow for decomposing a broad feature, multi-step fix, safety hardening effort, audit report, or vague implementation request into a detailed dependency-ordered thin-slice plan with explicit progress tracking. Use when the user explicitly asks to plan, slice, sequence, review an existing plan, or stop before implementation. For plan-and-execute feature work, prefer safe-feature-slice as the unified front door; it creates or updates slice plans itself before executing eligible slices.
+description: Planning-only workflow for decomposing a broad feature, multi-step fix, safety hardening effort, audit report, or vague implementation request into a detailed dependency-ordered thin-slice plan with explicit progress tracking. Use when the user explicitly asks to plan, slice, sequence, review an existing plan, or stop before implementation. For whole-feature plan-and-execute work with canonical progress, dependency-graph orchestration, and parallel agents, prefer feature-orchestrator.
 ---
 
 # Thin Slice Plan
@@ -11,7 +11,7 @@ Turn broad work into a concrete, progress-tracked plan made of small, safe, inde
 
 This skill plans only. It does not implement code, run migrations, deploy, or mark work complete without evidence.
 
-For normal plan-and-execute feature work, use `safe-feature-slice` as the unified workflow: it can create or update `plans/<feature-slug>/slice-plan.md` and then execute eligible slices. Use this standalone planning skill when the user explicitly wants planning-only output, asks to review or repair a plan artifact, or says not to start implementation.
+For normal whole-feature plan-and-execute work, use `feature-orchestrator` as the unified workflow: it creates or updates `plans/<feature-slug>/plan.md` and `progress.md`, then executes eligible dependency-graph nodes with parallel-safe workers. Use this standalone planning skill when the user explicitly wants planning-only output, asks to review or repair a plan artifact, or says not to start implementation.
 
 ## Core Principle
 
@@ -199,32 +199,6 @@ Never parallelize:
 
 For every implementation slice, list the intended independent worker ownership. Default worker config is model `gpt-5.5`, medium reasoning, fastest available medium profile when the runtime exposes speed/profile controls. For every `parallel-safe` slice, list write boundaries and evidence expected from a specialist agent.
 
-When a slice is safe for cheap code-writing agents, make the handoff explicit instead of relying on the worker to infer product or contract semantics. DeepSeek is one current provider adapter, not the stable interface. The stable handoff is an `AgentTaskContract`.
-
-## Agent Task Contract Readiness
-
-Before a slice can be marked eligible for cheap-agent execution, remove ambiguity from the handoff:
-
-- Semantic delta count is `1`. If there are multiple runtime behavior changes, split the slice.
-- Write surface is exact file paths. Directories require a reason and a bounded file pattern.
-- Runtime contract table exists for code that changes behavior.
-- Edge-case matrix exists for every optional field, branch, status, external result, or error mode the slice touches.
-- JavaScript/object-shape slices explicitly distinguish absent properties from own properties with value `undefined` wherever that changes output shape.
-- Previous-behavior preservation list exists and is testable.
-- Must-not-touch list includes generated files, migrations, lockfiles, package manifests, unrelated tests, shared contracts, and any cross-slice files.
-- Parent validator is stronger than the agent acceptance command when quality risk exists.
-- Model routing is explicit as provider/model/count/fallback data.
-- Candidate strategy is explicit, such as tournament, mixed-model tournament, single-candidate baseline, or stronger-model/manual implementation.
-
-Model routing guidance:
-
-- `deepseek-v4-flash`: isolated pure functions, small test additions, deterministic transforms, low-risk UI display/copy/layout, and slices with a complete runtime contract table.
-- `deepseek-v4-pro`: moderate domain logic, branch-heavy service helpers, multi-case tests, and slices where flash failed once but scope remains narrow.
-- `gpt-5.5`: contract-heavy runtime behavior, auth/ownership, state transitions, cross-file design, migrations, external integration semantics, or ambiguous domain rules.
-- `not-cheap-agent`: product decisions, live-data operations, broad refactors, dependency graph changes, deploys, package/lockfile edits, shared migrations, or any slice that cannot be validated without stronger judgment before writing.
-
-If a slice cannot satisfy this gate, split it further, mark it `blocked`, or route it to a stronger model.
-
 ## Plan File Template
 
 Use this structure for `plans/<feature-slug>/slice-plan.md`:
@@ -361,9 +335,6 @@ Runtime verification:
 
 Exit evidence:
 [commands, screenshots, logs, DB checks, or code references required before done]
-
-AgentTaskContract:
-[eligible/not eligible, model routing, semantic delta count, runtime contract table, edge-case matrix, read scope, exact allowed writes, must-not-touch list, task prompt, acceptance commands, parent verification, failure policy]
 ```
 
 ## Progress Discipline
@@ -442,7 +413,6 @@ When asked to review an existing plan:
 
 - check whether every slice has actor, action, invariant, unsafe outcomes, dependencies, verification, and exit evidence
 - check whether every implementation slice separates intentional behaviour changes from previous intended behaviours that should remain true
-- check whether every cheap-agent-eligible implementation slice has an `AgentTaskContract` with a semantic delta count, runtime contract table, edge-case matrix, parent validator, and explicit model route
 - identify monolithic slices that should be split
 - identify missing dependency gates and shared-state risks
 - identify places where progress could be marked done without proof
@@ -515,10 +485,6 @@ The confidence score is evidence-based:
 
 Do not recommend `COMMIT + PUSH` for a plan when high-risk decisions remain unresolved or the plan is not ready for another agent to execute. Recommend `COMMIT ONLY` when the plan is useful as a checkpoint but execution should wait. Recommend `DO NOT COMMIT` when the plan is speculative, stale, or likely to mislead future work.
 
-## Self-Refining Loop
+## Lessons And Memory Routing
 
-Before each run, read the last 10 entries from `LESSONS.md` beside this `SKILL.md` if it exists.
-After each run, append exactly two lines to that `LESSONS.md`: `input pattern: ...` and `result: what worked or failed, plus the fix`.
-If `LESSONS.md` does not exist, create it beside this `SKILL.md` before appending.
-Keep entries concise and redact secrets, tokens, customer data, and private details.
-After every 10-20 entries, distill repeated lessons into durable rules in this `SKILL.md`, preserving the raw `LESSONS.md`.
+Do not create or append `LESSONS.md` beside this installed skill. Use the active environment's global lessons and memory system instead. Lessons are for mistakes, corrections, and reusable failure-prevention rules; memories are for durable user, project, or workflow context when the active instructions allow memory updates. Keep entries concise and redact secrets, tokens, customer data, and private details.

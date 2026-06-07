@@ -69,7 +69,7 @@ Blocked on:
 
 ## `progress.md`
 
-`progress.md` is the canonical live state. The orchestrator is the only writer.
+`progress.md` is the canonical live state. Only orchestrator-owned stages write it: the main orchestrator and `feature-integrator`. Workers never write it directly.
 
 ```markdown
 # Feature Progress: {feature-slug}
@@ -103,7 +103,7 @@ Allowed gate statuses: `TODO`, `IN_PROGRESS`, `DONE`, `SKIPPED`, `BLOCKED`.
 
 ## `decisions.md`
 
-Record every user decision and every safe default applied without asking, so the user can quickly review what was decided for them:
+Record every user decision and every safe default that affects scope:
 
 ```markdown
 # Decisions: {feature-slug}
@@ -133,6 +133,10 @@ PASS | PASS WITH RISKS | BLOCKED | FAIL
 | Requirement | Evidence | Result |
 | --- | --- | --- |
 
+## Evidence Table
+| Claim | Fresh evidence | Result | Remaining risk |
+| --- | --- | --- | --- |
+
 ## Commands
 - ...
 
@@ -155,8 +159,9 @@ PASS | PASS WITH RISKS | BLOCKED | FAIL
 ## Update Rules
 
 - Move nodes to `IN_PROGRESS` before worker launch.
-- Mark gates `DONE` only with exact evidence.
+- Mark gates `DONE` only with exact fresh evidence from the current run.
 - Mark `DONE` only after all required gates pass or have accepted skip reasons.
 - Mark `BLOCKED` with the exact missing decision, unsafe shared state, or failing check.
 - Add newly discovered required work as a new graph node; do not silently expand active nodes.
 - Keep skipped work visible with the reason.
+- Do not let a worker recommendation, stale command, or expected outcome count as evidence.

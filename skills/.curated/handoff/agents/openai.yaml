@@ -1,4 +1,4 @@
 interface:
   display_name: "Handoff"
-  short_description: "Write or resume concise project handoffs"
-  default_prompt: "Use $handoff to write or refresh a concise project handoff for the next session. Preserve existing repo conventions, summarize current git and verification state, and do not commit unless I ask."
+  short_description: "Write a next-session handoff"
+  default_prompt: "Use $handoff to gather repo status, verification state, and next steps into a concise HANDOFF.md."

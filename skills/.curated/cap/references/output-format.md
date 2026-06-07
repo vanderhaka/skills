@@ -32,6 +32,12 @@ Use this structure for completed or stopped cap runs.
 ### Continuity
 - Updated files: <list or "none">
 
+### Branch Intent
+- Current branch: <branch or detached>
+- Default branch: <branch or unknown>
+- Decision: default branch | current branch | new branch | PR/merge later | blocked
+- Cleanup: skipped | snapshot only | candidates reported | completed
+
 ### Push
 Pushed to <remote>/<branch> | Skipped | Blocked: <reason>
 

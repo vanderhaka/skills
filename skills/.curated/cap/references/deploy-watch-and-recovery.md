@@ -17,7 +17,7 @@ For plain `cap` on low-risk changes, a short post-push deployment status check i
 
 Skip silently if `vercel` is unavailable or the repo is not linked.
 
-- Check the latest deployment with plain `vercel ls`; some installed CLI versions reject `--limit`.
+- Check the latest deployment with plain `vercel ls`; this installed CLI rejects `--limit`.
 - Treat the first deployment row as the newest deployment, or use the URL printed first after the table.
 - If the latest deployment is already `Ready`, `Error`, or `Canceled`, report it inline.
 - For a full watch, continue polling every 60 seconds until terminal status.

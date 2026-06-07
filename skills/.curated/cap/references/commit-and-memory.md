@@ -49,10 +49,18 @@ Then commit immediately. Do not ask for confirmation unless the staging scope is
 
 ## Post-Commit Memory Review
 
-After each successful commit in the cap flow, review whether the work produced durable follow-up context.
+After each successful commit in the cap flow, run the helper when it exists:
 
-- Run repo-local post-commit memory or lesson scripts only when they are documented and safe.
-- Update lesson/memory systems only when active instructions permit it and the work uncovered a durable preference, project decision, operational detail, correction, or reusable failure pattern.
+```bash
+if [ -f "$HOME/.codex/scripts/post_commit_memory_review.py" ]; then
+  /usr/bin/python3 "$HOME/.codex/scripts/post_commit_memory_review.py" --cwd "$PWD"
+fi
+```
+
+Use the output as a checklist right after commit succeeds. If the helper is unavailable, apply the checklist manually:
+
+- Update `~/.codex/lessons.md` only if the work uncovered a correction, avoidable miss, or reusable failure pattern.
+- Update the appropriate file under `~/.codex/memories/` only when the active system/user instructions permit memory writes and the work uncovered durable preference, project decision, operational detail, or reusable reference.
 - If multiple commits happen in one cap run, avoid duplicate lesson or memory entries.
 
 ## Continuity Review
@@ -69,5 +77,14 @@ If the current work changed what the next session needs to know, update those ex
 Rules:
 
 - Preserve the repo's existing continuity system instead of inventing a new one.
-- If the user explicitly asks for a handoff, use the relevant handoff workflow.
+- If the user explicitly asks for a handoff, use `$handoff`.
 - Skip continuity edits in `cap fast` unless the changed file set is itself continuity work.
+
+## Legacy Local Cap Lessons
+
+The local `cap/LESSONS.md` may contain useful historical routing notes, but do not let it become an always-on slow gate and do not append new entries there.
+
+- Read recent cap lessons when a cap run hits a familiar repo, a repeated failure, or an ambiguous mode choice.
+- Write new reusable cap routing, staging, verification, or deploy lessons to the active environment's global lessons system when the active instructions permit it.
+- Keep entries concise and redact secrets, tokens, customer data, and private details.
+- After 10-20 repeated entries, distill durable rules into the relevant reference file instead of growing the main `SKILL.md`.

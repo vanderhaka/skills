@@ -13,7 +13,7 @@ Run code verification and env sync checks in parallel only when their outputs an
 
 Start from the changed files and identify the smallest command that proves the intended behavior or packaging contract.
 
-- For skill changes, prefer the repo's skill validator. For local Codex installs, use an installed `quick_validate.py` helper when available.
+- For Codex skill changes, prefer `python3 ~/.codex/skills/.system/skill-creator/scripts/quick_validate.py <skill-folder>` when available, plus the repo's skill validator or public-safety audit when publishing a skills repository.
 - For docs-only changes, use configured markdown, link, formatting, or repository validators if they exist. If none exist, use staged-diff review plus public-safety or spell/link spot checks relevant to the change.
 - For a tiny source-code change, run the most focused test, typecheck, lint, or smoke that covers the touched path.
 - Use normal cap if no focused command gives meaningful coverage.

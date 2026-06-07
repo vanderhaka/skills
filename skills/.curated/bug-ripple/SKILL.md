@@ -23,8 +23,6 @@ The review posture is strict but bounded. Be blunt about confirmed risk, bad inv
 8. Be demanding about severity and structure. Do not soften data, auth, money, destructive-action, or common-path regressions because the fix is awkward. If the bug reveals avoidable branching, unclear ownership, cast-heavy contracts, or duplicated logic that materially increases sibling-bug risk, call that out as part of the finding.
 9. Harshness is for evidence and prioritization, not theater. Use direct language, but every hard call must be backed by file/line evidence, a realistic trigger, user impact, and a narrow verification path.
 
-Read-only checks are allowed only when they do not write snapshots, update generated files, mutate a shared database, call external write APIs, or depend on destructive setup/teardown. If a useful check may write state, describe it as a proposed prove-it check instead of running it during the review.
-
 ## Phase 0: Intake and Baseline
 
 Start from the target repo root when possible.
@@ -51,8 +49,6 @@ Do this yourself before any fanout. The ripple is only as good as the root-cause
 5. Identify the minimal fix, but do not apply it.
 6. Check whether tests already cover the intended behavior.
 7. Decide whether the original bug is a one-off mistake or a structural signal. Structural signals include scattered special cases, unclear ownership boundaries, loose object shapes, unsafe casts, silent fallbacks, non-atomic state changes, duplicated helpers, and framework/provider assumptions hidden in UI or shared code.
-
-If the original bug cannot be confirmed or reduced to a concrete root-cause hypothesis, stop before ripple fanout. Report the missing evidence and the single best next verification step; do not search for sibling bugs from a vague failure.
 
 Diagnosis output before fanout:
 
@@ -256,14 +252,7 @@ Tell me which fixes to apply, for example "fix all", "fix 0 and 2", or "just the
 
 ## If the User Approves Fixes
 
-The ripple review is complete. Switch into implementation mode for the selected fixes only. Prefer handing the selected work to:
-
-- `$safe-feature-slice` when the fix changes behavior, data flow, auth/ownership, external contracts, UI workflow, or deploy/runtime behavior.
-- `$tdd-deep` when the work is primarily a bug fix that can be driven by focused regression tests.
-
-Carry over the selected fix numbers, original root cause, sibling findings, prove-it assertions, intended invariants, and any user constraints.
-
-Implementation rules:
+The ripple review is complete. Switch into implementation mode for the selected fixes:
 
 1. Preserve unrelated worktree changes.
 2. Write or update the prove-it test first where practical.

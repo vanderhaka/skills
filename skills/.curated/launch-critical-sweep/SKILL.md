@@ -1,6 +1,6 @@
 ---
 name: launch-critical-sweep
-description: Pre-launch catastrophic-risk audit for finding confirmed P0/P1 launch blockers across auth, ownership, payments, destructive actions, deployment/env, migrations, integrations, webhooks, data loss, and trust-breaking client workflows. Use when the user asks for critical issues before launch, go-live blockers, release readiness, catastrophic client/team risk, or a deep sweep of paths that could instantly break trust. Reports only confirmed launch blockers, not a backlog, and hands each fix to safe-feature-slice.
+description: Pre-launch catastrophic-risk audit for finding confirmed P0/P1 launch blockers across auth, ownership, payments, destructive actions, deployment/env, migrations, integrations, webhooks, data loss, and trust-breaking client workflows. Use when the user asks for critical issues before launch, go-live blockers, release readiness, catastrophic client/us risk, or a deep sweep of paths that could instantly break trust. Reports only confirmed launch blockers, not a backlog, and hands each fix to safe-feature-slice.
 ---
 
 # Launch Critical Sweep
@@ -9,7 +9,7 @@ description: Pre-launch catastrophic-risk audit for finding confirmed P0/P1 laun
 
 Find confirmed launch-blocking issues before a production release or client go-live. This is the heavier sibling of `$one-major-issue`: it sweeps more surfaces, uses stricter risk framing, and may report a small set of catastrophic blockers instead of only one issue.
 
-The output should answer: **Can this launch safely, or is there a confirmed issue that could seriously hurt customers, the client, the project owner, revenue, data, security, or operational trust?**
+The output should answer: **Can this launch safely, or is there a confirmed issue that could seriously hurt customers, the client, James, revenue, data, security, or operational trust?**
 
 Use this skill when the user asks for:
 
@@ -17,7 +17,7 @@ Use this skill when the user asks for:
 - `critical issues before launch`
 - `deep launch blocker sweep`
 - `what could instantly break trust`
-- `catastrophic client/team risk before go-live`
+- `catastrophic client/us risk before go-live`
 - `is this safe to launch?`
 
 If the user appends extra instruction after the skill call, treat it as binding scope. Examples:
@@ -30,7 +30,7 @@ If the user appends extra instruction after the skill call, treat it as binding 
 
 Default to read-only investigation. Do not edit code, write migrations, change data, reformat files, deploy, or mutate external services unless the user explicitly asks for fixes or launch execution.
 
-Tests, builds, typechecks, lint, local app runs, browser checks, and local migrations are allowed only when they do not mutate shared state or violate the user's constraint. Run migrations only after the target is provably local/test-scoped, non-destructive, and relevant to launch readiness. If the target database, environment, or migration impact is unclear, report the migration check as blocked instead of running it.
+Tests, builds, typechecks, lint, local app runs, browser checks, and local migrations are allowed only when they do not mutate shared state or violate the user's constraint. If migrations are non-destructive and local/test-scoped, run them when needed to verify launch readiness.
 
 Do not ask the user to restate context that can be recovered from repo docs, branch state, deployment config, or memory. If a missing answer could affect money, real customer data, destructive writes, deploy cutover, auth boundaries, or external provider behavior, ask a short blocking question or mark the finding as blocked by that decision.
 
@@ -165,7 +165,7 @@ Look for:
 
 ## Output Detail Standard
 
-For every confirmed blocker, give enough detail that the project owner can decide whether to stop launch, brief a client, or hand the issue to a fixer without re-running the whole investigation.
+For every confirmed blocker, give enough detail that James can decide whether to stop launch, brief a client, or hand the issue to a fixer without re-running the whole investigation.
 
 Do not bury the finding in vague severity language. Spell out:
 
@@ -196,20 +196,6 @@ Every reported blocker needs:
 Separate confirmed facts from `Hypothesis`. If the catastrophic part depends on runtime state you cannot inspect, say exactly what is confirmed and what must be verified.
 
 If third-party API/framework behavior is central and may have changed, verify against current official documentation or primary sources before finalizing. Cite the source in the final answer when used.
-
-## Lane Agent Brief
-
-When delegating sweep lanes, give each agent a narrow read-only brief:
-
-```text
-You are running one lane of a launch-critical sweep.
-Do not edit files, write files, run migrations, deploy, mutate provider state, or print secrets.
-Launch target: [product/feature/release]
-Critical journeys: [flows]
-Lane: [auth/money/data loss/deploy/integrations/runtime/test-vs-prod]
-Scope: [files/directories/config/docs]
-Return only confirmed or very strongly evidenced P0/P1 blockers with file:line evidence, affected users/records/systems, failure chain, fix direction, required verification, and uncertainty. If none meet the bar, say so.
-```
 
 ## Ranking And Stopping
 
@@ -250,14 +236,114 @@ If multiple blockers exist, each handoff must stay narrow enough to execute inde
 
 ## Final Answer
 
-Use the verdict words from Ranking and Stopping as the first signal:
+For confirmed blockers, use this shape:
 
-- `LAUNCH BLOCKED`
-- `NO CONFIRMED LAUNCH BLOCKER FOUND`
-- `INCONCLUSIVE`
+```text
+Launch gate:
+LAUNCH BLOCKED
 
-For detailed formatting, load [references/output-templates.md](references/output-templates.md) only when composing the final answer. Keep the answer focused on confirmed launch blockers, explicitly blocked checks, or the most important residual risk. Do not create a general backlog.
+Critical launch blocker 1:
+[short title]
 
-## Skill Maintenance
+Issue in plain English:
+[what is broken, in one or two concrete sentences]
 
-Do not write to files inside the installed skill during normal use. If a run reveals a durable improvement to this workflow, mention it in the final answer as a suggested skill update instead of mutating the skill package.
+Why it blocks launch:
+[plain-language client/customer/us impact]
+
+Who/what is affected:
+- Users/roles: [customer/client/admin/operator/etc.]
+- Data/records/systems: [tables, files, payments, emails, webhooks, deploy envs, etc.]
+- Critical workflow: [journey or operation that breaks]
+
+Failure chain:
+1. [entry point or trigger]
+2. [code/config behavior]
+3. [unsafe outcome]
+
+Evidence:
+- [file:line anchor and what it proves]
+- [file:line anchor and what it proves]
+
+How to reproduce or verify:
+[minimal command, scenario, trace, or reasoning path]
+
+Why it needs to be fixed before launch:
+[why deferring creates client/customer/us risk, and what could happen in production]
+
+Fix direction:
+[smallest credible fix, including the invariant the fix must enforce and any migration/provider/deploy concerns]
+
+How the fix reduces risk:
+[what bad outcome becomes impossible or detectable after the fix]
+
+Verification required:
+- Automated: [focused tests/typecheck/build/migration check]
+- Runtime: [browser/API/provider/deploy check if needed]
+- Regression guard: [specific unsafe case that must stay covered]
+
+Suggested safe-feature-slice fix:
+Use $safe-feature-slice to fix [blocker title].
+Invariant: [rule that must remain true].
+Unsafe outcome to prevent: [bad state].
+Likely scope: [files/modules].
+Verification: [focused tests/checks/browser flow, including affected workflow].
+Extra instruction: [carry over relevant launch-sweep constraint].
+
+Confidence:
+Confirmed / High confidence / Hypothesis, with a short reason
+```
+
+For no confirmed blocker, use this shape:
+
+```text
+Launch gate:
+NO CONFIRMED LAUNCH BLOCKER FOUND
+
+What I checked:
+[brief evidence-backed scope]
+
+Most important surfaces covered:
+- [auth/ownership/money/data loss/deploy/etc. and the evidence source]
+
+Why I am not forcing one:
+[why candidates did not meet the launch-blocker evidence bar]
+
+Residual launch risk:
+[single highest-risk area not fully proven, why it matters, and what would be affected if it failed; or "None beyond normal release risk"]
+
+Best next verification:
+[one command, browser flow, deploy check, or module to inspect]
+
+Confidence:
+[short reason]
+```
+
+For inconclusive sweeps, use this shape:
+
+```text
+Launch gate:
+INCONCLUSIVE
+
+Blocked check:
+[what could not be verified]
+
+Why it matters:
+[what catastrophic risk this check would prove or rule out]
+
+Evidence gathered:
+[what was checked successfully]
+
+Affected surface if this check fails:
+[users, records, workflow, provider, or deploy environment at risk]
+
+Best next verification:
+[specific command/access/env/browser flow needed]
+
+Confidence:
+[short reason]
+```
+
+## Lessons And Memory Routing
+
+Do not create or append `LESSONS.md` beside this installed skill. Use the active environment's global lessons and memory system instead. Lessons are for mistakes, corrections, and reusable failure-prevention rules; memories are for durable user, project, or workflow context when the active instructions allow memory updates. Keep entries concise and redact secrets, tokens, customer data, and private details.

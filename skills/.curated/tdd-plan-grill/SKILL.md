@@ -1,13 +1,13 @@
 ---
 name: tdd-plan-grill
-description: Stress-test a TDD plan before implementation. Review a `plans/{slug}-tdd/plan.md` across completeness, scope, dependencies, feasibility, test strategy, and ambiguity; ask focused questions; record decisions in `grill-review.md`; and update the plan so it is ready for `$tdd-deep`. Use when the user wants to grill or harden a TDD plan specifically.
+description: Stress-test a TDD or feature-orchestrator plan before implementation. Review `plans/{slug}-tdd/plan.md` or `plans/{slug}/plan.md` across completeness, scope, dependency graph, feasibility, test strategy, gates, and ambiguity; ask focused questions; record decisions in `grill-review.md`; and update the plan when approved. Use when the user wants to grill or harden a TDD plan, slice plan, or orchestrated feature graph.
 ---
 
 # TDD Plan Grill
 
 ## Overview
 
-Challenge a TDD plan before code gets written. Read the plan, inspect the codebase, rank the highest-impact risks, ask focused follow-up questions, record the decisions, and then update the plan if the user agrees. This sits between `$tdd-plan-deep` and `$tdd-deep`.
+Challenge a TDD or orchestrated feature plan before code gets written. Read the plan, inspect the codebase, rank the highest-impact risks, ask focused follow-up questions, record the decisions, and then update the plan if the user agrees. This sits before `$tdd-deep` for standalone TDD flows and before worker launch for `feature-orchestrator` flows.
 
 Be adversarial about the plan, not the user. Surface gaps that would change issue count, sequencing, tests, or assumptions. Skip low-value nitpicks.
 
@@ -183,10 +183,6 @@ Set `Status: COMPLETE` in `grill-review.md` and add a final section with:
 - Keep the review traceable: every material question, answer, and decision goes in `grill-review.md`.
 - If the plan is already solid, say so plainly and keep the edits minimal.
 
-## Self-Refining Loop
+## Lessons And Memory Routing
 
-Before each run, read the last 10 entries from `LESSONS.md` beside this `SKILL.md` if it exists.
-After each run, append exactly two lines to that `LESSONS.md`: `input pattern: ...` and `result: what worked or failed, plus the fix`.
-If `LESSONS.md` does not exist, create it beside this `SKILL.md` before appending.
-Keep entries concise and redact secrets, tokens, customer data, and private details.
-After every 10-20 entries, distill repeated lessons into durable rules in this `SKILL.md`, preserving the raw `LESSONS.md`.
+Do not create or append `LESSONS.md` beside this installed skill. Use the active environment's global lessons and memory system instead. Lessons are for mistakes, corrections, and reusable failure-prevention rules; memories are for durable user, project, or workflow context when the active instructions allow memory updates. Keep entries concise and redact secrets, tokens, customer data, and private details.

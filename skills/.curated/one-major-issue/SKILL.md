@@ -26,17 +26,6 @@ Extra instruction text after the skill call can constrain scope, priority, evide
 
 If the user asks for `review only`, `read-only`, or similar, treat that as a hard boundary. Tests, builds, and local app runs are allowed only when they do not mutate shared state or violate the user's constraint.
 
-## Target Intake
-
-Before searching broadly, identify the review target and state it in your notes:
-
-- current uncommitted diff
-- current branch or PR diff
-- named files, route, module, feature, or risk area
-- whole repo when the user asks for an audit without narrower scope
-
-If the target is ambiguous but repo evidence makes one interpretation likely, proceed and label the assumption. Ask one concise question only when the target choice could materially change the result.
-
 ## Search Strategy
 
 Start from the repo's real shape:
@@ -56,16 +45,6 @@ For a non-trivial repo, split the investigation into independent lanes when the 
 - core user journeys and runtime failure paths
 
 Use parallel shell reads freely when safe. Use delegated/background agents only when the current environment and user instruction permit them, and ask each lane for its strongest single candidate with file/line evidence.
-
-When delegating lanes, use a short read-only brief:
-
-```text
-You are looking for one high-impact confirmed issue in this lane only.
-Do not edit files, write files, run migrations, commit, deploy, or mutate external state.
-Target: [diff/branch/files/feature/repo]
-Lane: [auth/money/integrations/tests/runtime/etc.]
-Return your strongest confirmed candidate with file:line evidence, impact, trigger, fix direction, and uncertainty. If no candidate meets the bar, say so.
-```
 
 ## Evidence Bar
 
@@ -175,6 +154,6 @@ Confidence:
 [short reason]
 ```
 
-## Skill Maintenance
+## Lessons And Memory Routing
 
-Do not write to files inside the installed skill during normal use. If a run reveals a durable improvement to this workflow, mention it in the final answer as a suggested skill update instead of mutating the skill package.
+Do not create or append `LESSONS.md` beside this installed skill. Use the active environment's global lessons and memory system instead. Lessons are for mistakes, corrections, and reusable failure-prevention rules; memories are for durable user, project, or workflow context when the active instructions allow memory updates. Keep entries concise and redact secrets, tokens, customer data, and private details.

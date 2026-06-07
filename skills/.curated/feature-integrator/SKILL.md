@@ -12,21 +12,19 @@ Accept or reject worker outputs and advance the dependency graph. This stage is 
 ## Workflow
 
 1. Read `plan.md`, `progress.md`, and the relevant `agent-runs/*.md`.
-2. For each worker report, verify:
-   - changed files stayed inside write boundaries
-   - dependencies were satisfied before work began
-   - RED, GREEN, REFACTOR, and required gates have evidence
-   - browser/boundary/migration skips have explicit reasons
-   - defaults applied by the worker are routine and inferable from repo conventions, existing product patterns, framework norms, standard engineering practice, or strong UX/UI/product judgment
-   - no unrelated work was absorbed
-3. Run integration checks when workers touched shared contracts, generated types, routes, schemas, or UI flows.
-4. Update `progress.md`:
+2. For each worker report, run two review passes:
+   - Spec pass: assigned behavior, acceptance criteria, decisions, intentional behavior changes, and previous behavior preservation are satisfied.
+   - Quality pass: changed files stayed inside write boundaries, dependencies were satisfied before work began, tests are meaningful, contracts still fit, and no unrelated work was absorbed.
+3. Verify RED, GREEN, REFACTOR, and required gates have fresh evidence from this run.
+4. Verify browser/boundary/migration skips have explicit accepted reasons.
+5. Run integration checks when workers touched shared contracts, generated types, routes, schemas, or UI flows.
+6. Update `progress.md`:
    - `DONE` only when evidence is accepted
    - `BLOCKED` with exact blocker
    - `NEEDS ATTENTION` or keep `IN_PROGRESS` when evidence is weak
-5. Add newly discovered required work as new graph nodes.
-6. Recompute eligible next-wave nodes.
-7. Recommend or launch the next safe parallel wave when the main orchestrator requests it.
+7. Add newly discovered required work as new graph nodes.
+8. Recompute eligible next-wave nodes.
+9. Recommend or launch the next safe parallel wave when the main orchestrator requests it.
 
 ## Rules
 
@@ -34,4 +32,5 @@ Accept or reject worker outputs and advance the dependency graph. This stage is 
 - Do not merge outputs that collide on files or contracts without local integration proof.
 - Do not advance dependent nodes until prerequisite progress is accepted.
 - Do not hide failed gates behind notes.
-- Do not bounce routine defaults back to the user during integration; accept them when evidence and product taste support them, record them in `decisions.md` if they matter for future workers, and only block on material missing decisions.
+- Do not accept a broad success claim when the evidence only proves a narrow path.
+- Do not treat stale command output, expected behavior, or confidence as proof.

@@ -1,62 +1,26 @@
 ---
 name: handoff
-description: Create or refresh a concise project handoff for next-session continuity, or resume from an existing handoff. Use when the user asks for a handoff, wrap-up, session summary, continuation note, next-session context, or says to continue from HANDOFF.md.
+description: End-of-session handoff that gathers repo status, checks build health, and writes/overwrites HANDOFF.md for next-session continuity. Use when the user asks for a handoff, wrap up, session summary, or what they need for next session.
 ---
 
 # Session Handoff
 
-## Goal
+## Overview
 
-Create or refresh the repo's continuity handoff with the minimum context needed to resume safely next session. If the user asks to continue from an existing handoff, read it first and use it as the starting context.
+Write a concise HANDOFF.md in the project root with the minimum context needed to resume work next session.
 
-## Modes
+## Workflow
 
-- `write`: user asks for a handoff, wrap-up, end-of-session note, or next-session context.
-- `resume`: user says `HANDOFF.md continue`, asks to continue from a handoff, or points at an existing handoff file.
+1) Gather context
+- Run `git diff --stat HEAD` and `git status` to capture uncommitted changes.
+- Run `git log --oneline -1` to capture the last commit.
+- Find any `STATUS-*.md` or `PLAN-*.md` files.
+- Detect project type from config files, then run the most appropriate build check:
+  - If TypeScript (e.g., `tsconfig.json` exists), run `npx tsc --noEmit`.
+  - Otherwise run the closest equivalent for the detected stack, or note that no build check was run.
 
-## Resume Mode
-
-1. Read the referenced handoff file, defaulting to `HANDOFF.md` in the repo root.
-2. Check current repo state with `git status --short --branch` and `git log --oneline -1`.
-3. Compare the handoff's last-known state to current state.
-4. Tell the user the next action you infer, any stale assumptions, and any blocker before proceeding.
-
-Do not treat the handoff as more authoritative than current files, git state, tests, or user instructions.
-
-## Write Mode
-
-### 1. Gather Context
-
-Use bounded reads:
-
-- `git status --short --branch`
-- `git diff --stat HEAD`
-- `git log --oneline -1`
-- relevant `README`, `AGENTS.md`, `CONTRIBUTING.md`, `plans/`, `STATUS-*.md`, `PLAN-*.md`, or existing `HANDOFF.md`
-- package/build/test config names needed to detect the safest check
-
-Run the closest low-risk verification check when practical:
-
-- prefer a repo script such as `test`, `typecheck`, `lint`, `build`, or documented check
-- for TypeScript, use the repo's package script before falling back to `npx tsc --noEmit`
-- if no safe check is clear, say that no build check was run and why
-
-Do not run checks that mutate shared databases, deploy, call provider write APIs, or rewrite generated files unless the user explicitly asked for that.
-
-### 2. Choose The Handoff File
-
-Default to `HANDOFF.md` in the project root, but preserve existing repo conventions:
-
-- If a repo already uses a different handoff/status file, update that file instead.
-- If `HANDOFF.md` exists and is tracked, keep it tracked.
-- If `HANDOFF.md` exists and is ignored, keep it ignored.
-- If no convention exists, create `HANDOFF.md`.
-
-Do not automatically add `HANDOFF.md` to `.gitignore`. Recommend ignoring it only when the handoff is purely local, machine-specific, or not meant for the team.
-
-### 3. Write The Handoff
-
-Keep it concise, usually under 40 lines:
+2) Write HANDOFF.md
+Write a single `HANDOFF.md` file with this exact structure:
 
 ```markdown
 # Handoff - {DATE}
@@ -64,33 +28,35 @@ Keep it concise, usually under 40 lines:
 ## Last task
 {One sentence: what was being worked on}
 
-## Current state
-{branch, last commit, clean/dirty status, verification result}
+## Status
+{clean build | N errors to fix | uncommitted changes}
 
 ## Key files
 - {5-10 files most relevant to resuming work, with 1-line descriptions}
 
-## Decisions and constraints
-- {important user decisions, safety boundaries, or assumptions}
-
 ## Next steps
-- {ordered next actions}
+- {What to do next, derived from STATUS/PLAN files or conversation}
 
-## Risks or blockers
-- {anything not verified, failing, or waiting on user/external state}
+## Active plans
+- {STATUS-*.md or PLAN-*.md files that are in progress, if any}
 ```
 
-### 4. Report Back
+3) Handle uncommitted changes
+If there are uncommitted changes, ask:
+"You have uncommitted changes. Want me to commit before ending?"
 
-Tell the user:
+4) Confirm
+Tell the user: "Wrote HANDOFF.md - paste `HANDOFF.md continue` in your next session to pick up."
 
-- which handoff file was written or updated
-- whether the repo is clean or dirty
-- which verification check ran, passed, failed, or was skipped
-- whether the handoff is tracked, ignored, or local-only
+## Rules
 
-If uncommitted changes remain, do not assume the user wants a commit. Say what changed and ask before committing unless the user already requested a commit/cap flow.
+- Always write to `HANDOFF.md` in the project root (overwrite if it exists).
+- Keep the file under 30 lines; brevity is the point.
+- Only list files relevant to resuming, not every file touched.
+- One HANDOFF.md per project; always overwritten.
+- Add `HANDOFF.md` to `.gitignore` if not already there.
+- Never assume project type; detect from config files.
 
-## Skill Maintenance
+## Lessons And Memory Routing
 
-Do not write to files inside the installed skill during normal use. If a run reveals a durable improvement to this workflow, mention it in the final answer as a suggested skill update instead of mutating the skill package.
+Do not create or append `LESSONS.md` beside this installed skill. Use the active environment's global lessons and memory system instead. Lessons are for mistakes, corrections, and reusable failure-prevention rules; memories are for durable user, project, or workflow context when the active instructions allow memory updates. Keep entries concise and redact secrets, tokens, customer data, and private details.

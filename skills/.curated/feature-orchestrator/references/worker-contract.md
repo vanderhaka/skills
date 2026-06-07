@@ -11,7 +11,8 @@ Launch a worker only when:
 - Write boundaries are disjoint from every other active worker.
 - Shared-state risks are absent or intentionally single-threaded.
 - Product/business decisions needed for the node are resolved.
-- Routine technical, UX, UI, and product-taste defaults inside the node are either recorded already or can be inferred from repo conventions and strong senior-engineer judgment.
+
+The worker prompt must be self-contained. Include only the context the worker needs, but include enough that it can succeed without relying on the main chat history.
 
 ## Worker Brief Template
 
@@ -25,9 +26,9 @@ Feature:
 Core invariant:
 Previous intended behaviors:
 Intentional behavior changes:
-Defaults applied:
 
 Node:
+Specific goal:
 Tier:
 Actor/trigger:
 Behavior to test:
@@ -40,11 +41,6 @@ Allowed write scope:
 Must not touch:
 Shared-state risks:
 
-Decision handling:
-- Apply routine technical, UX, UI, and product-taste defaults without asking, when they are inferable from repo conventions, nearby UI, framework norms, standard engineering practice, or strong product judgment.
-- Do not invent or change material product intent, brand strategy, money, permissions, ownership, state semantics, destructive behavior, data model direction, external contracts, customer-visible records, or live operational risk.
-- If a material decision is missing, stop and report `BLOCKED` with the smallest concrete question and the safest recommended answer.
-
 Required loop:
 1. RED - write/locate failing behavior test and prove it fails for the intended reason.
 2. GREEN - smallest code change to pass.
@@ -53,18 +49,23 @@ Required loop:
 5. Browser Gate - required for user-visible work via Codex in-app browser when available.
 6. Boundary/Migration Gate - run integration, DB, API, filesystem, third-party, auth, or non-destructive migration proof when required.
 
+Debugging standard:
+- If a bug, test failure, build failure, or unexpected behavior appears, find and state the root cause or current evidence-backed hypothesis before changing code.
+- If the same error or failed fix repeats twice, stop blind retries and research current official docs or reputable current sources before trying another fix.
+
 External docs:
 - Use Context7/current official docs before coding if this node touches third-party APIs, frameworks, SDKs, cloud services, or standards where current behavior matters.
 
 Return:
 - Files changed
+- Root cause or reason no debugging was needed
+- Failed attempts, if any
 - RED evidence
 - GREEN evidence
 - REFACTOR summary or skipped reason
 - Repo gate commands/results
 - Browser/boundary/migration evidence or skipped reason
 - Previous behaviors preserved and evidence
-- Defaults applied during implementation
 - Residual risk
 - Recommendation: DONE | BLOCKED | NEEDS ATTENTION
 ```
@@ -89,6 +90,10 @@ Completed:
 - GREEN:
 - REFACTOR:
 
+## Root Cause / Investigation
+- Root cause or hypothesis:
+- Failed attempts:
+
 ## Gates
 - Repo Gate:
 - Browser Gate:
@@ -102,9 +107,6 @@ Completed:
 ## Residual Risk
 - ...
 
-## Defaults Applied
-- ...
-
 ## Handoff Notes
 - ...
 
@@ -116,8 +118,8 @@ DONE | BLOCKED | NEEDS ATTENTION
 
 The orchestrator must verify the report before accepting it:
 
-- Changed files match the write scope.
+- Spec pass: node behavior, acceptance criteria, decisions, intentional changes, and previous behavior preservation are satisfied.
+- Quality pass: changed files match the write scope, tests are meaningful, contracts still fit, and the node did not absorb unrelated work.
 - No required gate is missing.
 - Skipped gates have explicit reasons.
-- The node did not absorb unrelated work.
 - Any newly discovered required work becomes a new graph node.

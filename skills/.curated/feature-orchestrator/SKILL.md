@@ -27,7 +27,7 @@ Required artifacts:
 - `verification.md` - final proof, skipped checks, behavior preservation confidence.
 - `agent-runs/` - one report per worker attempt.
 
-Only the orchestrator edits `progress.md`. Workers write reports under `agent-runs/`; the orchestrator verifies the report and then updates progress.
+Only orchestrator-owned stages edit `progress.md`: the main orchestrator and `feature-integrator`. Workers write reports under `agent-runs/`; the orchestrator or integrator verifies the report and then updates progress.
 
 Read `references/graph-and-progress.md` before creating or changing the canonical artifacts.
 
@@ -52,6 +52,8 @@ The main `feature-orchestrator` coordinates these stages and owns the end-to-end
 - Use `tdd-deep` as the per-node worker loop for behavior changes.
 - Use `tdd-review-deep` only for refactor-only nodes: `LOCK -> REVIEW -> REFACTOR`.
 - Use `stepwise-app-builder` gate discipline for user-facing work: repo gate plus browser gate before advancing.
+- Use systematic debugging discipline when a failure or unexpected behavior appears: reproduce it, find the root cause, compare against a working pattern, and test one hypothesis at a time.
+- Use evidence-before-claims discipline before advancing nodes, reporting success, committing, or marking the feature complete.
 
 Do not create a separate `plans/*-tdd/` or `plans/*-stepwise/` flow for the same feature unless the user explicitly asks for a standalone specialist plan. The orchestrator's `plans/<feature-slug>/progress.md` remains the source of truth.
 
@@ -80,15 +82,11 @@ Assumptions:
 Out of scope:
 ```
 
-Before asking, run the decision list yourself. Use repo evidence, existing docs, tests, schema, nearby implementation, framework norms, standard engineering practice, and strong UX/UI/product judgment to make every routine or strongly inferred decision first.
+Ask only for decisions that repo evidence cannot answer and that could change permissions, ownership, money, state transitions, destructive behavior, data model, migration direction, external contracts, customer-visible records, or live-data risk.
 
-Ask only for remaining decisions that repo evidence and strong product judgment cannot answer and that could change permissions, ownership, money, state transitions, destructive behavior, data model, migration direction, external contracts, customer-visible records, live-data risk, product intent, brand strategy, or specific business logic.
+Batch routine defaults. Do not delegate unresolved product decisions to workers.
 
-Do not ask the user to confirm routine technical, UX, UI, or product-taste defaults unless the feature creates a credible exception. Defaults include ordinary validation shape, error handling, transient retries, idempotency mechanics, accessibility defaults, test placement, logging level, formatting, framework-standard file organization, notification badge color/placement, empty/loading/error states, sensible default sorting, standard affordances, and normal visual hierarchy.
-
-After each user answer, repeat the loop: infer newly clear defaults, update `decisions.md` and the working brief, then ask only the remaining material decision. Continue until the only unresolved items are explicitly blocked graph nodes.
-
-Do not delegate unresolved product decisions to workers. Record routine defaults in `decisions.md` for quick user review instead of interrupting for approval.
+For vague, novel, customer-facing, or design-heavy features, slow down enough to state the intended behavior or design direction before code starts. If the choice changes product direction, permissions, data, money, state, or user-visible records, get the decision recorded in `decisions.md`; otherwise record the safe default and continue.
 
 ### 3. Build The Dependency Graph
 
@@ -124,6 +122,8 @@ Never parallelize:
 
 Read `references/worker-contract.md` before launching workers.
 
+Each worker brief must be self-contained: one goal, the relevant current context, allowed write scope, forbidden scope, dependencies already satisfied, shared-state risks, required gates, and exact evidence to return. Do not rely on hidden chat context for worker success.
+
 ### 5. Execute Nodes
 
 Each implementation node must follow:
@@ -143,6 +143,9 @@ Required standards:
 - Run non-destructive migrations when the node requires them and project rules allow them.
 - Use current official docs or Context7 for third-party/framework behavior where current behavior matters.
 - For UI/user-visible nodes, use the Codex in-app browser when available before marking the node done.
+- If a bug, test failure, build failure, or unexpected behavior appears, write down the current root-cause finding or hypothesis before changing code.
+- If the same error or failed fix repeats twice, stop blind retries, research current official docs or reputable current sources, choose one safe fix, and record the reasoning.
+- Do not claim a node is done or move to the next node without fresh evidence from the current run.
 
 Workers return concise evidence in `agent-runs/<node>-<attempt>.md`. They do not edit `progress.md`.
 
@@ -150,11 +153,12 @@ Workers return concise evidence in `agent-runs/<node>-<attempt>.md`. They do not
 
 For each worker report:
 
-1. Verify changed files are inside the assigned write boundary.
-2. Verify RED, GREEN, REFACTOR, and required gates have evidence.
-3. Run integration checks when worker outputs share contracts.
-4. Update `progress.md` only after evidence is accepted.
-5. Recompute the dependency graph and launch the next safe wave.
+1. Run a spec pass: verify the report satisfies the node behavior, acceptance criteria, decisions, intentional changes, and previous behavior preservation.
+2. Run a quality pass: verify changed files are inside the assigned write boundary, tests are meaningful, contracts still fit, and no unrelated work was absorbed.
+3. Verify RED, GREEN, REFACTOR, and required gates have evidence.
+4. Run integration checks when worker outputs share contracts.
+5. Update `progress.md` only after evidence is accepted.
+6. Recompute the dependency graph and launch the next safe wave.
 
 If a node fails, keep it `IN_PROGRESS` or mark it `BLOCKED` with the exact failing command, missing decision, or unsafe shared-state reason. Do not quietly skip a gate and continue.
 
@@ -170,6 +174,7 @@ Before `COMPLETE`, prove every explicit requirement:
 - Boundary checks ran for DB/API/filesystem/third-party/payment/auth nodes, or each skip has a reason.
 - Non-destructive migrations ran when required.
 - `verification.md` records behavior preservation confidence from 0-100.
+- Every positive completion claim is backed by fresh evidence in `verification.md`, not by memory, expectation, or a worker's recommendation.
 
 Only mark the feature `COMPLETE` when current evidence proves the full requested scope, not merely the last node.
 
@@ -193,9 +198,6 @@ Next action:
 
 If work is not complete, leave the flow active and state the next unblocked graph node or blocker.
 
-## Self-Refining Loop
+## Lessons And Memory Routing
 
-Before each run, read the last 10 entries from `LESSONS.md` beside this `SKILL.md` if it exists.
-After each run, append exactly two lines to that `LESSONS.md`: `input pattern: ...` and `result: what worked or failed, plus the fix`.
-If `LESSONS.md` does not exist, create it beside this `SKILL.md` before appending.
-Keep entries concise and redact secrets, tokens, customer data, and private details.
+Do not create or append `LESSONS.md` beside this installed skill. Use the active environment's global lessons and memory system instead. Lessons are for mistakes, corrections, and reusable failure-prevention rules; memories are for durable user, project, or workflow context when the active instructions allow memory updates. Keep entries concise and redact secrets, tokens, customer data, and private details.

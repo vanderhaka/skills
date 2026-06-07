@@ -203,10 +203,6 @@ When useful, include a short confidence note:
 
 Confidence should reflect both the fix recommendation and behaviour-preservation confidence, not just whether the new requested path seems plausible.
 
-## Self-Refining Loop
+## Lessons And Memory Routing
 
-Before each run, read the last 10 entries from `LESSONS.md` beside this `SKILL.md` if it exists.
-After each run, append exactly two lines to that `LESSONS.md`: `input pattern: ...` and `result: what worked or failed, plus the fix`.
-If `LESSONS.md` does not exist, create it beside this `SKILL.md` before appending.
-Keep entries concise and redact secrets, tokens, customer data, and private details.
-After every 10-20 entries, distill repeated lessons into durable rules in this `SKILL.md`, preserving the raw `LESSONS.md`.
+Do not create or append `LESSONS.md` beside this installed skill. Use the active environment's global lessons and memory system instead. Lessons are for mistakes, corrections, and reusable failure-prevention rules; memories are for durable user, project, or workflow context when the active instructions allow memory updates. Keep entries concise and redact secrets, tokens, customer data, and private details.

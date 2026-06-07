@@ -1,6 +1,6 @@
 ---
 name: safe-feature-slice
-description: Unified safety-first workflow for planning, building, continuing, or reviewing one or more feature slices while preserving invariants. Use when asked to implement, harden, audit, review, fix, or ship feature work that touches money, permissions, data ownership, destructive actions, webhooks, state transitions, migrations, integrations, customer-visible records, or other behavior that must stay safe. Creates or updates a thin-slice plan itself for broad work, executes eligible slices, uses independent GPT-5.5 medium workers when safe, and requires strict browser/computer-use verification when tests alone cannot prove the slice.
+description: Safety-first workflow for planning, building, continuing, or reviewing one or more feature slices while preserving invariants. Use for single safe slices, existing slice-plan continuation, audits, reviews, or feature work touching money, permissions, data ownership, destructive actions, webhooks, state transitions, migrations, integrations, or customer-visible records. For whole-feature delivery through a canonical dependency graph, progress.md, and maximum safe parallel agents, prefer feature-orchestrator.
 ---
 
 # Safe Feature Slice
@@ -61,7 +61,7 @@ This step costs minutes and avoids the larger cost of fixing things that aren't 
 
 ## Multi-Slice Gate
 
-This skill is the front door for both planning and executing safe feature work. One narrow slice remains the atomic implementation unit, but broad work should be planned inside this workflow before execution instead of bouncing out and back.
+This skill is the safety engine for slice-sized work. For whole-feature delivery with many dependency-graph nodes, canonical `progress.md`, and parallel workers, use `feature-orchestrator`; it may delegate individual high-risk nodes back to this skill's discipline.
 
 When a plan contains multiple required slices, execute them as a slice loop by default: finish one slice, record evidence, then continue to the next eligible slice until all required slices are done, explicitly skipped, or blocked.
 
@@ -114,71 +114,6 @@ If classification is ambiguous, prefer the safest reversible path:
 | "Continue the quote approval plan" with `plans/quote-approval/slice-plan.md` present | `planned-slice` | Pick the next eligible slice from the plan. |
 | "Review this PR for payment state safety" | `single-slice` if PR is narrow, otherwise `needs-plan` | Classify after the initial read. |
 | "Implement all remaining slices" | `planned-slice` | Execute the next eligible slice, then keep going until the required slice set is done, skipped, or blocked. |
-
-## Blocker Triage Gate
-
-When a blocker is discovered during a plan, slice, verification node, browser proof, test run, deploy watch, or review, stop it from becoming a vague note. Triage it before expanding the active slice.
-
-Classify the blocker as one or more of:
-
-- product decision
-- repo bug
-- test or verification failure
-- env or data drift
-- migration, RLS, schema, or permission drift
-- external service, connector, access, billing, or quota issue
-- unsafe live-data or destructive-change risk
-
-Record the blocker with enough evidence that another workflow can act without rediscovering it:
-
-- affected plan node, slice, route, or feature
-- exact symptom
-- repro command, URL, or user action
-- expected behavior
-- actual behavior
-- concise log excerpt or error text
-- suspected files, migrations, services, or external system
-- why it blocks the graph or slice
-- explicit unblock condition
-
-Route the blocker deliberately:
-
-- If it is small, deterministic, and inside the active slice, fix it inside the slice and keep the evidence with that slice.
-- If it blocks future work but is outside the active slice, add or update the blocker row and do not silently expand scope.
-- If diagnosis is unclear, cross-cutting, or likely to need prioritization, hand it to `issue-fix-strategy` with the handoff packet below.
-- If it needs product, business, route, permission, or lifecycle input, mark it `decision-needed` and ask the smallest useful question.
-- If it needs live data, auth, role, billing, production config, destructive migration, or external account mutation, pause for explicit approval.
-
-Use this `issue-fix-strategy` handoff packet when routing a blocker:
-
-```text
-Blocker:
-[short title]
-
-Affected node or slice:
-[plan node, route, or slice id]
-
-Symptom:
-[what failed]
-
-Repro:
-[command, URL, or browser action]
-
-Expected:
-[expected behavior]
-
-Actual:
-[actual behavior and concise error]
-
-Suspected cause:
-[files, migrations, services, env, provider, or unknown]
-
-Why it blocks:
-[which future work cannot proceed safely]
-
-Unblock condition:
-[what evidence means this is resolved]
-```
 
 ## Interview Gate
 
@@ -314,18 +249,6 @@ Review against these questions:
 - Does this need browser or Computer Use verification to prove the real workflow?
 - Would this still work if two requests happen at the same time?
 - Does this slice break the feature spine or shared contract?
-
-Then run a separate structural maintainability pass, especially when the diff touches shared routes/services, grows large files, adds tooling, or threads new state through an existing workflow:
-
-- Is there a simpler reframing that would delete branches, helpers, modes, or repeated plumbing while preserving behavior?
-- Did feature-specific logic leak into a shared route, proxy, service, renderer, or helper that now knows too much?
-- Did the change duplicate a canonical loader, renderer, policy, or truth table instead of testing or reusing the existing one?
-- Did it add special-case conditionals to an already busy flow where a dedicated model, policy, or boundary would be clearer?
-- Did it make an already-large file absorb more concerns, or push a file past roughly 1000 lines without a strong structural reason?
-- Did it introduce loose object shapes, optionality, casts, or fallback parsing where an explicit typed boundary would be safer?
-- Do new scripts or test tools write artifacts into the repo root or unignored paths instead of a contained, ignored output directory?
-
-Treat evidence-backed structural regressions as review findings, not cosmetic nits. A correctness-only `PASS` is not enough when the implementation creates likely future regressions, hides duplicated truth, or normalizes artifact sprawl. Use `PASS WITH RISKS` for contained debt with a clear follow-up; use `FAIL` when the structure already caused or strongly enables a user-visible, data, auth, deploy, or workflow regression.
 
 For code reviews, lead with concrete findings and file/line references. Classify confirmed unsafe paths separately from hypotheses and missing-test risks.
 
@@ -470,10 +393,6 @@ Do not recommend `COMMIT + PUSH` unless the slice is at least `PASS` or a clearl
 
 Only include `Optional next step` when it is genuinely useful and not required by the current slice. Phrase it as a direct question before starting that work, for example: `Optional next step: Should I add coverage for the adjacent retry path next?`
 
-## Self-Refining Loop
+## Lessons And Memory Routing
 
-Before each run, read the last 10 entries from `LESSONS.md` beside this `SKILL.md` if it exists.
-After each run, append exactly two lines to that `LESSONS.md`: `input pattern: ...` and `result: what worked or failed, plus the fix`.
-If `LESSONS.md` does not exist, create it beside this `SKILL.md` before appending.
-Keep entries concise and redact secrets, tokens, customer data, and private details.
-After every 10-20 entries, distill repeated lessons into durable rules in this `SKILL.md`, preserving the raw `LESSONS.md`.
+Do not create or append `LESSONS.md` beside this installed skill. Use the active environment's global lessons and memory system instead. Lessons are for mistakes, corrections, and reusable failure-prevention rules; memories are for durable user, project, or workflow context when the active instructions allow memory updates. Keep entries concise and redact secrets, tokens, customer data, and private details.

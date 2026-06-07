@@ -20,5 +20,5 @@ Examples of reusable patterns from prior cap runs:
 - Some Vercel CLI installs reject `vercel ls --limit`; use plain `vercel ls` or `vercel inspect`.
 - Avoid reading `.vercel/.env*` or `.env*`; inspect `.vercel/project.json`, env-name listings, or redacted key-presence scripts.
 - For repos with Supabase migrations, check linked/local migration state and run non-destructive migrations when they are part of the intended slice.
-- For repos with expensive browser/Electron suites, prefer focused proof unless release confidence truly requires the broad suite.
-- For Next.js builds in env-less worktrees, safe placeholder public env values may be required when app modules validate public env at import time.
+- For KanAgent/Ralph, avoid broad test commands that spawn excessive Playwright/Electron instances unless release proof truly requires them.
+- For Next.js builds in env-less worktrees, safe placeholder public env values may be required when the app trims public Supabase values at import time.

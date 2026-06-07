@@ -20,11 +20,7 @@ Implement one assigned graph node safely. The worker owns the node implementatio
 
 1. Confirm dependencies are satisfied and write boundaries are clear.
 2. If another worker owns the same files or shared mutable state, stop and report `BLOCKED`.
-3. Apply inferable defaults inside the node before implementation:
-   - use repo conventions, existing product patterns, framework norms, standard engineering practice, and strong UX/UI/product judgment
-   - do not ask about routine technical, UX, UI, or product-taste choices
-   - stop only for material missing decisions that could change product intent, brand strategy, money, permissions, ownership, state semantics, destructive behavior, data model direction, external contracts, customer-visible records, or live operational risk
-   - record defaults applied in the worker report
+3. If the node starts from a bug, test failure, build failure, or unexpected behavior, reproduce it and write the root cause or current evidence-backed hypothesis before changing code.
 4. RED:
    - write or locate the failing behavior/characterization test first
    - map acceptance criteria to assertions
@@ -53,6 +49,6 @@ Implement one assigned graph node safely. The worker owns the node implementatio
 - Do not spawn child agents.
 - Do not revert unrelated changes.
 - Do not weaken assertions, mock the dangerous part, or widen scope.
-- Do not block on inferable defaults. Use strong senior-engineer judgment and record what you decided.
-- Do not make material product/business/ops decisions. Report `BLOCKED` with the smallest concrete question and safest recommended answer.
 - Do not mark `DONE`; recommend `DONE`, `BLOCKED`, or `NEEDS ATTENTION` with evidence.
+- Do not stack fixes on top of failed fixes. If the same error or failed fix repeats twice, stop, research current official docs or reputable current sources, and report the chosen fix with reasoning.
+- Do not use old output, expectations, or confidence as proof. Evidence must come from commands, browser checks, or boundary checks run for this node attempt.
