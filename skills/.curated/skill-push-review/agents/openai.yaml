@@ -1,0 +1,4 @@
+interface:
+  display_name: "Skill Push Review"
+  short_description: "Review skills before repo push"
+  default_prompt: "Run a lightweight skill-push review with a dated audit snapshot."

@@ -58,6 +58,7 @@ skills/
     ├── one-major-issue/
     ├── safe-feature-slice/
     ├── skill-repo-maintainer/
+    ├── skill-push-review/
     ├── tdd-plan-grill/
     ├── thermo-nuclear-code-quality-review/
     └── thin-slice-plan/
@@ -92,6 +93,7 @@ templates/
 - `thin-slice-plan` — planning-only workflow for dependency-ordered slice plans.
 - `thermo-nuclear-code-quality-review` — strict maintainability review for file sprawl, spaghetti branching, and abstraction quality.
 - `skill-repo-maintainer` — maintain and public-safety-check this skills repository.
+- `skill-push-review` — lightweight review and dated audit snapshot before pushing skill changes.
 
 ## Install A Skill
 
