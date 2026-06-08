@@ -22,6 +22,7 @@ Use this structure for completed or stopped cap runs.
 - Tests: PASS | FAIL | SKIPPED
 - Build: PASS | FAIL | SKIPPED
 - UI/Browser: PASS | FAIL | SKIPPED
+- Structural/Fallow: PASS | WARN | FAIL | SKIPPED
 
 ### Env Vars
 - Synced | <n> local-only | <n> Vercel-only | Skipped (no Vercel)

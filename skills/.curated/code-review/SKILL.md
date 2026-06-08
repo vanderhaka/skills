@@ -1,6 +1,6 @@
 ---
 name: code-review
-description: Harsh unified code review workflow for PRs, current diffs, changed files, focused repo areas, or implementation plans. Use when the user asks for code review, review this branch, audit current changes, find issues, compare reviewers, run a normal or strict review, assess merge safety, decide whether code is ready, or demand thermo-level maintainability scrutiny without invoking a separate thermo skill.
+description: Harsh unified code review workflow for PRs, current diffs, changed files, focused repo areas, or implementation plans. Use when the user asks for code review, review this branch, audit current changes, find issues, compare reviewers, run a normal or strict review, assess merge safety, decide whether code is ready, or demand thermo-level maintainability scrutiny without invoking a separate thermo skill. For JS/TS reviews, this skill must strictly call $fallow for read-only structural analysis before finalizing.
 ---
 
 # Code Review
@@ -56,6 +56,11 @@ Start from the real repo state:
 5. For framework, SDK, provider, browser, payment, auth, or cloud behavior that
    may have changed, verify against current primary/official docs before treating
    the claim as confirmed.
+6. For TypeScript/JavaScript repos or meaningful JS/TS diffs, strictly call
+   `$fallow` before finalizing the review. This is mandatory structural evidence,
+   not an optional lane. Skip only when the scope truly has no JS/TS package or
+   Fallow cannot run; in either case, the final review must include the Fallow
+   evidence line with the skip/failure reason.
 
 If the workspace is not a git repo, say so and review the provided files/artifacts
 directly.
@@ -111,6 +116,158 @@ them locally as separate passes.
    - casts, `any`, `unknown`, optionality, or loose ad-hoc shapes obscuring the invariant
    - duplicated canonical helpers or logic living in the wrong layer
    - missed simplification that could delete whole branches, layers, modes, or concepts
+
+6. JS/TS codebase analysis
+   - strictly call `$fallow` for every JS/TS review before writing the final verdict
+   - use audit mode for changed-code or PR review, and full/dead-code/dupes/health mode for broad maintainability review
+   - require read-only proof from `$fallow`: command, verdict/top signal, status before/after, and whether `.fallow*` files changed
+   - treat Fallow output as evidence to inspect, not as automatic review findings
+   - do not run `fallow init`, `fallow fix`, hooks, or baseline-saving commands in review-only mode
+
+## Using Fallow Effectively
+
+Use `$fallow` to make JS/TS structural review more factual. It answers graph-level
+questions that linters and context-window reading miss: unused files/exports,
+unused or unlisted dependencies, circular imports, duplicated logic, complexity
+hotspots, and configured architecture-boundary drift.
+
+`$fallow` is the canonical path. Do not replace it with a loose manual command
+sequence unless the skill or its runner is unavailable; if you must fall back,
+report that fallback in the final evidence line.
+
+### 1. Decide if Fallow applies
+
+Call `$fallow` when the review includes a TypeScript/JavaScript package,
+frontend workspace, Node service, or JS/TS tooling surface. Skip it for
+Swift/PHP/Python-only reviews unless a touched JS/TS workspace is in scope.
+
+Before running it, inspect the repo shape:
+
+```bash
+pwd
+git status --short --branch
+find . \( -path './node_modules' -o -path './.next' -o -path './.git' \) -prune -o \( -name package.json -o -name fallow.toml -o -name .fallowrc.json -o -name .fallowrc.jsonc \) -print
+```
+
+If a repo has `fallow` in `package.json`, a `fallow.toml`, `.fallowrc.*`, CI
+workflow, or package script, treat Fallow as adopted and prefer the repo-local
+command. If not adopted, use global or `npx` one-off analysis as advisory
+evidence only.
+
+### 2. Choose the right command
+
+For current branch or PR review in an adopted repo:
+
+```bash
+python3 ~/.codex/skills/fallow/scripts/run_fallow_readonly.py --mode audit --base origin/main .
+fallow audit --no-cache --format json --quiet --explain
+```
+
+If base detection fails, retry once with the correct base ref:
+
+```bash
+fallow audit --base main --no-cache --format json --quiet --explain
+```
+
+For unadopted changed-code review, use a one-off command and keep it advisory:
+
+```bash
+python3 ~/.codex/skills/fallow/scripts/run_fallow_readonly.py --mode audit --base origin/main .
+npx fallow audit --no-cache --format json --quiet --explain
+```
+
+For broad repo, architecture, or strict maintainability review:
+
+```bash
+python3 ~/.codex/skills/fallow/scripts/run_fallow_readonly.py --mode full .
+npx fallow --no-cache --format json --quiet
+npx fallow dead-code --no-cache --format json --quiet
+npx fallow dupes --no-cache --format json --quiet
+npx fallow health --no-cache --format json --quiet
+```
+
+For monorepos, scope to the package under review when possible:
+
+```bash
+fallow audit --workspace <package-name> --no-cache --format json --quiet --explain
+npx fallow --workspace <package-name> --no-cache --format json --quiet
+```
+
+For production-surface review, use production mode when tests/stories/dev-only
+files would distort the signal:
+
+```bash
+fallow audit --production --no-cache --format json --quiet --explain
+npx fallow --production --no-cache --format json --quiet
+```
+
+Do not run `fallow init`, `fallow fix`, `fallow hooks`, `fallow setup-hooks`, or
+baseline-saving commands during review. If cleanup looks safe, recommend a
+separate non-review fix step that starts with:
+
+```bash
+npx fallow fix --dry-run --format json
+```
+
+### 3. Interpret output correctly
+
+Treat Fallow output as a map of where to inspect, not as the final review.
+
+For each finding, classify it before reporting:
+
+- `confirmed finding`: source review proves the tool is pointing at real dead
+  code, duplicated logic, risky complexity, dependency drift, cycle, or boundary
+  drift.
+- `policy/config issue`: the code is valid but Fallow needs entry points,
+  generated-file ignores, public API modeling, dependency ignores, or boundary
+  config.
+- `inherited backlog`: the finding predates the diff and should not be blamed on
+  the current change unless the user asked for full cleanup.
+- `false positive / needs human context`: dynamic imports, reflection,
+  framework-discovered files, plugin manifests, public package exports, generated
+  code, or runtime-only dependency use may need manual modeling.
+
+Only include `confirmed finding` items in the main findings list. Put policy,
+backlog, and false-positive notes in `Open Questions / Assumptions` or `Test
+gaps/residual risk` unless they are themselves blocking the review.
+
+### 4. Prioritize Fallow signals
+
+In changed-code review, prioritize:
+
+1. `fail` verdicts from `fallow audit`
+2. unresolved imports and unlisted dependencies
+3. new unused files, exports, or dependencies introduced by the change
+4. new boundary violations or circular imports
+5. new high-complexity functions or CRAP-score failures
+6. new duplicate logic involving changed files
+
+In broad maintainability review, use full-repo Fallow output to pick the highest
+leverage files first, then inspect the source for simpler designs. Do not flood
+the review with a raw inventory of every unused export or clone group.
+
+### 5. Report Fallow evidence tersely
+
+In every JS/TS review summary, include one line. If this line is missing, the
+code review is incomplete:
+
+```text
+Fallow / structural-analysis evidence: <command> -> <pass|warn|fail|skipped>, <top signal or reason skipped>
+```
+
+When a Fallow-backed issue becomes a finding, cite the actual source file/line
+and explain the real maintainability or correctness impact. Do not cite only the
+tool name.
+
+### 6. Failure handling
+
+If Fallow exits with a runtime/config error, do not treat that as a product
+finding. Report the failed command and reason, then continue the review from
+source, tests, and repo evidence.
+
+If Fallow produces a very noisy first-run backlog in an unadopted repo, stop
+using it as a gate. Summarize the adoption need separately and keep the review
+focused on the requested diff or risk area.
 
 ## Structural Standards
 
@@ -349,6 +506,8 @@ a cleaner decomposition.
 
 Keep only genuinely different workflows standalone:
 
+- Use `$fallow` inside every JS/TS code review as the required structural
+  evidence lane. Do not treat it as optional when JS/TS is in scope.
 - Use `$launch-critical-sweep` for go-live, release readiness, catastrophic-risk,
   or "is this safe to launch?" questions.
 - Use `$tdd-deep` when the user wants behavior-preserving refactor/cleanup with
@@ -379,6 +538,7 @@ Good lanes to delegate:
 - money/state/webhooks/migrations
 - tests/verification gaps
 - structural maintainability and code-judo opportunities
+- JS/TS Fallow structural analysis through `$fallow`, when the repo or diff is in scope
 - skeptical dedupe/false-positive pass
 
 Brief each agent with role, exact scope, read/write boundary, files or artifacts
@@ -407,7 +567,11 @@ Verdict: PASS | PASS WITH RISKS | FAIL | BLOCKED | NO MATERIAL FINDINGS
 Suggested next step:
 Behavior preservation confidence: 0-100, with a short evidence basis
 Structural quality confidence: 0-100, with a short evidence basis
+Fallow / structural-analysis evidence: command and verdict, or skipped with reason
 ```
+
+For any JS/TS review, the Fallow evidence line is required. Missing Fallow
+evidence means the review is not finished.
 
 Severity labels:
 

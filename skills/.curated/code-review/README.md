@@ -6,6 +6,10 @@
 
 This skill owns the strict thermo/code-judo review bar directly. Use it as the default review skill instead of reaching for a separate thermo-nuclear review.
 
+For TypeScript and JavaScript reviews, this skill strictly calls `fallow` before
+finalizing so structural-analysis evidence is always reported or explicitly
+skipped with a reason.
+
 ## Use It When
 
 - You ask for a code review.
@@ -27,6 +31,7 @@ It routes only genuinely different workflows to specialist skills, such as `laun
 - File and line references.
 - Impact and fix direction.
 - Behavior preservation and structural quality confidence.
+- Required Fallow structural-analysis evidence for JS/TS reviews.
 - Open questions or assumptions.
 - Brief summary only after the findings.
 

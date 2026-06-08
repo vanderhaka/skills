@@ -26,6 +26,7 @@ Cap is now a routed workflow. Start by choosing the smallest mode that honestly 
 - Respect active repo rules, dirty-worktree constraints, Codex editing rules, and user-requested file boundaries.
 - For UI changes, use the Codex in-app browser before calling the work done. If it is unavailable, say so and use the best fallback.
 - For non-destructive migrations, run or apply them when they are part of the intended slice and the repo's migration tooling is available.
+- For TypeScript/JavaScript repos that have adopted Fallow, include `fallow audit --no-cache` in the structural proof gate. For unadopted JS/TS repos, run Fallow only when structural drift risk is material and report it as one-off evidence, not a mandatory policy failure.
 
 ## Mode Selection
 

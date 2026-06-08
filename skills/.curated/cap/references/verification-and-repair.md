@@ -26,6 +26,8 @@ Start from the changed files and identify the smallest command that proves the i
 - Format check: only if a formatter is configured.
 - Tests: repo test script if it is real, or the established project runner.
 - Build: repo build script if present.
+- Structural analysis: run `fallow audit --no-cache` when the repo has adopted Fallow. For unadopted repos, use `npx fallow --no-cache`, `npx fallow dead-code --no-cache --format json`, `npx fallow dupes --no-cache --format json`, or `npx fallow health --no-cache --format json` only when dead code, duplication, complexity, dependency drift, circular imports, or boundary drift are relevant to the change.
+- Do not apply `fallow fix` during cap unless the user explicitly asked for cleanup and the dry run has been reviewed.
 
 ## Python
 

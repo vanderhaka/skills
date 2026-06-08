@@ -49,6 +49,7 @@ skills/
     ├── feature-plan-grill/
     ├── feature-proof/
     ├── feature-slice-worker/
+    ├── fallow/
     ├── grill-me/
     ├── handoff/
     ├── issue-fix-strategy/
@@ -79,6 +80,7 @@ templates/
 - `feature-slice-worker` — execute one graph node with Red-Green-Refactor and required verification gates.
 - `feature-integrator` — verify worker reports, update canonical progress, and advance dependency waves.
 - `feature-proof` — run final requirement-level proof and behavior-preservation reporting before completion.
+- `fallow` — run read-only Fallow structural analysis for JS/TS reviews and report required evidence.
 - `grill-me` — interview relentlessly about a plan or design until material decisions are resolved.
 - `handoff` — write or resume concise project handoffs without overwriting repo conventions.
 - `issue-fix-strategy` — chat-only executive triage for any issue source, with priority, fix approach, proof, and next-step routing.
