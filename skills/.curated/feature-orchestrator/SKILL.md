@@ -49,13 +49,27 @@ The main `feature-orchestrator` coordinates these stages and owns the end-to-end
 - Use `grill-me` patterns for decision discovery when product, data, permission, money, state, migration, external contract, or UX decisions are unclear.
 - Use `thin-slice-plan` discipline for invariants, unsafe outcomes, risk tiers, dependency graph, and progress tracking.
 - Use `tdd-plan-deep` issue-writing discipline inside each graph node: one observable `When X, then Y`, concrete acceptance criteria, regression guards, and test sketches.
-- Use `tdd-deep` as the per-node worker loop for behavior changes.
+- `feature-slice-worker` is the canonical per-node worker loop. `tdd-deep` discipline is already embedded in it; treat `tdd-deep` as reference material, not as a competing worker loop.
 - Use `tdd-review-deep` only for refactor-only nodes: `LOCK -> REVIEW -> REFACTOR`.
-- Use `stepwise-app-builder` gate discipline for user-facing work: repo gate plus browser gate before advancing.
 - Use systematic debugging discipline when a failure or unexpected behavior appears: reproduce it, find the root cause, compare against a working pattern, and test one hypothesis at a time.
 - Use evidence-before-claims discipline before advancing nodes, reporting success, committing, or marking the feature complete.
 
 Do not create a separate `plans/*-tdd/` or `plans/*-stepwise/` flow for the same feature unless the user explicitly asks for a standalone specialist plan. The orchestrator's `plans/<feature-slug>/progress.md` remains the source of truth.
+
+## Handoffs
+
+Inbound:
+
+- `issue-fix-strategy` triage output and `code-review` findings are valid seed material. Carry their issue list, priorities, regression protections, and proof requirements into the working brief, `decisions.md`, and the graph, so every accepted issue maps to at least one node. Do not re-litigate priority calls the triage already made unless repo evidence contradicts them.
+- A direct feature request with no prior triage enters at the intake stage as normal.
+
+Outbound:
+
+- When the feature is `COMPLETE`, offer `cap` to verify, commit, and push.
+- When blocked on product decisions, run `feature-intake-grill` rather than guessing.
+- When the user wants independent scrutiny of the delivered work, offer `code-review`.
+
+When ending a response with a handoff, recommend exactly one next step. When another route is genuinely defensible, list it as an alternative with a one-line tradeoff; never list more than two alternatives.
 
 ## Workflow
 
@@ -110,6 +124,12 @@ Risk tiers:
 
 Launch every unblocked node whose dependencies are `DONE` and whose write boundaries are disjoint. Use as many workers as safely possible, not blindly as many as possible.
 
+Launch mechanics:
+
+- Launch a wave as concurrent subagent calls through the environment's agent mechanism (agent/task tool, team, or workflow runner) — dispatch all workers in the wave together, not one worker per turn.
+- Default soft cap: 4 workers per wave. Exceed it only when the user explicitly asks for more parallelism and integration can still verify every report properly.
+- Use isolated worktrees for workers when the environment supports them and write boundaries are tight or shared-state risk is non-trivial.
+
 Never parallelize:
 
 - git checkout, merge, rebase, push, or release tagging
@@ -142,7 +162,7 @@ Required standards:
 - Do not weaken assertions, mock the dangerous part, or widen scope with bonus fixes.
 - Run non-destructive migrations when the node requires them and project rules allow them.
 - Use current official docs or Context7 for third-party/framework behavior where current behavior matters.
-- For UI/user-visible nodes, use the Codex in-app browser when available before marking the node done.
+- For UI/user-visible nodes, verify in a real browser before marking the node done, using whatever browser tooling the active environment provides (in-app browser, browser MCP/extension, or Playwright).
 - If a bug, test failure, build failure, or unexpected behavior appears, write down the current root-cause finding or hypothesis before changing code.
 - If the same error or failed fix repeats twice, stop blind retries, research current official docs or reputable current sources, choose one safe fix, and record the reasoning.
 - Do not claim a node is done or move to the next node without fresh evidence from the current run.
@@ -158,7 +178,8 @@ For each worker report:
 3. Verify RED, GREEN, REFACTOR, and required gates have evidence.
 4. Run integration checks when worker outputs share contracts.
 5. Update `progress.md` only after evidence is accepted.
-6. Recompute the dependency graph and launch the next safe wave.
+6. Commit the accepted wave as one checkpoint commit before launching the next wave. Workers never run git mutations; only the orchestrator commits. Pushing or shipping goes through `cap` and only when the user asks.
+7. Recompute the dependency graph and launch the next safe wave.
 
 If a node fails, keep it `IN_PROGRESS` or mark it `BLOCKED` with the exact failing command, missing decision, or unsafe shared-state reason. Do not quietly skip a gate and continue.
 
@@ -196,7 +217,7 @@ Confidence:
 Next action:
 ```
 
-If work is not complete, leave the flow active and state the next unblocked graph node or blocker.
+If work is not complete, leave the flow active and state the next unblocked graph node or blocker. If work is complete, set `Next action` using the Handoffs rules.
 
 ## Lessons And Memory Routing
 

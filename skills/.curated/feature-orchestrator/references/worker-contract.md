@@ -20,7 +20,8 @@ The worker prompt must be self-contained. Include only the context the worker ne
 You are implementing one graph node for a tracked feature flow.
 You are not alone in the codebase. Do not revert unrelated changes.
 Do not edit progress.md. Write your report to agent-runs/{node}-{attempt}.md or return it to the orchestrator.
-Do not spawn child codex processes.
+Do not spawn child agents or nested agent processes.
+Do not commit, push, or run any git mutation; the orchestrator owns git.
 
 Feature:
 Core invariant:
@@ -46,7 +47,7 @@ Required loop:
 2. GREEN - smallest code change to pass.
 3. REFACTOR - only safe cleanup after green.
 4. Repo Gate - targeted tests plus typecheck/lint/build as required.
-5. Browser Gate - required for user-visible work via Codex in-app browser when available.
+5. Browser Gate - required for user-visible work; use the browser tooling the active environment provides (in-app browser, browser MCP/extension, or Playwright).
 6. Boundary/Migration Gate - run integration, DB, API, filesystem, third-party, auth, or non-destructive migration proof when required.
 
 Debugging standard:

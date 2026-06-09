@@ -6,7 +6,9 @@
 It captures Fallow evidence for unused code, dependency drift, duplication,
 complexity, circular imports, and architecture-boundary drift.
 
-This skill is mandatory inside `code-review` whenever JS/TS is in scope.
+This skill is mandatory inside `code-review`'s `full` and `strict` modes
+whenever JS/TS is in scope, and skippable with a stated reason in `quick` and
+`one` modes.
 
 ## Use It When
 

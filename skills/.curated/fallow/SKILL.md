@@ -1,6 +1,6 @@
 ---
 name: fallow
-description: Run Fallow read-only structural analysis for TypeScript and JavaScript repos. Use when the user asks to run Fallow, audit JS/TS dead code, dependency drift, duplication, complexity, circular imports, architecture boundaries, or when code-review/cap/deep-review needs Fallow evidence. This skill is mandatory inside $code-review whenever JS/TS is in scope.
+description: Run Fallow read-only structural analysis for TypeScript and JavaScript repos. Use when the user asks to run Fallow, audit JS/TS dead code, dependency drift, duplication, complexity, circular imports, architecture boundaries, or when code-review/cap/deep-review needs Fallow evidence. This skill is mandatory inside the code-review skill's full and strict modes whenever JS/TS is in scope.
 ---
 
 # Fallow
@@ -15,9 +15,10 @@ Fallow is not behavioral proof. It does not replace source review, tests,
 typecheck, browser/runtime proof, migrations, provider checks, or security
 review.
 
-`$code-review` must call this skill whenever JS/TS is in scope. If this skill
-cannot run, the code review must report the failed command or explicit skip reason
-in its Fallow evidence line.
+The `code-review` skill must call this skill for `full` and `strict` JS/TS
+reviews, and may skip it with a stated reason for `quick` and `one` modes. If
+this skill cannot run, the code review must report the failed command or
+explicit skip reason in its Fallow evidence line.
 
 ## Default Contract
 
@@ -27,7 +28,8 @@ in its Fallow evidence line.
   or baseline-saving commands unless the user explicitly asks for adoption or
   cleanup.
 - Do not write artifacts into the target repo unless the user asks. Store output
-  in `/tmp`, the active Codex `work/` folder, or another external scratch path.
+  in `/tmp`, the active session's scratch/work folder, or another external
+  scratch path.
 - Report whether the target repo status changed after the run.
 
 ## Workflow
@@ -42,15 +44,17 @@ find . \( -path './node_modules' -o -path './.next' -o -path './.git' \) -prune 
 ```
 
 3. Decide mode:
-   - `audit`: changed-code or PR review; default for `$code-review`.
+   - `audit`: changed-code or PR review; default for `code-review`.
    - `full`: broad repo structural review.
    - `dead-code`: dead files/exports/dependencies/imports only.
    - `dupes`: duplicate logic only.
    - `health`: complexity/maintainability health.
-4. Prefer the bundled runner:
+4. Prefer the bundled runner, `scripts/run_fallow_readonly.py` inside this
+   skill's installed folder. Resolve `<skills-root>` to the environment's
+   installed skills directory (e.g. `~/.claude/skills` or `~/.codex/skills`):
 
 ```bash
-python3 ~/.codex/skills/fallow/scripts/run_fallow_readonly.py --mode audit --base origin/main /path/to/repo
+python3 <skills-root>/fallow/scripts/run_fallow_readonly.py --mode audit --base origin/main /path/to/repo
 ```
 
 Use `--mode full`, `--mode dead-code`, `--mode dupes`, or `--mode health` for
@@ -99,7 +103,7 @@ When reporting Fallow evidence, include:
 - residual risk around dynamic imports, runtime entry points, public APIs, and
   generated files
 
-For `$code-review`, include this line exactly:
+For `code-review`, include this line exactly:
 
 ```text
 Fallow / structural-analysis evidence: <command> -> <pass|warn|fail|skipped>, <top signal or reason skipped>

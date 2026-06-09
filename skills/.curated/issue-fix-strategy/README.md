@@ -29,7 +29,7 @@ It ends by routing to the right next step.
 
 ## Not For
 
-Use `feature-graph-plan` when the strategy is already clear and ready to become graph nodes. Use `feature-intake-grill` when a missing decision materially changes scope or safety.
+Use `feature-graph-plan` when the strategy is already clear and ready to become graph nodes. Use `feature-intake-grill` when a missing decision materially changes scope or safety. Use `safe-feature-slice` when the work is one narrow fix on a risky surface and a full dependency graph would be overhead.
 
 ## Install
 

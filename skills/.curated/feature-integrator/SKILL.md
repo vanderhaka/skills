@@ -31,6 +31,7 @@ Accept or reject worker outputs and advance the dependency graph. This stage is 
 - Do not trust a worker's `DONE` recommendation without checking evidence.
 - Do not merge outputs that collide on files or contracts without local integration proof.
 - Do not advance dependent nodes until prerequisite progress is accepted.
+- Do not launch the next wave before the accepted wave is committed as one orchestrator-owned checkpoint commit; reject worker reports that include their own commits or pushes.
 - Do not hide failed gates behind notes.
 - Do not accept a broad success claim when the evidence only proves a narrow path.
 - Do not treat stale command output, expected behavior, or confidence as proof.

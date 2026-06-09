@@ -1,6 +1,6 @@
 ---
 name: code-review
-description: Harsh unified code review workflow for PRs, current diffs, changed files, focused repo areas, or implementation plans. Use when the user asks for code review, review this branch, audit current changes, find issues, compare reviewers, run a normal or strict review, assess merge safety, decide whether code is ready, or demand thermo-level maintainability scrutiny without invoking a separate thermo skill. For JS/TS reviews, this skill must strictly call $fallow for read-only structural analysis before finalizing.
+description: Harsh unified code review workflow for PRs, current diffs, changed files, focused repo areas, or implementation plans. Use when the user asks for code review, review this branch, audit current changes, find issues, compare reviewers, run a normal or strict review, assess merge safety, decide whether code is ready, or demand thermo-level maintainability scrutiny without invoking a separate thermo skill. For JS/TS reviews, this skill runs the fallow skill for read-only structural analysis before finalizing (mandatory in full and strict modes).
 ---
 
 # Code Review
@@ -21,6 +21,11 @@ path.
 Do not approve code merely because behavior appears correct. If the implementation
 works but makes the codebase harder to reason about, call that out directly.
 
+Backticked skill names in this document (`fallow`, `cap`, `tdd-deep`,
+`safe-feature-slice`, `bug-ripple`, `launch-critical-sweep`) refer to installed
+skills. Invoke them through the active environment's skill mechanism (slash
+command, skill tool, or equivalent).
+
 ## Mode Selection
 
 Infer the mode from the user request and repo evidence:
@@ -29,12 +34,11 @@ Infer the mode from the user request and repo evidence:
 - `full`: broader repo/PR review with parallel lanes and a ranked plan.
 - `one`: return only the single strongest confirmed issue.
 - `strict`: normal review plus maximum structural pressure.
-- `launch`: use `$launch-critical-sweep` when the real question is go-live safety.
-- `refactor-safe`: use `$tdd-deep` when the task is behavior-preserving refactor.
-- `ripple`: use `$bug-ripple` when one bug suggests sibling bugs.
-- `ship`: use `$cap` when the user asks to verify, commit, push, or ship.
 
-Do not route strict maintainability review to another skill. `$code-review` owns
+If the request is actually go-live safety, refactor execution, a sibling-bug
+sweep, or shipping, do not force a review mode — route per Specialist Routing.
+
+Do not route strict maintainability review to another skill. `code-review` owns
 that standard. If the user asks for a "thermo", "thermo-nuclear", "harsh",
 "brutal", "code-judo", "spaghetti", or "1k-line" review, run this skill in
 `strict` mode and apply the structural standards below.
@@ -56,11 +60,12 @@ Start from the real repo state:
 5. For framework, SDK, provider, browser, payment, auth, or cloud behavior that
    may have changed, verify against current primary/official docs before treating
    the claim as confirmed.
-6. For TypeScript/JavaScript repos or meaningful JS/TS diffs, strictly call
-   `$fallow` before finalizing the review. This is mandatory structural evidence,
-   not an optional lane. Skip only when the scope truly has no JS/TS package or
-   Fallow cannot run; in either case, the final review must include the Fallow
-   evidence line with the skip/failure reason.
+6. For TypeScript/JavaScript repos or meaningful JS/TS diffs, run the `fallow`
+   skill before finalizing the review. Mandatory for `full` and `strict` modes.
+   For `quick` and `one` modes it may be skipped when structural analysis would
+   add nothing (for example, a few-line diff in one file). Every JS/TS review
+   must still include the Fallow evidence line — as a result, or as
+   `skipped, <reason>`.
 
 If the workspace is not a git repo, say so and review the provided files/artifacts
 directly.
@@ -109,144 +114,45 @@ them locally as separate passes.
    - missing browser/runtime/provider proof for user-visible or integration paths
 
 5. Structural maintainability
-   - file crossing or sprawling past 1000 lines without strong reason
-   - spaghetti growth from scattered conditionals and special cases
-   - feature logic leaking into shared/general paths
-   - thin wrappers, identity abstractions, magic generic handling
-   - casts, `any`, `unknown`, optionality, or loose ad-hoc shapes obscuring the invariant
-   - duplicated canonical helpers or logic living in the wrong layer
-   - missed simplification that could delete whole branches, layers, modes, or concepts
+   - apply the Structural Standards section below
 
-6. JS/TS codebase analysis
-   - strictly call `$fallow` for every JS/TS review before writing the final verdict
-   - use audit mode for changed-code or PR review, and full/dead-code/dupes/health mode for broad maintainability review
-   - require read-only proof from `$fallow`: command, verdict/top signal, status before/after, and whether `.fallow*` files changed
-   - treat Fallow output as evidence to inspect, not as automatic review findings
-   - do not run `fallow init`, `fallow fix`, hooks, or baseline-saving commands in review-only mode
+6. JS/TS structural analysis
+   - run the Fallow Evidence Lane below when JS/TS is in scope
 
-## Using Fallow Effectively
+## Fallow Evidence Lane
 
-Use `$fallow` to make JS/TS structural review more factual. It answers graph-level
-questions that linters and context-window reading miss: unused files/exports,
-unused or unlisted dependencies, circular imports, duplicated logic, complexity
-hotspots, and configured architecture-boundary drift.
+Fallow answers graph-level questions that linters and context-window reading
+miss: unused files/exports, unused or unlisted dependencies, circular imports,
+duplicated logic, complexity hotspots, and architecture-boundary drift. It
+applies when the review includes a TypeScript/JavaScript package, frontend
+workspace, Node service, or JS/TS tooling surface.
 
-`$fallow` is the canonical path. Do not replace it with a loose manual command
-sequence unless the skill or its runner is unavailable; if you must fall back,
-report that fallback in the final evidence line.
+The `fallow` skill is the canonical path and owns the mechanics: command
+selection, adopted-vs-unadopted handling, monorepo/production scoping,
+read-only rules, and output interpretation. Follow that skill rather than
+improvising commands. If the skill or its runner is unavailable and you fall
+back to manual commands, report the fallback in the evidence line.
 
-### 1. Decide if Fallow applies
+Review-specific rules:
 
-Call `$fallow` when the review includes a TypeScript/JavaScript package,
-frontend workspace, Node service, or JS/TS tooling surface. Skip it for
-Swift/PHP/Python-only reviews unless a touched JS/TS workspace is in scope.
-
-Before running it, inspect the repo shape:
-
-```bash
-pwd
-git status --short --branch
-find . \( -path './node_modules' -o -path './.next' -o -path './.git' \) -prune -o \( -name package.json -o -name fallow.toml -o -name .fallowrc.json -o -name .fallowrc.jsonc \) -print
-```
-
-If a repo has `fallow` in `package.json`, a `fallow.toml`, `.fallowrc.*`, CI
-workflow, or package script, treat Fallow as adopted and prefer the repo-local
-command. If not adopted, use global or `npx` one-off analysis as advisory
-evidence only.
-
-### 2. Choose the right command
-
-For current branch or PR review in an adopted repo:
-
-```bash
-python3 ~/.codex/skills/fallow/scripts/run_fallow_readonly.py --mode audit --base origin/main .
-fallow audit --no-cache --format json --quiet --explain
-```
-
-If base detection fails, retry once with the correct base ref:
-
-```bash
-fallow audit --base main --no-cache --format json --quiet --explain
-```
-
-For unadopted changed-code review, use a one-off command and keep it advisory:
-
-```bash
-python3 ~/.codex/skills/fallow/scripts/run_fallow_readonly.py --mode audit --base origin/main .
-npx fallow audit --no-cache --format json --quiet --explain
-```
-
-For broad repo, architecture, or strict maintainability review:
-
-```bash
-python3 ~/.codex/skills/fallow/scripts/run_fallow_readonly.py --mode full .
-npx fallow --no-cache --format json --quiet
-npx fallow dead-code --no-cache --format json --quiet
-npx fallow dupes --no-cache --format json --quiet
-npx fallow health --no-cache --format json --quiet
-```
-
-For monorepos, scope to the package under review when possible:
-
-```bash
-fallow audit --workspace <package-name> --no-cache --format json --quiet --explain
-npx fallow --workspace <package-name> --no-cache --format json --quiet
-```
-
-For production-surface review, use production mode when tests/stories/dev-only
-files would distort the signal:
-
-```bash
-fallow audit --production --no-cache --format json --quiet --explain
-npx fallow --production --no-cache --format json --quiet
-```
-
-Do not run `fallow init`, `fallow fix`, `fallow hooks`, `fallow setup-hooks`, or
-baseline-saving commands during review. If cleanup looks safe, recommend a
-separate non-review fix step that starts with:
-
-```bash
-npx fallow fix --dry-run --format json
-```
-
-### 3. Interpret output correctly
-
-Treat Fallow output as a map of where to inspect, not as the final review.
-
-For each finding, classify it before reporting:
-
-- `confirmed finding`: source review proves the tool is pointing at real dead
-  code, duplicated logic, risky complexity, dependency drift, cycle, or boundary
-  drift.
-- `policy/config issue`: the code is valid but Fallow needs entry points,
-  generated-file ignores, public API modeling, dependency ignores, or boundary
-  config.
-- `inherited backlog`: the finding predates the diff and should not be blamed on
-  the current change unless the user asked for full cleanup.
-- `false positive / needs human context`: dynamic imports, reflection,
-  framework-discovered files, plugin manifests, public package exports, generated
-  code, or runtime-only dependency use may need manual modeling.
-
-Only include `confirmed finding` items in the main findings list. Put policy,
-backlog, and false-positive notes in `Open Questions / Assumptions` or `Test
-gaps/residual risk` unless they are themselves blocking the review.
-
-### 4. Prioritize Fallow signals
-
-In changed-code review, prioritize:
-
-1. `fail` verdicts from `fallow audit`
-2. unresolved imports and unlisted dependencies
-3. new unused files, exports, or dependencies introduced by the change
-4. new boundary violations or circular imports
-5. new high-complexity functions or CRAP-score failures
-6. new duplicate logic involving changed files
-
-In broad maintainability review, use full-repo Fallow output to pick the highest
-leverage files first, then inspect the source for simpler designs. Do not flood
-the review with a raw inventory of every unused export or clone group.
-
-### 5. Report Fallow evidence tersely
+- Ask for `audit` mode for changed-code or PR review; `full`, `dead-code`,
+  `dupes`, or `health` mode for broad maintainability review.
+- Treat output as a map of where to inspect, not as automatic findings. Apply
+  the fallow skill's classification (confirmed finding, policy/config issue,
+  inherited backlog, false positive). Only confirmed findings enter the main
+  findings list; the rest go to `Open Questions / Assumptions` or residual
+  risk unless they block the review itself.
+- In changed-code review, prioritize: `fail` verdicts, unresolved imports and
+  unlisted dependencies, then new unused files/exports/dependencies, new
+  boundary violations or cycles, new high-complexity functions, and new
+  duplicate logic introduced by the change.
+- In broad maintainability review, use full-repo output to pick the highest
+  leverage files first, then inspect the source for simpler designs. Do not
+  flood the review with a raw inventory of every unused export or clone group.
+- A Fallow runtime/config error is not a product finding. Report the failed
+  command and reason, then continue from source, tests, and repo evidence. If
+  an unadopted repo produces a noisy first-run backlog, stop using it as a
+  gate and summarize the adoption need separately.
 
 In every JS/TS review summary, include one line. If this line is missing, the
 code review is incomplete:
@@ -256,177 +162,94 @@ Fallow / structural-analysis evidence: <command> -> <pass|warn|fail|skipped>, <t
 ```
 
 When a Fallow-backed issue becomes a finding, cite the actual source file/line
-and explain the real maintainability or correctness impact. Do not cite only the
-tool name.
-
-### 6. Failure handling
-
-If Fallow exits with a runtime/config error, do not treat that as a product
-finding. Report the failed command and reason, then continue the review from
-source, tests, and repo evidence.
-
-If Fallow produces a very noisy first-run backlog in an unadopted repo, stop
-using it as a gate. Summarize the adoption need separately and keep the review
-focused on the requested diff or risk area.
+and explain the real maintainability or correctness impact. Do not cite only
+the tool name.
 
 ## Structural Standards
 
 Apply these standards to every meaningful review, not only to explicitly strict
-reviews.
+reviews. Each standard lists what to flag and the preferred remedy direction.
 
 ### 1. Be ambitious about structural simplification
 
-- Do not stop at "this could be a bit cleaner."
-- Look for code-judo moves: restructurings that preserve behavior while making
-  the implementation dramatically simpler, smaller, more direct, and more
-  inevitable.
-- Prefer deleting whole branches, helper layers, modes, flags, or concepts over
-  polishing them.
-- If behavior can stay the same while the structure becomes meaningfully cleaner,
-  push for the cleaner version.
-- Do not rubber-stamp an implementation that works but leaves the codebase messier.
+Look for code-judo moves: restructurings that preserve behavior while making
+the implementation dramatically simpler, smaller, and more direct. Do not stop
+at "this could be a bit cleaner," and do not rubber-stamp an implementation
+that works but leaves the codebase messier.
+
+- Flag: complicated implementations where a cleaner reframing could delete
+  whole categories of complexity; refactors that move code around without
+  reducing the number of concepts a reader must hold in their head.
+- Remedy: prefer deleting whole branches, helper layers, modes, flags, or
+  concepts over polishing them; reframe the state model so conditionals
+  disappear instead of getting centralized.
 
 ### 2. Treat 1000-line file growth as a presumptive blocker
 
-- Do not let a PR push a file from under 1000 lines to over 1000 lines without a
-  very strong structural reason.
-- Prefer extracting helpers, subcomponents, services, modules, or local
-  abstractions before accepting file sprawl.
-- If the diff crosses that threshold, explicitly ask whether the code should be
-  decomposed first.
-- Only waive this when the file has a compelling ownership reason and remains
-  clearly organized.
+Do not let a PR push a file from under 1000 lines to over 1000 lines without a
+very strong structural reason.
+
+- Flag: any diff that crosses the threshold, especially when the new code could
+  be split out.
+- Remedy: extract helpers, subcomponents, services, or modules before accepting
+  sprawl; explicitly ask whether the code should be decomposed first. Waive
+  only when the file has a compelling ownership reason and remains clearly
+  organized.
 
 ### 3. Reject spaghetti growth
 
-- Be highly suspicious of new ad-hoc conditionals, scattered special cases, or
-  one-off branches inserted into unrelated flows.
-- Treat "weird if statements in random places" as a design problem, not a style
-  nit.
-- Prefer pushing complexity into a dedicated model, helper, state machine, policy
-  object, module, or boundary instead of tangling an existing path.
-- Call out changes that make the surrounding code harder to reason about, even if
-  they technically work.
+Treat "weird if statements in random places" as a design problem, not a style
+nit. Call out changes that make surrounding code harder to reason about, even
+if they technically work.
+
+- Flag: new conditionals bolted onto unrelated code paths; one-off booleans,
+  nullable modes, optional flags, or special cases complicating existing
+  control flow; narrow edge-case handling dropped into the middle of an already
+  busy function; "temporary" branching likely to become permanent debt.
+- Remedy: push complexity into a dedicated model, helper, state machine, policy
+  object, module, or boundary; replace condition chains with a typed model,
+  explicit dispatcher, or state machine; collapse duplicate branches into one
+  clearer flow.
 
 ### 4. Prefer direct, boring, maintainable code
 
-- Treat brittle, ad-hoc, magical, or overly generic behavior as a quality problem.
-- Be skeptical of generic mechanisms that hide simple data-shape assumptions.
-- Flag thin abstractions, identity wrappers, pass-through helpers, or indirection
-  layers that do not buy clarity.
-- Prefer a direct flow over a clever abstraction when the abstraction does not
-  remove real complexity.
+Treat brittle, ad-hoc, magical, or overly generic behavior as a quality
+problem, and be skeptical of generic mechanisms that hide simple data-shape
+assumptions.
+
+- Flag: thin abstractions, identity wrappers, pass-through helpers, or
+  indirection layers that do not buy clarity.
+- Remedy: delete wrappers that do not meaningfully clarify the API; keep the
+  direct flow unless the abstraction removes real complexity.
 
 ### 5. Push hard on type and boundary cleanliness
 
-- Question unnecessary optionality, `unknown`, `any`, cast-heavy code, and silent
-  fallbacks when a clearer invariant or boundary should exist.
-- Prefer explicit typed models, shared contracts, schemas, or discriminated
-  shapes over loosely-shaped ad-hoc objects.
-- If a branch relies on fallback behavior to paper over an unclear invariant, ask
-  whether the boundary should be made explicit instead.
+- Flag: unnecessary optionality, `unknown`, `any`, cast-heavy code, loose
+  ad-hoc object shapes, or silent fallbacks that paper over an unclear
+  invariant.
+- Remedy: explicit typed models, shared contracts, schemas, or discriminated
+  shapes; make the boundary explicit so the control flow gets simpler.
 
 ### 6. Keep logic in the canonical layer
 
-- Call out feature logic leaking into shared paths, UI-specific logic leaking into
-  services, or implementation details leaking through APIs.
-- Prefer existing canonical utilities/helpers over bespoke one-offs.
-- Push code toward the package, service, or module that already owns the concept
-  instead of normalizing architectural drift.
+- Flag: feature logic leaking into shared paths, UI-specific logic leaking into
+  services, implementation details leaking through APIs, and copy-pasted or
+  bespoke helpers where a canonical utility already exists.
+- Remedy: move logic to the package, service, or module that already owns the
+  concept; reuse the canonical helper; change the ownership boundary so the
+  feature becomes a natural extension of an existing abstraction.
 
 ### 7. Treat avoidable orchestration complexity as a design smell
 
-- If independent work is serialized for no good reason, ask whether the flow can
-  be parallelized or simplified.
-- If related updates can leave state half-applied, push for a more atomic
-  structure.
-- Do not over-index on micro-optimizations, but do flag orchestration that makes
-  correctness and recovery harder to reason about.
+Do not over-index on micro-optimizations, but do flag orchestration that makes
+correctness and recovery harder to reason about.
 
-## Primary Review Questions
-
-For every meaningful change, ask:
-
-- Is there a code-judo move that would make this dramatically simpler?
-- Can this change be reframed so fewer concepts, branches, helpers, flags, or
-  layers are needed?
-- Does this improve or worsen the local architecture?
-- Did the diff add branching complexity where a better model or abstraction should
-  exist?
-- Did a previously cohesive module become more coupled, more stateful, or harder
-  to scan?
-- Is this logic living in the right file, package, service, and layer?
-- Did this change enlarge a file or component past a healthy size boundary?
-- Are repeated conditionals signaling a missing model, helper, or dispatcher?
-- Is the implementation direct and legible, or does it rely on special cases and
-  incidental control flow?
-- Is this abstraction earning its keep, or is it just a wrapper?
-- Did the diff introduce casts, optionality, ad-hoc object shapes, or silent
-  fallback that obscure the real invariant?
-- Is this orchestration more sequential or less atomic than it needs to be?
-- Does the test coverage prove the real boundary, or only a mocked happy path?
-- Could this fail for auth, ownership, money, state, migration, webhook, or
-  customer-visible data reasons?
-
-## What To Flag Aggressively
-
-Escalate findings when you see:
-
-- A complicated implementation where a cleaner reframing could delete whole
-  categories of complexity.
-- Refactors that move code around but fail to reduce the number of concepts a
-  reader must hold in their head.
-- A file crossing 1000 lines due to the PR, especially if the new code could be
-  split out.
-- New conditionals bolted onto unrelated code paths.
-- One-off booleans, nullable modes, optional flags, or special cases that
-  complicate existing control flow.
-- Feature-specific logic leaking into general-purpose modules.
-- Generic "magic" handling that hides simple structure and makes the code harder
-  to reason about.
-- Thin wrappers or identity abstractions that add indirection without simplifying
-  anything.
-- Unnecessary casts, `any`, `unknown`, or optional params that muddy the real
-  contract.
-- Copy-pasted logic instead of canonical helpers or focused extraction.
-- Narrow edge-case handling implemented in the middle of an already busy function.
-- Refactors that technically pass tests but make the code less modular or less
-  readable.
-- "Temporary" branching that is likely to become permanent debt.
-- Bespoke helpers where the codebase already has a canonical utility for the job.
-- Logic added in the wrong layer/package when there is a clear canonical home.
-- Sequential async flow where obviously independent work could stay simpler with
-  parallel execution.
-- Partial-update logic that leaves state less atomic than necessary.
-- Tests that mock away the boundary where the regression is likely to happen.
-
-## Preferred Remedies
-
-When you identify a problem, prefer suggestions like:
-
-- Delete a whole layer of indirection rather than polishing it.
-- Reframe the state model so conditionals disappear instead of getting
-  centralized.
-- Change the ownership boundary so the feature becomes a natural extension of an
-  existing abstraction.
-- Turn special-case logic into a simpler default flow with fewer exceptions.
-- Extract a helper, pure function, component, service, or module with a real
-  ownership boundary.
-- Split a large file into smaller focused modules.
-- Move feature-specific logic behind a dedicated abstraction.
-- Replace condition chains with a typed model, explicit dispatcher, or state
-  machine.
-- Separate orchestration from business logic.
-- Collapse duplicate branches into a single clearer flow.
-- Delete wrappers that do not meaningfully clarify the API.
-- Reuse the existing canonical helper instead of introducing a near-duplicate.
-- Make type boundaries more explicit so control flow gets simpler.
-- Move the logic to the package/module/layer that already owns the concept.
-- Parallelize independent work when that also simplifies orchestration.
-- Restructure related updates into a more atomic flow when partial state would be
-  harder to reason about.
-- Add regression tests at the real boundary rather than only asserting mocked
-  internals.
+- Flag: independent work serialized for no good reason; partial-update logic
+  that leaves state less atomic than necessary; tests that mock away the
+  boundary where the regression is likely to happen.
+- Remedy: parallelize independent work when that also simplifies the flow;
+  restructure related updates into a more atomic shape; add regression tests
+  at the real boundary rather than only asserting mocked internals.
 
 Do not be satisfied with "maybe rename this" feedback when the real issue is
 structural. Do not be satisfied with a merely cleaner version of the same messy
@@ -506,18 +329,24 @@ a cleaner decomposition.
 
 Keep only genuinely different workflows standalone:
 
-- Use `$fallow` inside every JS/TS code review as the required structural
-  evidence lane. Do not treat it as optional when JS/TS is in scope.
-- Use `$launch-critical-sweep` for go-live, release readiness, catastrophic-risk,
+- Use the `fallow` skill inside JS/TS code review as the structural evidence
+  lane — mandatory for `full` and `strict` modes, skippable with a stated
+  reason for `quick` and `one`.
+- Use `launch-critical-sweep` for go-live, release readiness, catastrophic-risk,
   or "is this safe to launch?" questions.
-- Use `$tdd-deep` when the user wants behavior-preserving refactor/cleanup with
+- Use `tdd-deep` when the user wants behavior-preserving refactor/cleanup with
   characterization tests and implementation.
-- Use `$bug-ripple` after diagnosing one concrete bug when similar sibling bugs
+- Use `bug-ripple` after diagnosing one concrete bug when similar sibling bugs
   may exist.
-- Use `$safe-feature-slice` as the default next step after actionable review
-  findings when the user wants fixes, hardening, or implementation. It can plan
-  first for broad/multi-finding work and then execute eligible slices.
-- Use `$cap` when the user asks to verify, commit, push, deploy, or finish the
+- Use `issue-fix-strategy` when the review produces multiple findings with mixed
+  priorities and the user needs an executive triage, fix order, and routing call
+  before implementation.
+- Use `safe-feature-slice` for one narrow fix or hardening task on a risky
+  surface once the finding is clear.
+- Use `feature-orchestrator` when the required fixes are already clear but span
+  multiple slices, files, or waves and should run as a tracked dependency graph
+  with parallel workers.
+- Use `cap` when the user asks to verify, commit, push, deploy, or finish the
   branch.
 
 Do not route to a separate thermo-nuclear skill. The harsh structural review bar
@@ -538,7 +367,7 @@ Good lanes to delegate:
 - money/state/webhooks/migrations
 - tests/verification gaps
 - structural maintainability and code-judo opportunities
-- JS/TS Fallow structural analysis through `$fallow`, when the repo or diff is in scope
+- JS/TS Fallow structural analysis through the `fallow` skill, when the repo or diff is in scope
 - skeptical dedupe/false-positive pass
 
 Brief each agent with role, exact scope, read/write boundary, files or artifacts
@@ -583,18 +412,23 @@ Severity labels:
 For review-only requests, do not edit files. For implementation requests, finish
 the review judgment first, then move into the appropriate fix workflow.
 
-When there are actionable findings, end with a suggested next step:
+When there are actionable findings, end with a suggested next step. Recommend
+exactly one; when another route is genuinely defensible, list it as an
+alternative with a one-line tradeoff, and never list more than two alternatives:
 
-- `Use $safe-feature-slice to fix [specific issue]` for one narrow fix or
+- `Use safe-feature-slice to fix [specific issue]` for one narrow fix or
   hardening task.
-- `Use $safe-feature-slice to create/update a slice plan for [scope] and execute
-  the first eligible slice` when there are multiple related findings or broad
-  work.
-- `Use $launch-critical-sweep` when the real decision is go-live safety.
-- `Use $tdd-deep` when the next move is behavior-preserving refactor with
+- `Use issue-fix-strategy to triage these findings` when there are multiple
+  findings with mixed priorities and the fix order or routing needs an
+  executive call before implementation.
+- `Use feature-orchestrator to deliver [scope]` when the required fixes are
+  already clear but span multiple slices and deserve a tracked dependency graph
+  with parallel workers.
+- `Use launch-critical-sweep` when the real decision is go-live safety.
+- `Use tdd-deep` when the next move is behavior-preserving refactor with
   characterization tests.
-- `Use $bug-ripple` when one confirmed bug implies likely sibling bugs.
-- `Use $cap` when the code is reviewed and the user asks to verify, commit, push,
+- `Use bug-ripple` when one confirmed bug implies likely sibling bugs.
+- `Use cap` when the code is reviewed and the user asks to verify, commit, push,
   or ship.
 - `No action` when there are no material findings.
 
@@ -624,9 +458,5 @@ Useful phrasing:
 - `this pushes the file past 1000 lines. can we decompose this first?`
 - `this adds another special-case branch into an already busy flow. can we move this behind its own abstraction?`
 - `this works, but it makes the surrounding code harder to reason about. keep the behavior and restructure the implementation.`
-- `this feels like feature logic leaking into a shared path. isolate it.`
-- `this abstraction seems unnecessary. keep the direct flow unless the wrapper removes real complexity.`
-- `why does this need a cast or optional here? make the boundary explicit instead.`
-- `this looks like a bespoke helper for something the codebase already owns elsewhere. reuse the canonical one.`
 - `there is a code-judo move here that makes this much simpler. reframe this so these branches disappear.`
 - `this refactor moves complexity around, but does not delete it. make the model itself simpler.`

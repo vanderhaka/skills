@@ -37,7 +37,7 @@ Implement one assigned graph node safely. The worker owns the node implementatio
    - run targeted tests
    - run typecheck/lint/build when required by the node or repo
 8. Browser Gate:
-   - required for user-visible nodes via Codex in-app browser when available
+   - required for user-visible nodes; use the browser tooling the active environment provides (in-app browser, browser MCP/extension, or Playwright)
 9. Boundary/Migration Gate:
    - run DB/API/filesystem/third-party/auth/payment checks when required
    - run non-destructive migrations when required and safe
@@ -47,6 +47,7 @@ Implement one assigned graph node safely. The worker owns the node implementatio
 
 - Do not edit `progress.md`.
 - Do not spawn child agents.
+- Do not commit, push, or run any git mutation; the orchestrator owns git.
 - Do not revert unrelated changes.
 - Do not weaken assertions, mock the dangerous part, or widen scope.
 - Do not mark `DONE`; recommend `DONE`, `BLOCKED`, or `NEEDS ATTENTION` with evidence.

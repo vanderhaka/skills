@@ -1,6 +1,6 @@
 ---
 name: issue-fix-strategy
-description: Chat-only executive triage for any set of issues, review findings, UX complaints, screenshots, logs, failing tests, tool diagnostics, or messy context. Use when the user wants plain-English judgement on what each issue is, why it matters, how to fix it, priority, proof needed, and the next suggested workflow step before implementation. Routes clear work to feature-graph-plan and decision-blocked work to feature-intake-grill without creating plan artifacts.
+description: Chat-only executive triage for any set of issues, review findings, UX complaints, screenshots, logs, failing tests, tool diagnostics, or messy context. Use when the user wants plain-English judgement on what each issue is, why it matters, how to fix it, priority, proof needed, and the next suggested workflow step before implementation. Routes broad work to feature-graph-plan/feature-orchestrator, narrow risky fixes to safe-feature-slice, and decision-blocked work to feature-intake-grill without creating plan artifacts.
 ---
 
 # Issue Fix Strategy
@@ -71,11 +71,12 @@ Priority must include a reason. Do not rank by vibes.
 3. Split bundled findings that require different fixes, owners, risks, or verification.
 4. Separate symptoms from likely root causes.
 5. Drop or downgrade findings that are weak, stale, unverifiable, or only tool noise.
-6. Classify each issue by priority and risk surface.
-7. Recommend a fix path for each issue.
-8. Identify previous intended behaviours that must not regress.
-9. Identify proof required before implementation can be called done.
-10. Choose the next suggested workflow step.
+6. Assign each surviving issue a stable ID (`I1`, `I2`, ...) and use that ID everywhere the issue is referenced: priority order, waves, routing, and any handoff.
+7. Classify each issue by priority and risk surface.
+8. Recommend a fix path for each issue.
+9. Identify previous intended behaviours that must not regress.
+10. Identify proof required before implementation can be called done.
+11. Choose the next suggested workflow step.
 
 When useful, group issues into fix waves:
 
@@ -85,14 +86,27 @@ When useful, group issues into fix waves:
 
 ## Routing Rules
 
-End every response with `Next Suggested Step`.
+End every response with `Next Suggested Step`. Recommend exactly one route.
+When another route is genuinely defensible, list it under `Also viable` with a
+one-line tradeoff. Never list more than two alternatives.
 
 Route to `feature-graph-plan` when:
 
 - the issues are clear enough to become dependency-graph nodes
 - priorities and risk surfaces are understood
 - no unresolved product or safety decision blocks planning
-- the likely implementation needs more than a tiny direct fix
+- the work spans multiple slices, files, or fix waves
+
+`feature-graph-plan` is the planning stage of `feature-orchestrator`; execution
+continues there under one canonical `progress.md`.
+
+Route to `safe-feature-slice` when:
+
+- the work is one narrow fix, or a few independent narrow fixes, touching a
+  risky surface: money, permissions, ownership, destructive actions, webhooks,
+  state transitions, migrations, integrations, or customer-visible records
+- a full dependency graph would be overhead, but implementing directly would
+  skip needed invariant protection
 
 Route to `feature-intake-grill` when:
 
@@ -108,7 +122,8 @@ Route to `Implement directly` only when:
 
 - the fix is tiny and obvious
 - the affected surface is narrow
-- the risk is low
+- the risk is low and no risky surface from the `safe-feature-slice` list is
+  touched
 - orchestrator overhead would be wasteful
 
 Route to `Stay in discussion` when:
@@ -116,6 +131,8 @@ Route to `Stay in discussion` when:
 - the issue list is too ambiguous
 - the source evidence is too weak
 - the next safe move is to gather or inspect more context before planning
+- a focused `code-review` pass would confirm or kill the weakest findings
+  before any routing call is safe
 
 ## Output Shape
 
@@ -130,12 +147,12 @@ Use this structure unless the user requests a different format:
 
 ## Priority Order
 
-1. [P0/P1/P2/P3] [Issue name] - [short reason]
-2. [P0/P1/P2/P3] [Issue name] - [short reason]
+1. [I1] [P0/P1/P2/P3] [Issue name] - [short reason]
+2. [I2] [P0/P1/P2/P3] [Issue name] - [short reason]
 
 ## Issues
 
-### 1. [Issue Name]
+### I1. [Issue Name]
 
 Priority: [P0/P1/P2/P3]
 
@@ -155,18 +172,18 @@ Proof required:
 [Tests, typecheck, browser smoke, migration proof, deploy proof, provider proof, manual verification, or other evidence.]
 
 Suggested routing:
-[`feature-graph-plan`, `feature-intake-grill`, `Implement directly`, or `Stay in discussion`, with reason.]
+[`feature-graph-plan`, `feature-intake-grill`, `safe-feature-slice`, `Implement directly`, or `Stay in discussion`, with reason.]
 
 ## Recommended Fix Order
 
 Wave 1:
-- [Issue/fix and why first.]
+- [I# - issue/fix and why first.]
 
 Wave 2:
-- [Issue/fix and why next.]
+- [I# - issue/fix and why next.]
 
 Wave 3:
-- [Issue/fix and why later.]
+- [I# - issue/fix and why later.]
 
 ## Clarifying Questions
 
@@ -174,11 +191,22 @@ Wave 3:
 
 ## Next Suggested Step
 
-[Proceed to `feature-graph-plan`, run `feature-intake-grill`, use `grill-me`, implement directly, or stay in discussion.]
+Recommended: [proceed to `feature-graph-plan` (execution continues under `feature-orchestrator`), run `feature-intake-grill`, use `safe-feature-slice`, use `grill-me`, implement directly, or stay in discussion]
 
 Reason:
 [Why this route is the right next move.]
+
+Also viable:
+[At most two alternatives, each with a one-line tradeoff, only when genuinely defensible. Otherwise write: None.]
 ```
+
+## Output Scaling
+
+- 10 issues or fewer: use the full per-issue template for every issue.
+- More than 10 issues: keep the full template for P0 and P1 issues only. Summarize P2 and P3 issues in one compact table — `ID | Priority | Issue | Fix direction | Routing` — and expand a P2/P3 issue to the full template only when its fix is risky, counterintuitive, or decision-blocked.
+- Compacting never deletes triage judgement: every priority still needs a reason, and a compacted issue that routes onward keeps its ID so regression protections and proof requirements can be derived at planning time.
+
+Issue IDs are the traceability handle for the rest of the flow. When routing to `feature-graph-plan`, every accepted issue ID must map to at least one graph node.
 
 ## Rules
 
