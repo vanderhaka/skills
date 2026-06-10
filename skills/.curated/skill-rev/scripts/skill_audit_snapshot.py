@@ -87,7 +87,13 @@ def repo_root(start: Path) -> Path:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--repo", default=".", help="Skills repo path.")
-    parser.add_argument("--installed-dir", default=None, help="Installed skills dir, usually ~/.codex/skills.")
+    parser.add_argument(
+        "--installed-dir",
+        action="append",
+        default=None,
+        dest="installed_dirs",
+        help="Installed skills dir, repeatable (e.g. ~/.codex/skills and ~/.claude/skills).",
+    )
     parser.add_argument("--out-dir", default=".skill-audits", help="Where to write the dated audit.")
     parser.add_argument("--fetch", action="store_true", help="Fetch origin/main before writing the audit.")
     args = parser.parse_args()
@@ -96,7 +102,7 @@ def main() -> int:
     if args.fetch:
         run(["git", "fetch", "origin", "main"], root)
 
-    installed_dir = Path(args.installed_dir).expanduser() if args.installed_dir else None
+    installed_dirs = [Path(d).expanduser() for d in (args.installed_dirs or [])]
     timestamp = dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H-%M-%SZ")
     out_dir = (root / args.out_dir).resolve()
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -112,15 +118,17 @@ def main() -> int:
         if not skill_dir.is_dir():
             continue
         name = skill_dir.name
-        installed_skill = installed_dir / name if installed_dir else None
-        installed_status = compare_installed(skill_dir, installed_skill) if installed_skill else "not checked"
+        if installed_dirs:
+            installed_statuses = [compare_installed(skill_dir, d / name) for d in installed_dirs]
+        else:
+            installed_statuses = ["not checked"]
         rows.append(
             "| {name} | {skill} | {readme} | {agent} | {installed} |".format(
                 name=name,
                 skill=utc_mtime(skill_dir / "SKILL.md"),
                 readme="yes" if (skill_dir / "README.md").exists() else "no",
                 agent="yes" if (skill_dir / "agents" / "openai.yaml").exists() else "no",
-                installed=installed_status,
+                installed=" | ".join(installed_statuses),
             )
         )
 
@@ -131,7 +139,8 @@ def main() -> int:
         f"- HEAD: `{head}`",
         f"- origin/main: `{remote}`",
         f"- ahead/behind: `{ahead_behind}`",
-        f"- installed dir: `{display_path(installed_dir)}`",
+        "- installed dirs: "
+        + (", ".join(f"`{display_path(d)}`" for d in installed_dirs) if installed_dirs else "`not checked`"),
         "",
         "## Git Status",
         "",
@@ -141,8 +150,14 @@ def main() -> int:
         "",
         "## Skills",
         "",
-        "| Skill | SKILL.md updated | README | Agent metadata | Installed comparison |",
-        "| --- | --- | --- | --- | --- |",
+        "| Skill | SKILL.md updated | README | Agent metadata | "
+        + (
+            " | ".join(f"Installed: {display_path(d)}" for d in installed_dirs)
+            if installed_dirs
+            else "Installed comparison"
+        )
+        + " |",
+        "| --- | --- | --- | --- | " + " | ".join("---" for _ in (installed_dirs or [None])) + " |",
         *rows,
         "",
     ]

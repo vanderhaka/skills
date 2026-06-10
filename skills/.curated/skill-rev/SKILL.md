@@ -1,9 +1,9 @@
 ---
-name: skill-push-review
-description: Lightweight review for vanderhaka/skills changes before push, plus pull/update audits for all curated skills. Use when skills are about to be pushed, when checking whether repo skills are updated, or when comparing installed local skills against the remote catalog.
+name: skill-rev
+description: Lightweight review for vanderhaka/skills changes before push, plus pull/update audits for all curated skills. Modes — no args runs the full pre-push review, "push" runs pre-push checks only, "sync" runs the pull/update audit comparing installed skills against the repo. Use when skills are about to be pushed, when checking whether repo skills are updated, or when comparing installed local skills against the remote catalog.
 ---
 
-# Skill Push Review
+# Skill Rev
 
 ## Role
 
@@ -14,6 +14,20 @@ handoff to `cap` or a normal git push.
 This is intentionally smaller than `cap`. It does not stage, commit, push, repair
 failures, publish, or install skills. It gives a focused review and a dated audit
 snapshot so the next action is obvious.
+
+## Modes
+
+Arguments after the skill name select the flow. Treat the first argument as the
+mode keyword; ignore case.
+
+- (no args) — full review: Pre-Push Review plus the installed-skills comparison
+  in the audit snapshot.
+- `push` — Pre-Push Review only. Skip the installed-skills comparison (run the
+  snapshot without `--installed-dir`).
+- `sync` — Pull / Update Audit only. Skip the pre-push checks.
+
+Any other argument text is extra context (for example a skill name to focus on),
+not a mode.
 
 ## Pre-Push Review
 
@@ -52,10 +66,11 @@ git diff --check
 python3 -m py_compile <changed-script.py>
 ```
 
-6. Create a dated audit snapshot for all curated skills:
+6. Create a dated audit snapshot for all curated skills (in full mode, include
+   both installed dirs; in `push` mode, omit the `--installed-dir` flags):
 
 ```bash
-python3 skills/.curated/skill-push-review/scripts/skill_audit_snapshot.py
+python3 skills/.curated/skill-rev/scripts/skill_audit_snapshot.py --installed-dir ~/.codex/skills --installed-dir ~/.claude/skills
 ```
 
 The snapshot writes to `.skill-audits/<timestamp>-skill-audit.md`, which is
@@ -63,8 +78,8 @@ ignored by git. Do not commit audit snapshots unless the user explicitly asks.
 
 ## Pull / Update Audit
 
-Use this when the user asks whether repo skills are updated or wants a pull
-check before syncing local installed skills.
+Use this for `sync` mode, when the user asks whether repo skills are updated, or
+wants a pull check before syncing local installed skills.
 
 1. Fetch remote state:
 
@@ -80,22 +95,24 @@ git rev-list --left-right --count HEAD...origin/main
 git pull --ff-only origin main
 ```
 
-3. Create a dated audit for every curated skill and compare against installed
-local skills:
+3. Create a dated audit for every curated skill and compare against both
+   installed skill dirs:
 
 ```bash
-python3 skills/.curated/skill-push-review/scripts/skill_audit_snapshot.py --fetch --installed-dir ~/.codex/skills
+python3 skills/.curated/skill-rev/scripts/skill_audit_snapshot.py --fetch --installed-dir ~/.codex/skills --installed-dir ~/.claude/skills
 ```
 
 The audit records repo HEAD, remote HEAD, ahead/behind counts, per-skill package
-timestamps, README/agent metadata presence, and installed-vs-repo drift.
+timestamps, README/agent metadata presence, and installed-vs-repo drift for each
+installed dir.
 
 ## Output
 
 Report in this compact shape:
 
 ```text
-Skill push review: PASS | WARN | FAIL | BLOCKED
+Skill rev: PASS | WARN | FAIL | BLOCKED
+Mode: full | push | sync
 Scope: <changed skills or all skills>
 Audit: <path to dated audit>
 Checks: validate=<pass/fail>, public-safety=<pass/fail>, diff-check=<pass/fail>, scripts=<pass/fail/skipped>

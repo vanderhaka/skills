@@ -1,20 +1,28 @@
-# Skill Push Review
+# Skill Rev
 
 ## What This Skill Does
 
-`skill-push-review` is a lightweight pre-push reviewer for this skills repo. It
-checks pending skill changes before they are pushed and creates dated audit
-snapshots for all curated skills.
+`skill-rev` is a lightweight pre-push reviewer for this skills repo. It checks
+pending skill changes before they are pushed and creates dated audit snapshots
+for all curated skills.
 
 It also supports pull/update audits so you can tell whether the repo skills and
 installed local skills are in sync.
+
+## Modes
+
+- `skill-rev` — full pre-push review including installed-skills comparison.
+- `skill-rev push` — pre-push checks only, no installed-skills comparison.
+- `skill-rev sync` — pull/update audit only: remote drift plus installed-vs-repo
+  comparison for `~/.codex/skills` and `~/.claude/skills`.
 
 ## Use It When
 
 - You are about to push skill changes to `vanderhaka/skills`.
 - You want to check whether the remote skills repo is updated.
 - You want a dated audit covering every curated skill.
-- You want to compare repo skills against installed `~/.codex/skills`.
+- You want to compare repo skills against installed `~/.codex/skills` or
+  `~/.claude/skills`.
 
 ## How It Works
 
@@ -40,7 +48,7 @@ Use `cap` when you want the reviewed work committed and pushed. Use
 ## Install
 
 ```bash
-$skill-installer install https://github.com/vanderhaka/skills/tree/main/skills/.curated/skill-push-review
+$skill-installer install https://github.com/vanderhaka/skills/tree/main/skills/.curated/skill-rev
 ```
 
 Restart Codex after installing new skills.

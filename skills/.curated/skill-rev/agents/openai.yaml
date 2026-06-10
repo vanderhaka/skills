@@ -1,0 +1,4 @@
+interface:
+  display_name: "Skill Rev"
+  short_description: "Review skills before repo push or sync check"
+  default_prompt: "Run a skill-rev review with a dated audit snapshot."
