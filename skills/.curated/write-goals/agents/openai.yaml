@@ -1,0 +1,4 @@
+interface:
+  display_name: "Write Goals"
+  short_description: "Draft clear Codex goal objectives"
+  default_prompt: "Use $write-goals to turn this rough task into a durable Codex /goal objective with success criteria."
