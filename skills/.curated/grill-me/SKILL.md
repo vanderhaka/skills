@@ -1,18 +1,25 @@
 ---
 name: grill-me
-description: Interview the user relentlessly about a plan or design until reaching shared understanding, resolving each branch of the decision tree. Use when user wants to stress-test a plan, get grilled on their design, or mentions "grill me". Batch routine best-practice defaults into 3-5 quick confirmations instead of forcing needless one-by-one technical choices.
+description: Interview the user about a plan or design until reaching shared understanding, while defaulting routine technical and reversible low-risk decisions to established best practice. Use when user wants to stress-test a plan, get grilled on their design, or mentions "grill me". Ask only material product, business, risk, or external-contract questions that cannot be safely decided from best practice or repo context.
 ---
 
-Interview me relentlessly about every aspect of this plan until we reach a shared understanding. Walk down each branch of the design tree, resolving dependencies between decisions one-by-one. For each question, provide your recommended answer.
+Interview me relentlessly about the decisions that actually require my judgment. The goal is shared understanding, not making me reinvent common practice.
 
-Ask material design, product, business, data, permission, state, money, integration, or user-experience questions one at a time.
+Before asking any question, classify the candidate decision:
 
-Do not make the user reinvent the wheel on routine technical choices. When several low-thought decisions have clear best-practice defaults, batch them into 3-5 quick confirmations. For each item, state the default and only ask for confirmation or exceptions.
+1. Codebase-discoverable: inspect the codebase or docs and follow the existing pattern. Do not ask.
+2. Best-practice default: decide directly using repo conventions, ecosystem norms, accessibility defaults, ordinary validation/error-handling patterns, standard test placement, logging norms, formatting, and framework-standard file organization. Do not ask.
+3. Reversible light business default: decide directly when normal category practice is enough and the downside is low, such as default copy tone, empty-state behavior, standard onboarding steps, conventional non-binding labels, default analytics event names, or MVP scope guardrails. Do not ask.
+4. User-material decision: ask me one question at a time, provide your recommended answer, and explain why it cannot safely be defaulted.
 
-Low-thought decisions are things like naming conventions, standard validation shape, ordinary error handling, common accessibility defaults, test placement, logging level, formatting, framework-standard file organization, and other choices where the repo or ecosystem already has a normal answer.
+Ask only user-material decisions. These include material scope or positioning choices, revenue/pricing/contracts, permissions/privacy/security boundaries, irreversible data model or migration strategy, external API contracts, legal/compliance exposure, operational risk, stakeholder commitments, brand/business choices where category best practice does not decide, and UX/state choices that materially change a core workflow.
 
-Do not batch decisions that could materially change scope, UX, data model, permissions, billing, security, migration strategy, external contracts, or operational risk. Ask those one at a time.
+Do not batch-confirm routine defaultable choices during the interview. Choose the default, keep a "Model defaults for review" log, and continue to the next material decision. If the user objects to a default at review time, update the decision log and revisit only dependent decisions.
+
+When asking a user-material question, walk down the design tree and resolve dependencies one by one. After each answer, decide which downstream branch is now relevant before asking again.
 
 If a question can be answered by exploring the codebase, explore the codebase instead.
+
+At the end, produce a concise review containing user decisions captured, model-defaulted decisions for review, rejected material options, open blockers, and remaining risks. If no material question remains, stop asking and produce the review.
 
 When this skill is used before `feature-orchestrator`, record decisions, safe defaults, rejected options, and open blockers in `plans/<feature-slug>/decisions.md` so worker agents do not rediscover or reinterpret product choices.

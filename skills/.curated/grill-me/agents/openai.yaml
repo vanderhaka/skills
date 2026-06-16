@@ -1,4 +1,4 @@
 interface:
   display_name: "Grill Me"
-  short_description: "Stress-test a plan through relentless questioning"
-  default_prompt: "Use $grill-me to interview me about this plan until every material decision is resolved."
+  short_description: "Stress-test a plan while defaulting routine decisions"
+  default_prompt: "Use $grill-me to interview me about this plan. Decide routine best-practice defaults yourself, log them for review, and ask me only material questions."
