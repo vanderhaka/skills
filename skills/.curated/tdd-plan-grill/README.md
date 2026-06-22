@@ -2,12 +2,12 @@
 
 ## What This Skill Does
 
-`tdd-plan-grill` stress-tests a TDD plan before implementation. It makes sure the plan is clear, scoped, testable, and ready for `$tdd-deep`.
+`tdd-plan-grill` stress-tests a test-first plan before implementation. It makes sure the plan is clear, scoped, testable, and ready for the current implementation flow.
 
 ## Use It When
 
 - A `plans/{slug}-tdd/plan.md` exists.
-- You want to harden a TDD plan before coding.
+- You want to harden a test-first plan before coding.
 - The test strategy, dependencies, or acceptance criteria may be weak.
 - You need focused questions and plan edits before implementation.
 
@@ -21,7 +21,7 @@ The skill reviews the plan for completeness, ambiguity, feasibility, test qualit
 - Missing decision list.
 - Better acceptance criteria.
 - Stronger RED/GREEN/REFACTOR path.
-- Updated plan ready for `$tdd-deep`.
+- Updated plan ready for `safe-feature-slice` or `feature-orchestrator`.
 
 ## Not For
 

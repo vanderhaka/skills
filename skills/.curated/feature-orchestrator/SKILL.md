@@ -46,11 +46,12 @@ The main `feature-orchestrator` coordinates these stages and owns the end-to-end
 
 ## Helper Skill Map
 
-- Use `grill-me` patterns for decision discovery when product, data, permission, money, state, migration, external contract, or UX decisions are unclear.
+- Use `grill-with-docs` when product, data, permission, money, state, migration, external contract, or UX decisions need durable documentation before graph planning.
+- Use `grill-me` patterns for lightweight decision discovery when no project docs need to be updated.
 - Use `thin-slice-plan` discipline for invariants, unsafe outcomes, risk tiers, dependency graph, and progress tracking.
-- Use `tdd-plan-deep` issue-writing discipline inside each graph node: one observable `When X, then Y`, concrete acceptance criteria, regression guards, and test sketches.
-- `feature-slice-worker` is the canonical per-node worker loop. `tdd-deep` discipline is already embedded in it; treat `tdd-deep` as reference material, not as a competing worker loop.
-- Use `tdd-review-deep` only for refactor-only nodes: `LOCK -> REVIEW -> REFACTOR`.
+- Write each graph node with one observable `When X, then Y`, concrete acceptance criteria, regression guards, and test sketches.
+- `feature-slice-worker` is the canonical per-node worker loop. Do not route feature nodes through retired standalone TDD skills.
+- For refactor-only nodes, use a constrained `LOCK -> REVIEW -> REFACTOR` loop: lock current behavior with tests or characterization evidence, review the target structure, then refactor behind the same behavior proof.
 - Use systematic debugging discipline when a failure or unexpected behavior appears: reproduce it, find the root cause, compare against a working pattern, and test one hypothesis at a time.
 - Use evidence-before-claims discipline before advancing nodes, reporting success, committing, or marking the feature complete.
 

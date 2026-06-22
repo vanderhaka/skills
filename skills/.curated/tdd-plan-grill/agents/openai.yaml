@@ -1,4 +1,4 @@
 interface:
   display_name: "TDD Plan Grill"
   short_description: "Stress-test a TDD plan before coding"
-  default_prompt: "Use $tdd-plan-grill to challenge plans/example-tdd/ before I start implementation."
+  default_prompt: "Use $tdd-plan-grill to challenge plans/example-tdd/ before implementation starts."

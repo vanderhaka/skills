@@ -21,10 +21,10 @@ path.
 Do not approve code merely because behavior appears correct. If the implementation
 works but makes the codebase harder to reason about, call that out directly.
 
-Backticked skill names in this document (`fallow`, `cap`, `tdd-deep`,
-`safe-feature-slice`, `bug-ripple`, `launch-critical-sweep`) refer to installed
-skills. Invoke them through the active environment's skill mechanism (slash
-command, skill tool, or equivalent).
+Backticked skill names in this document (`fallow`, `cap`, `safe-feature-slice`,
+`bug-ripple`, `launch-critical-sweep`) refer to installed skills. Invoke them
+through the active environment's skill mechanism (slash command, skill tool, or
+equivalent).
 
 ## Mode Selection
 
@@ -334,8 +334,8 @@ Keep only genuinely different workflows standalone:
   reason for `quick` and `one`.
 - Use `launch-critical-sweep` for go-live, release readiness, catastrophic-risk,
   or "is this safe to launch?" questions.
-- Use `tdd-deep` when the user wants behavior-preserving refactor/cleanup with
-  characterization tests and implementation.
+- Use `safe-feature-slice` when the user wants behavior-preserving
+  refactor/cleanup with characterization tests and implementation.
 - Use `bug-ripple` after diagnosing one concrete bug when similar sibling bugs
   may exist.
 - Use `issue-fix-strategy` when the review produces multiple findings with mixed
@@ -425,8 +425,8 @@ alternative with a one-line tradeoff, and never list more than two alternatives:
   already clear but span multiple slices and deserve a tracked dependency graph
   with parallel workers.
 - `Use launch-critical-sweep` when the real decision is go-live safety.
-- `Use tdd-deep` when the next move is behavior-preserving refactor with
-  characterization tests.
+- `Use safe-feature-slice` when the next move is behavior-preserving refactor
+  with characterization tests.
 - `Use bug-ripple` when one confirmed bug implies likely sibling bugs.
 - `Use cap` when the code is reviewed and the user asks to verify, commit, push,
   or ship.

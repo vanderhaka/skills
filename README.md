@@ -51,6 +51,7 @@ skills/
     ├── feature-slice-worker/
     ├── fallow/
     ├── grill-me/
+    ├── grill-with-docs/
     ├── handoff/
     ├── issue-fix-strategy/
     ├── launch-critical-sweep/
@@ -84,13 +85,14 @@ templates/
 - `feature-proof` — run final requirement-level proof and behavior-preservation reporting before completion.
 - `fallow` — run read-only Fallow structural analysis for JS/TS reviews and report required evidence.
 - `grill-me` — interview relentlessly about a plan or design until material decisions are resolved.
+- `grill-with-docs` — clarify material codebase decisions while updating `CONTEXT.md`, ADRs, and feature decision docs.
 - `handoff` — write or resume concise project handoffs without overwriting repo conventions.
 - `issue-fix-strategy` — chat-only executive triage for any issue source, with priority, fix approach, proof, and next-step routing.
 - `launch-critical-sweep` — find confirmed P0/P1 launch blockers before go-live.
 - `logic-ripple` — map every surface touched by a business-rule change before fixing or canonicalizing it.
 - `one-major-issue` — find at most one confirmed high-impact issue and hand it to a safe fix slice.
 - `safe-feature-slice` — unified plan-and-execute workflow for invariant-preserving feature work.
-- `tdd-plan-grill` — stress-test a TDD plan before implementation and update it for `$tdd-deep`.
+- `tdd-plan-grill` — stress-test a test-first plan before implementation and update it for the current implementation flow.
 - `thin-slice-plan` — planning-only workflow for dependency-ordered slice plans.
 - `thermo-nuclear-code-quality-review` — strict maintainability review for file sprawl, spaghetti branching, and abstraction quality.
 - `write-goals` — draft, critique, or rewrite Codex `/goal` objectives with clear success criteria and safe activation boundaries.

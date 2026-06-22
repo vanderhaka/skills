@@ -1,13 +1,13 @@
 ---
 name: tdd-plan-grill
-description: Stress-test a TDD or feature-orchestrator plan before implementation. Review `plans/{slug}-tdd/plan.md` or `plans/{slug}/plan.md` across completeness, scope, dependency graph, feasibility, test strategy, gates, and ambiguity; ask focused questions; record decisions in `grill-review.md`; and update the plan when approved. Use when the user wants to grill or harden a TDD plan, slice plan, or orchestrated feature graph.
+description: Stress-test a test-first or feature-orchestrator plan before implementation. Review `plans/{slug}-tdd/plan.md` or `plans/{slug}/plan.md` across completeness, scope, dependency graph, feasibility, test strategy, gates, and ambiguity; ask focused questions; record decisions in `grill-review.md`; and update the plan when approved. Use when the user wants to grill or harden a test-first plan, slice plan, or orchestrated feature graph.
 ---
 
 # TDD Plan Grill
 
 ## Overview
 
-Challenge a TDD or orchestrated feature plan before code gets written. Read the plan, inspect the codebase, rank the highest-impact risks, ask focused follow-up questions, record the decisions, and then update the plan if the user agrees. This sits before `$tdd-deep` for standalone TDD flows and before worker launch for `feature-orchestrator` flows.
+Challenge a test-first or orchestrated feature plan before code gets written. Read the plan, inspect the codebase, rank the highest-impact risks, ask focused follow-up questions, record the decisions, and then update the plan if the user agrees. This sits before `safe-feature-slice` for standalone implementation and before worker launch for `feature-orchestrator` flows.
 
 Be adversarial about the plan, not the user. Surface gaps that would change issue count, sequencing, tests, or assumptions. Skip low-value nitpicks.
 
@@ -17,7 +17,7 @@ Accept any of these:
 
 - `plans/{slug}-tdd/`
 - `plans/{slug}-tdd/plan.md`
-- `$tdd-plan-grill` when there is exactly one likely TDD plan in `plans/`
+- `$tdd-plan-grill` when there is exactly one likely test-first plan in `plans/`
 - Optional focus areas such as completeness, dependencies, or test strategy
 
 ## Output Files
@@ -46,8 +46,8 @@ Read only when needed:
 
 - If the user gives `plans/{slug}-tdd/`, use it.
 - If the user gives `plans/{slug}-tdd/plan.md`, use its parent folder.
-- Otherwise inspect `plans/*-tdd/plan.md`.
-- If none exist, stop and tell the user to run `$tdd-plan-deep` first.
+- Otherwise inspect `plans/*-tdd/plan.md` and `plans/*/plan.md`.
+- If none exist, stop and tell the user to create a plan with `thin-slice-plan` or `feature-orchestrator` first.
 - If more than one exists and no target is obvious, ask which plan to review.
 
 ### 2. Read the real context
@@ -172,7 +172,7 @@ Set `Status: COMPLETE` in `grill-review.md` and add a final section with:
 - wave count
 - what changed
 - unresolved concerns that do not block implementation
-- next step: `$tdd-deep plans/{slug}-tdd/`
+- next step: `safe-feature-slice plans/{slug}-tdd/` for standalone implementation, or `feature-orchestrator plans/{slug}/` for an orchestrated graph
 
 ## Quality Rules
 
