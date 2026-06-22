@@ -1,0 +1,4 @@
+interface:
+  display_name: "Ask James"
+  short_description: "Route work to the right Codex skill"
+  default_prompt: "Use $ask-james to choose the right skill or workflow for this task, with one recommendation and one optional alternative."

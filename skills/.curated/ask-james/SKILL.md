@@ -1,0 +1,81 @@
+---
+name: ask-james
+description: Router for James's Codex skill stack. Use when the user asks which skill or workflow to use, says ask James, wants the next best skill, is unsure whether to review/plan/build/commit, or gives a broad task that should be routed before execution.
+---
+
+# Ask James
+
+Pick the right skill or flow for the user's situation. This skill is a router, not a replacement for the specialist skills.
+
+## Operating Rule
+
+Recommend exactly one next skill by default. If another route is genuinely defensible, list one alternative with a one-line tradeoff. Do not list a menu of every possible skill.
+
+If the user only asked for advice, stop after the recommendation. If the user asked to proceed, continue with the recommended skill after giving the routing call.
+
+## Main Routes
+
+### Broad Feature Work
+
+Use `feature-orchestrator` when the user wants a complete feature, broad multi-slice fix, many agents coordinated, canonical `plans/<feature-slug>/progress.md`, or "keep going until complete" execution.
+
+Use `safe-feature-slice` when the work is one narrow feature/fix or a small risky slice touching money, permissions, ownership, destructive actions, state transitions, webhooks, migrations, integrations, or customer-visible records.
+
+Use `thin-slice-plan` when the user explicitly wants planning only and no implementation yet.
+
+### Decisions Before Work
+
+Use `grill-with-docs` when a codebase feature, refactor, product/design choice, or architecture decision needs material decisions clarified and the results should land in `CONTEXT.md`, ADRs, or `plans/<feature-slug>/decisions.md`.
+
+Use `grill-me` when the user wants to stress-test a plan or design, but no durable project docs need to be updated.
+
+Use `feature-intake-grill` when the only missing piece is the orchestrator's decision gate before graph planning.
+
+### Issues, Reviews, And Bugs
+
+Use `issue-fix-strategy` when the user has a messy issue list, review findings, UX complaints, logs, screenshots, failing tests, or tool diagnostics and wants plain-English priority, fix order, proof, and routing.
+
+Use `code-review` when the user asks for review, audit, merge readiness, harsh maintainability critique, branch/diff review, or implementation-plan review.
+
+Use `bug-ripple` when one concrete bug may imply sibling bugs nearby, or the user asks what else could break in the same pattern.
+
+Use `logic-ripple` when a business/domain rule change may need to be applied consistently across the codebase.
+
+Use `one-major-issue` when the user wants only the single biggest confirmed issue, not a backlog.
+
+Use `launch-critical-sweep` when the decision is go-live readiness or catastrophic launch risk.
+
+### Finish, Handoff, And Skill Repo Work
+
+Use `cap` when the user wants checks, exact staging, commit, push, deploy watch, or "finish this safely."
+
+Use `handoff` when the user wants to wrap the session or create next-session continuity.
+
+Use `write-goals` when the user wants a durable Codex `/goal` objective or needs to decide whether goal mode fits.
+
+Use `skill-repo-maintainer` when creating, editing, publishing, or public-safety-checking skills.
+
+Use `skill-rev` when reviewing skill repo changes before push or auditing installed-vs-source skill drift.
+
+## Output Shape
+
+```text
+Recommended: <skill>
+Why: <one plain-English reason>
+Use it now if: <trigger condition>
+Do not use it if: <main counter-signal>
+Also viable: <one alternative or "None">
+```
+
+## Routing Bias
+
+- Prefer `issue-fix-strategy` before planning when the input is a pile of findings.
+- Prefer `grill-with-docs` before graph planning when product/domain decisions need to survive the chat.
+- Prefer `feature-orchestrator` for whole-feature execution.
+- Prefer `safe-feature-slice` for one risky slice.
+- Prefer `cap` only after the work is ready to verify, commit, and push.
+- Prefer discussion over action when the source evidence is too weak to route safely.
+
+## Lessons And Memory Routing
+
+Do not create or append `LESSONS.md` beside this installed skill. Use the active environment's global lessons and memory system instead. Lessons are for mistakes, corrections, and reusable failure-prevention rules; memories are for durable user, project, or workflow context when the active instructions allow memory updates. Keep entries concise and redact secrets, tokens, customer data, and private details.

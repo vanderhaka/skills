@@ -39,6 +39,7 @@ Primary references used:
 ```text
 skills/
 └── .curated/
+    ├── ask-james/
     ├── bug-ripple/
     ├── cap/
     ├── code-review/
@@ -73,7 +74,8 @@ templates/
 
 ## Curated Skills
 
-- `bug-ripple` — diagnose one bug, then run a strict bounded sibling-bug blast-radius review.
+- `ask-james` — route broad or ambiguous work to the right curated skill with one recommendation and one optional alternative.
+- `bug-ripple` — diagnose one bug with a tight feedback loop, then run a strict bounded sibling-bug blast-radius review.
 - `cap` — verify, commit, and push intended work safely without sweeping unrelated files, with a focused fast mode for tiny changes.
 - `code-review` — unified review workflow with correctness, safety, tests, and maintainability lanes.
 - `feature-orchestrator` — coordinate whole-feature delivery through one canonical graph, progress file, parallel-safe worker waves, and final proof.

@@ -1,13 +1,13 @@
 ---
 name: bug-ripple
-description: Diagnose one reported bug, define its root cause and blast radius, then run a strict, findings-first, read-only sibling-bug ripple sweep with parallel Codex agents when explicitly authorized and available. Use when the user says bug ripple, sibling bugs, what else could break, fix and sweep, or asks for likely related failures after a bug.
+description: Diagnose one reported bug with a disciplined reproduce/minimize/hypothesize loop, define its root cause and blast radius, then run a strict, findings-first, read-only sibling-bug ripple sweep with parallel Codex agents when explicitly authorized and available. Use when the user says bug ripple, sibling bugs, what else could break, fix and sweep, or asks for likely related failures after a bug.
 ---
 
 # Bug Ripple
 
 ## Purpose
 
-Use this skill when one concrete bug is a signal that nearby code may contain related failures. First diagnose the reported bug precisely, then search the same mental-model gap and feature area for sibling bugs. The default output is a findings-first report and fix menu, not code changes.
+Use this skill when one concrete bug is a signal that nearby code may contain related failures. First diagnose the reported bug precisely with a tight debugging loop, then search the same mental-model gap and feature area for sibling bugs. The default output is a findings-first report and fix menu, not code changes.
 
 The review posture is strict but bounded. Be blunt about confirmed risk, bad invariants, weak tests, and messy structure that makes sibling bugs likely. Do not turn this into a repo-wide maintainability review, and do not pad the report with speculative nits.
 
@@ -39,16 +39,29 @@ Start from the target repo root when possible.
 
 Do this yourself before any fanout. The ripple is only as good as the root-cause statement.
 
-1. Trace the bug to exact file and line evidence. Read the full relevant file, not only the failing line.
-2. Identify what the user would see or lose.
-3. Identify the mental-model gap, not just the broken statement. Examples: wrong ownership assumption, stale async state, nullable data treated as required, trusted client input, provider event assumed ordered, expanded object assumed present.
-4. Define a prove-it test mentally:
+### Diagnosis loop
+
+1. Reproduce or identify the tightest available feedback loop:
+   - failing test, if one exists
+   - local route/action/component reproduction
+   - log or stack trace tied to exact code
+   - screenshot or browser proof tied to a route/state
+   - static read only when runtime reproduction is unavailable
+2. Minimize the failure to the smallest actor, trigger, state, and boundary that still explains the user's symptom.
+3. Trace the bug to exact file and line evidence. Read the full relevant file, not only the failing line.
+4. Identify what the user would see or lose.
+5. Identify the mental-model gap, not just the broken statement. Examples: wrong ownership assumption, stale async state, nullable data treated as required, trusted client input, provider event assumed ordered, expanded object assumed present.
+6. Rank 2-4 plausible hypotheses before settling on root cause. Test them against code evidence one at a time; do not stack guesses.
+7. Instrument only when read-only evidence is insufficient and the user has approved mutation. Otherwise state the missing evidence and the safest way to capture it.
+8. Define a prove-it regression test:
    - expected behavior
    - current wrong behavior
    - exact assertion shape
-5. Identify the minimal fix, but do not apply it.
-6. Check whether tests already cover the intended behavior.
-7. Decide whether the original bug is a one-off mistake or a structural signal. Structural signals include scattered special cases, unclear ownership boundaries, loose object shapes, unsafe casts, silent fallbacks, non-atomic state changes, duplicated helpers, and framework/provider assumptions hidden in UI or shared code.
+9. Identify the minimal fix, but do not apply it.
+10. Check whether tests already cover the intended behavior.
+11. Decide whether the original bug is a one-off mistake or a structural signal. Structural signals include scattered special cases, unclear ownership boundaries, loose object shapes, unsafe casts, silent fallbacks, non-atomic state changes, duplicated helpers, and framework/provider assumptions hidden in UI or shared code.
+
+If the same hypothesis or failed diagnostic path repeats twice, stop blind retries. Name the repeated failure, narrow the next evidence needed, and use current primary docs or nearby working code before continuing.
 
 Diagnosis output before fanout:
 
@@ -59,7 +72,9 @@ Bug: ...
 User impact: ...
 Root cause: ...
 Where: path/to/file.ext:line
-Prove-it test: `expect(...).toBe(...)` currently ...
+Feedback loop: ...
+Hypotheses considered: ...
+Prove-it regression test: `expect(...).toBe(...)` currently ...
 Suggested fix: ...
 Existing coverage: covered / missing / unclear
 Structural signal: one-off / likely pattern / unclear

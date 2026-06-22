@@ -2,7 +2,7 @@
 
 ## What This Skill Does
 
-`bug-ripple` starts with one reported bug, works out the real root cause, then checks nearby code for sibling bugs caused by the same bad assumption. It is a strict, bounded blast-radius review, not a repo-wide audit.
+`bug-ripple` starts with one reported bug, works out the real root cause through a disciplined debugging loop, then checks nearby code for sibling bugs caused by the same bad assumption. It is a strict, bounded blast-radius review, not a repo-wide audit.
 
 ## Use It When
 
@@ -13,11 +13,11 @@
 
 ## How It Works
 
-The skill first diagnoses the original bug and names the user impact, root cause, location, prove-it test, and likely fix. Only after that does it build a small blast-radius scope and search for related failures. When explicitly authorized and available, it can use parallel read-only agents for separate risk lanes.
+The skill first reproduces or identifies the tightest feedback loop, minimizes the failure, ranks hypotheses, and names the user impact, root cause, location, prove-it regression test, and likely fix. Only after that does it build a small blast-radius scope and search for related failures. When explicitly authorized and available, it can use parallel read-only agents for separate risk lanes.
 
 ## What You Get
 
-- Original bug diagnosis with a structural-signal call.
+- Original bug diagnosis with a feedback loop, hypotheses considered, and structural-signal call.
 - Bounded blast-radius scope.
 - Confirmed sibling bugs, if any, ranked as BLOCKER, MAJOR, or MODERATE.
 - Structural risk in the blast radius when it materially increases sibling-bug risk.
