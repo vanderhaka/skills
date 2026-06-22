@@ -1,11 +1,56 @@
 ---
 name: ask-james
-description: Router for James's Codex skill stack. Use when the user asks which skill or workflow to use, says ask James, wants the next best skill, is unsure whether to review/plan/build/commit, or gives a broad task that should be routed before execution.
+description: Router and inventory helper for James's Codex skill stack. Use when the user asks which skill or workflow to use, says ask James, wants the next best skill, asks to list skills, uses ask-james list, is unsure whether to review/plan/build/commit, or gives a broad task that should be routed before execution.
 ---
 
 # Ask James
 
 Pick the right skill or flow for the user's situation. This skill is a router, not a replacement for the specialist skills.
+
+## Inventory Mode
+
+If the user invokes `ask-james list`, says "list", asks to "list all skills", asks "what skills do we have", or otherwise wants an inventory, do not route to one skill. List the curated James skill stack with one quick summary each.
+
+Use this output shape:
+
+```text
+James skills:
+- `skill-name` — quick summary.
+```
+
+Keep summaries short. Do not include plugin/system skills unless the user explicitly asks for installed non-curated skills too.
+
+### Curated Skill Inventory
+
+- `ask-james` — route broad or ambiguous work to the right curated skill.
+- `bug-ripple` — diagnose one concrete bug, then sweep nearby sibling failures.
+- `cap` — verify, exact-stage, commit, and push intended work safely.
+- `code-review` — harsh correctness, safety, test, and maintainability review.
+- `codebase-design` — design deeper modules, cleaner interfaces, seams, adapters, and test surfaces.
+- `fallow` — run read-only JS/TS structural analysis with Fallow.
+- `feature-graph-plan` — turn a feature brief into dependency graph nodes and progress tracking.
+- `feature-intake-grill` — resolve material feature decisions before graph planning.
+- `feature-integrator` — verify worker reports, update progress, and advance feature waves.
+- `feature-orchestrator` — coordinate whole-feature delivery through graph, workers, and proof.
+- `feature-plan-grill` — stress-test a feature plan before worker launch.
+- `feature-proof` — prove final feature requirements and behavior preservation.
+- `feature-slice-worker` — execute one feature graph node with required gates.
+- `grill-me` — interview a plan or design until material decisions are clear.
+- `grill-with-docs` — clarify decisions while updating durable project docs.
+- `handoff` — write or resume concise next-session project handoffs.
+- `issue-fix-strategy` — triage messy issues, findings, logs, screenshots, or diagnostics into a fix order.
+- `launch-critical-sweep` — find confirmed P0/P1 blockers before launch.
+- `logic-ripple` — map all surfaces affected by a business-rule change.
+- `one-major-issue` — find only the single biggest confirmed issue.
+- `prototype` — build disposable UI or logic experiments before real implementation.
+- `safe-feature-slice` — plan and execute risky or narrow feature slices safely.
+- `skill-repo-maintainer` — create, validate, scrub, and publish public-safe skill folders.
+- `skill-rev` — review skill repo changes and audit installed-vs-source drift.
+- `tdd-plan-grill` — stress-test a test-first or feature-orchestrator plan.
+- `thermo-nuclear-code-quality-review` — extreme maintainability review for sprawl and spaghetti.
+- `thin-slice-plan` — make a planning-only dependency-ordered implementation plan.
+- `write-goals` — draft or critique Codex `/goal` objectives.
+- `wwh` — explain decisions, bugs, plans, or requests in simple who/what/when/where/how/why form.
 
 ## Operating Rule
 
