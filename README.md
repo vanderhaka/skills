@@ -64,6 +64,7 @@ skills/
     ├── tdd-plan-grill/
     ├── thermo-nuclear-code-quality-review/
     ├── thin-slice-plan/
+    ├── wwh/
     └── write-goals/
 scripts/
 └── validate_skills.py
@@ -97,6 +98,7 @@ templates/
 - `tdd-plan-grill` — stress-test a test-first plan before implementation and update it for the current implementation flow.
 - `thin-slice-plan` — planning-only workflow for dependency-ordered slice plans.
 - `thermo-nuclear-code-quality-review` — strict maintainability review for file sprawl, spaghetti branching, and abstraction quality.
+- `wwh` — explain a decision, change, bug, issue, incident, plan, or request in simple who/what/when/where/how/why language, omitting irrelevant sections.
 - `write-goals` — draft, critique, or rewrite Codex `/goal` objectives with clear success criteria and safe activation boundaries.
 - `skill-repo-maintainer` — maintain and public-safety-check this skills repository.
 - `skill-rev` — lightweight review and dated audit snapshot before pushing skill changes, plus pull/sync audits (`push` and `sync` modes).

@@ -1,0 +1,4 @@
+interface:
+  display_name: "WWH"
+  short_description: "Explain decisions and bugs in simple 5W1H form"
+  default_prompt: "Use $wwh to explain this decision, change, bug, or issue in simple who, what, when, where, how, and why language."
