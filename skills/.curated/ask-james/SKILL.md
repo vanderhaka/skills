@@ -31,6 +31,10 @@ Use `grill-me` when the user wants to stress-test a plan or design, but no durab
 
 Use `feature-intake-grill` when the only missing piece is the orchestrator's decision gate before graph planning.
 
+Use `codebase-design` when the task is mainly about module shape, architecture vocabulary, interface design, seam placement, adapters, or making code easier to test before implementation.
+
+Use `prototype` when the next best step is a disposable UI or logic experiment to answer a design, state, data-shape, or workflow question before full implementation.
+
 ### Issues, Reviews, And Bugs
 
 Use `issue-fix-strategy` when the user has a messy issue list, review findings, UX complaints, logs, screenshots, failing tests, or tool diagnostics and wants plain-English priority, fix order, proof, and routing.

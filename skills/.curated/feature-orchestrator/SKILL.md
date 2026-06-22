@@ -47,6 +47,8 @@ The main `feature-orchestrator` coordinates these stages and owns the end-to-end
 ## Helper Skill Map
 
 - Use `grill-with-docs` when product, data, permission, money, state, migration, external contract, or UX decisions need durable documentation before graph planning.
+- Use `codebase-design` when a feature depends on a module boundary, interface shape, seam, adapter, or test-surface decision before graph planning.
+- Use `prototype` when a vague UI, state model, workflow, or data-shape question should be answered with a disposable artifact before production implementation.
 - Use `grill-me` patterns for lightweight decision discovery when no project docs need to be updated.
 - Use `thin-slice-plan` discipline for invariants, unsafe outcomes, risk tiers, dependency graph, and progress tracking.
 - Write each graph node with one observable `When X, then Y`, concrete acceptance criteria, regression guards, and test sketches.

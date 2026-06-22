@@ -8,18 +8,20 @@
 
 - A feature or refactor needs shared understanding before planning or coding.
 - Domain terms, actor names, lifecycle states, or product rules need to be clarified.
+- Glossary conflicts, ownership rules, or code-vs-domain contradictions need to be resolved.
 - Decisions should survive into `CONTEXT.md`, `docs/adr/`, or `plans/<feature-slug>/decisions.md`.
 - The work touches permissions, money, ownership, state, migrations, integrations, or customer-visible behavior.
 
 ## How It Works
 
-The skill follows the local `grill-me` standard: inspect repo evidence first, default routine safe choices, and ask only user-material decisions one at a time with a recommended answer. As decisions land, it updates the relevant durable docs instead of leaving the knowledge trapped in chat.
+The skill follows the local `grill-me` standard: inspect repo evidence first, default routine safe choices, and ask only user-material decisions one at a time with a recommended answer. It also stress-tests domain language with concrete scenarios, glossary conflicts, ownership rules, and code-vs-domain contradictions. As decisions land, it updates the relevant durable docs instead of leaving the knowledge trapped in chat.
 
 ## What You Get
 
 - Confirmed user decisions.
 - Model-defaulted decisions for review.
 - Updated domain language or ADRs when warranted.
+- Domain terms, scenarios, and contradictions called out when relevant.
 - Feature-flow decisions recorded for downstream planning and workers.
 - A recommended next skill.
 

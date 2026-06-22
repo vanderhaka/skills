@@ -42,6 +42,7 @@ skills/
     ├── ask-james/
     ├── bug-ripple/
     ├── cap/
+    ├── codebase-design/
     ├── code-review/
     ├── feature-graph-plan/
     ├── feature-integrator/
@@ -58,6 +59,7 @@ skills/
     ├── launch-critical-sweep/
     ├── logic-ripple/
     ├── one-major-issue/
+    ├── prototype/
     ├── safe-feature-slice/
     ├── skill-repo-maintainer/
     ├── skill-rev/
@@ -78,6 +80,7 @@ templates/
 - `ask-james` — route broad or ambiguous work to the right curated skill with one recommendation and one optional alternative.
 - `bug-ripple` — diagnose one bug with a tight feedback loop, then run a strict bounded sibling-bug blast-radius review.
 - `cap` — verify, commit, and push intended work safely without sweeping unrelated files, with a focused fast mode for tiny changes.
+- `codebase-design` — shared architecture discipline for deep modules, clean interfaces, seams, adapters, and test surfaces.
 - `code-review` — unified review workflow with correctness, safety, tests, and maintainability lanes.
 - `feature-orchestrator` — coordinate whole-feature delivery through one canonical graph, progress file, parallel-safe worker waves, and final proof.
 - `feature-intake-grill` — clear product, data, permission, money, migration, external-contract, and live-risk decisions before graph planning.
@@ -94,6 +97,7 @@ templates/
 - `launch-critical-sweep` — find confirmed P0/P1 launch blockers before go-live.
 - `logic-ripple` — map every surface touched by a business-rule change before fixing or canonicalizing it.
 - `one-major-issue` — find at most one confirmed high-impact issue and hand it to a safe fix slice.
+- `prototype` — build disposable UI or logic prototypes to answer design/state questions before production implementation.
 - `safe-feature-slice` — unified plan-and-execute workflow for invariant-preserving feature work.
 - `tdd-plan-grill` — stress-test a test-first plan before implementation and update it for the current implementation flow.
 - `thin-slice-plan` — planning-only workflow for dependency-ordered slice plans.

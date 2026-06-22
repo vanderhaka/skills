@@ -1,4 +1,4 @@
 interface:
   display_name: "Grill With Docs"
-  short_description: "Clarify material codebase decisions and update durable docs"
-  default_prompt: "Use $grill-with-docs to clarify the material decisions for this codebase work, default routine choices yourself, and update durable docs as decisions land."
+  short_description: "Clarify decisions, domain language, and durable docs"
+  default_prompt: "Use $grill-with-docs to clarify material codebase decisions, stress-test domain terms and ownership rules, default routine choices yourself, and update durable docs as decisions land."

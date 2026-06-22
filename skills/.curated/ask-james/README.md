@@ -9,7 +9,7 @@
 - The user asks which skill to use.
 - The task is broad or ambiguous.
 - The user asks for the next best workflow step.
-- You need to decide between `feature-orchestrator`, `safe-feature-slice`, `code-review`, `issue-fix-strategy`, `bug-ripple`, `cap`, or another curated skill.
+- You need to decide between `feature-orchestrator`, `safe-feature-slice`, `codebase-design`, `prototype`, `code-review`, `issue-fix-strategy`, `bug-ripple`, `cap`, or another curated skill.
 
 ## How It Works
 

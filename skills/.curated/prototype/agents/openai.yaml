@@ -1,0 +1,4 @@
+interface:
+  display_name: "Prototype"
+  short_description: "Build disposable UI or logic prototypes"
+  default_prompt: "Use $prototype to build a disposable UI or logic prototype that answers one question, captures the result, and keeps production implementation separate."

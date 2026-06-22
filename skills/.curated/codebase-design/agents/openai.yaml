@@ -1,0 +1,4 @@
+interface:
+  display_name: "Codebase Design"
+  short_description: "Design deeper modules and cleaner interfaces"
+  default_prompt: "Use $codebase-design to evaluate this module or architecture choice, recommend a cleaner interface, and explain the seam, adapter, and test-surface trade-offs."
