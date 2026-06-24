@@ -1,6 +1,6 @@
 ---
 name: progress
-description: Strict production progress protocol for existing internal products, SaaS apps, dashboards, and tools. Use when the user wants Codex to discover the best real improvement, coordinate concurrent worktrees, get one approval, execute through a dependency graph with safe parallel worker waves, QA the result, and deliver a repeatable demo-ready package.
+description: Strict production progress protocol for existing internal products, SaaS apps, dashboards, and tools. Use when the user wants Codex to discover the best real improvement, coordinate concurrent worktrees, get one approval, execute through a dependency graph with safe parallel worker waves, QA the result, and deliver formal plus plain-English demo-ready summaries.
 ---
 
 # Progress
@@ -27,9 +27,11 @@ plans/<slug>/
   shared-contract.md
   plan.md
   progress.md
+  plain-english-before.md
   verification.md
   demo.md
   final-delivery.md
+  plain-english-after.md
   handoff.md
   agent-runs/
 ```
@@ -54,10 +56,36 @@ Use the bundled templates in `assets/templates/`:
 - `approval-proposal.md`
 - `shared-contract.md`
 - `execution-graph.md`
+- `plain-english-before.md`
 - `demo-package.md`
 - `final-delivery.md`
+- `plain-english-after.md`
 
 If a section cannot be completed, write `BLOCKED`, `SKIPPED`, or `NOT APPLICABLE` in the matching field with the reason. Do not remove the section.
+
+## Plain-English Summary Rules
+
+Formal artifacts prove the work. Plain-English artifacts explain the work.
+
+Write `plans/<slug>/plain-english-before.md` after the shared contract and execution graph are ready, and before implementation begins. Also send a short version to the user before implementation starts. It must explain:
+
+- what is being fixed
+- what will change for users or operators
+- what will not change
+- what is already known to be externally blocked
+- what to watch during QA and demo
+- what proof should exist when the work is done
+
+Write `plans/<slug>/plain-english-after.md` before final response. Also include its content after the formal numbered final response. It must explain:
+
+- what was fixed
+- what changed in the product or workflow
+- what was verified
+- what is still blocked or risky
+- what to look out for next
+- the next practical action
+
+For connector, source, payment, analytics, webhook, or external-provider work, both plain-English summaries must separate local readiness, deployed production proof, account-owner actions, and actual incoming data. Do not let "row exists", "configured", "linked", or "script passes locally" stand in for "receiving live data".
 
 ## Stage -1: Active Work Registry
 
@@ -288,6 +316,8 @@ Classify each node as exactly one of:
 
 Create worker waves from the graph.
 
+Before implementation starts, write `plans/<slug>/plain-english-before.md` from `assets/templates/plain-english-before.md`. If the graph or shared contract changes materially, update the plain-English before summary before continuing implementation.
+
 Parallelize only when all conditions are true:
 
 - dependencies are satisfied
@@ -411,9 +441,11 @@ The demo package must include:
 
 Use `feature-proof` before final delivery. Write `plans/<slug>/verification.md` and `plans/<slug>/final-delivery.md`.
 
+Write `plans/<slug>/plain-english-after.md` from `assets/templates/plain-english-after.md`.
+
 Before final response, update `plans/progress-registry.md` in the registry owner checkout to `complete` or `blocked` with final evidence. If the result is successful, run registry cleanup. Do not stage or commit the registry unless the user explicitly approved shared registry state.
 
-The final response must use this exact numbered shape:
+The final response must use this exact numbered shape first:
 
 1. Approved goal
 2. What changed
@@ -425,6 +457,13 @@ The final response must use this exact numbered shape:
 8. Proof it works
 9. Known limitations
 10. Recommended next step
+
+Then include:
+
+```text
+Plain-English Summary
+{content from plain-english-after.md}
+```
 
 If the work is verified and uncommitted, recommend `cap`. Do not push, deploy, or promote unless the user approved that action.
 
