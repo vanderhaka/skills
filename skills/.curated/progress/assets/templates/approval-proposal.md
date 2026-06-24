@@ -6,17 +6,18 @@ Repository: {absolute path}
 
 ## Registry Snapshot
 Registry path: {absolute path}/plans/progress-registry.md
+Registry storage policy: LOCAL ONLY unless explicitly approved for commit
 Recommended reservation slug: {slug}
 Conflict result: NO HARD CONFLICT | BLOCKED
 
-| Active slug | Status | Product area | Write boundaries | Decision |
-| --- | --- | --- | --- | --- |
-| {slug} | {status} | {area} | {paths} | ALLOW/BLOCK |
+| Active slug | Status | Product area | Boundary confidence | Write boundaries | Decision |
+| --- | --- | --- | --- | --- | --- |
+| {slug} | {status} | {area} | HIGH/MEDIUM/LOW | {paths} | ALLOW/BLOCK |
 
 ## Opportunity Matrix
-| # | Opportunity | Problem | Impact | Demoable | Testable | Size | Risk | Dependency readiness | Registry overlap | Score |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| 1 | {name} | {problem} | {impact} | {1-5} | {1-5} | {1-5} | {1-5 inverse} | {1-5} | NONE | {total}/30 |
+| # | Opportunity | Problem | Impact | Demoable | Testable | Size | Risk | Dependency readiness | Registry overlap | Boundary confidence | Score |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | {name} | {problem} | {impact} | {1-5} | {1-5} | {1-5} | {1-5 inverse} | {1-5} | NONE | HIGH/MEDIUM | {total}/30 |
 
 Scoring rule: higher is better. Size score is higher when the work is smaller. Risk score is higher when risk is lower.
 
@@ -30,7 +31,15 @@ Scoring rule: higher is better. Size score is higher when the work is smaller. R
 7. Risks: {risks}
 8. Dependencies: {dependencies}
 9. Registry overlap: NONE | BLOCKED BY {slug}
-10. Score: {score}/30
+10. Boundary confidence: HIGH | MEDIUM | LOW
+11. Score: {score}/30
+
+## Blocked Reservation Suggestions
+Use this section only when an existing blocked entry may over-reserve.
+
+| Existing slug | Suggested action | Why | Approval needed |
+| --- | --- | --- | --- |
+| {slug} | keep block/narrow reservation/split/sequence/abandon | {reason} | YES/NO |
 
 ## Recommendation
 Recommended option: {number}

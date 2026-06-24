@@ -54,6 +54,7 @@ Rollback path: {path}
 
 ## 11. Registry Reservation And Forbidden Overlap
 Registry path: {absolute path}/plans/progress-registry.md
+Registry storage policy: LOCAL ONLY unless explicitly approved for commit
 Registry entry status: approved/active
 Registry entry id: {slug}
 
@@ -64,3 +65,15 @@ Registry entry id: {slug}
 | APIs/functions | {apis} | {apis} |
 | Data/migrations | {models} | {models} |
 | External providers/env | {providers/env names} | {providers/env names} |
+
+## 12. Boundary Confidence And Evidence
+Boundary confidence: HIGH | MEDIUM | LOW
+
+| Boundary | Evidence | Residual uncertainty |
+| --- | --- | --- |
+| Files/directories | {paths} | {uncertainty} |
+| Routes/screens/commands | {surfaces} | {uncertainty} |
+| APIs/jobs/functions | {surfaces} | {uncertainty} |
+| Data/migrations/fixtures | {surfaces} | {uncertainty} |
+| External providers/env | {env names only} | {uncertainty} |
+| Tests/browser flows | {commands/routes} | {uncertainty} |

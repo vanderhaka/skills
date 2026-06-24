@@ -18,6 +18,7 @@ Branch: codex/{slug}
 - Out of scope: {scope}
 - Registry entry: {slug}
 - Registry hard-conflict check: PASS | BLOCKED
+- Boundary confidence: HIGH | MEDIUM | LOW
 - Forbidden overlap for other runs: {files/routes/apis/data/providers}
 
 ## Dependency Graph

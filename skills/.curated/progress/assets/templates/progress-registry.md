@@ -4,6 +4,7 @@ Status: ACTIVE
 Last reconciled: {YYYY-MM-DD}
 Repository: {absolute path}
 Registry owner checkout: {absolute path}
+Storage policy: LOCAL ONLY unless explicitly approved for commit
 
 ## Status Rules
 
@@ -16,9 +17,9 @@ Registry owner checkout: {absolute path}
 
 ## Active Work
 
-| Slug | Status | Worktree | Branch | Goal | Product area | Write boundaries | Routes/APIs/Data | Forbidden overlap | Last updated |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| {slug} | proposed | {path or PENDING} | codex/{slug} | {goal} | {area} | {paths} | {surfaces} | {conflicts} | {YYYY-MM-DD} |
+| Slug | Status | Worktree | Branch | Goal | Product area | Boundary confidence | Write boundaries | Routes/APIs/Data | Forbidden overlap | Blocked by | Last updated |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| {slug} | proposed | {path or PENDING} | codex/{slug} | {goal} | {area} | HIGH/MEDIUM/LOW | {paths} | {surfaces} | {conflicts} | none | {YYYY-MM-DD} |
 
 ## Conflict Decisions
 
@@ -26,8 +27,20 @@ Registry owner checkout: {absolute path}
 | --- | --- | --- | --- | --- |
 | {YYYY-MM-DD} | {incoming} | {existing} | BLOCKED | {evidence} |
 
+## Blocked Reservation Suggestions
+
+| Blocked slug | Suggested action | Reason | User approval needed |
+| --- | --- | --- | --- |
+| {slug} | keep block/narrow reservation/split/sequence/abandon | {reason} | YES/NO |
+
 ## Reconciliation Notes
 
 | Date | Finding | Action |
 | --- | --- | --- |
 | {YYYY-MM-DD} | {finding} | {action} |
+
+## Archived Work
+
+| Slug | Final status | Worktree | Branch | Goal | Final evidence |
+| --- | --- | --- | --- | --- | --- |
+| {slug} | complete/abandoned | {path} | codex/{slug} | {goal} | {evidence} |

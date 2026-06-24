@@ -40,6 +40,13 @@ Every run must also create or update this repo-level coordination artifact:
 plans/progress-registry.md
 ```
 
+The registry is local coordination state by default. Do not stage, commit, push, or include `plans/progress-registry.md` or `plans/.progress-registry.lock/` in a PR unless the user explicitly approves making the registry a shared project artifact. If the registry file is untracked, add these local-only patterns to `.git/info/exclude`:
+
+```text
+plans/progress-registry.md
+plans/.progress-registry.lock/
+```
+
 Use the bundled templates in `assets/templates/`:
 
 - `progress-registry.md`
@@ -59,26 +66,33 @@ Before opportunity scoring, approval, worktree creation, or product-code edits, 
 1. Resolve the repo root with `git rev-parse --show-toplevel`.
 2. Inspect current `git status --short`, current branch, and `git worktree list --porcelain`.
 3. Treat the first `worktree` entry from `git worktree list --porcelain` as the registry owner checkout unless the user explicitly names a different coordination checkout.
-4. Read active-work evidence from every worktree path:
+4. Before writing outside the current checkout, state the registry owner checkout path and why it is the owner. Do not silently mutate a different checkout.
+5. Read active-work evidence from every worktree path:
    - `plans/progress-registry.md`
    - `plans/*/shared-contract.md`
    - `plans/*/plan.md`
    - `plans/*/progress.md`
    - `plans/*/handoff.md`
-5. Create `plans/progress-registry.md` from `assets/templates/progress-registry.md` in the registry owner checkout when it does not exist.
-6. From the registry owner checkout, acquire a write lock before editing the registry owner copy:
+6. Create `plans/progress-registry.md` from `assets/templates/progress-registry.md` in the registry owner checkout when it does not exist.
+7. If `plans/progress-registry.md` is untracked, keep it local-only and ensure `.git/info/exclude` contains the registry and lock patterns.
+8. From the registry owner checkout, acquire a write lock before editing the registry owner copy:
 
 ```bash
 mkdir -p plans
 mkdir plans/.progress-registry.lock
 ```
 
-7. After acquiring the lock, write `plans/.progress-registry.lock/owner.md` with the run slug, timestamp, current thread context, and intended registry edit.
-8. If the lock command fails, do not edit the registry. Read the existing registry and lock evidence, then stop with the exact blocker unless the user explicitly approves clearing the stale lock.
-9. Release the lock after the registry write by removing only `plans/.progress-registry.lock` that this run created.
-10. Before presenting the approval proposal, add or update a `proposed` registry entry for the recommended work.
-11. After approval, update the entry to `approved`, then `active` once the implementation worktree exists.
-12. Update the entry after every completed graph node and at final delivery with status `blocked`, `complete`, or `abandoned`.
+9. After acquiring the lock, write `plans/.progress-registry.lock/owner.md` with the run slug, timestamp, current thread context, and intended registry edit.
+10. If the lock command fails, do not edit the registry. Read the existing registry and lock evidence, then stop with the exact blocker unless the user explicitly approves clearing the stale lock.
+11. Release the lock after the registry write by removing only `plans/.progress-registry.lock` that this run created.
+12. Before presenting the approval proposal, add or update a `proposed` registry entry for the recommended work.
+13. After approval, update the entry to `approved`, then `active` once the implementation worktree exists.
+14. Update the entry after every completed graph node and at final delivery with status `blocked`, `complete`, or `abandoned`.
+15. After a successful final delivery, run registry cleanup:
+   - mark this run `complete`
+   - move stale `complete` and `abandoned` entries into the archive section
+   - mark stale `proposed` entries `abandoned` only when no matching approval, worktree, branch, `progress.md`, or `handoff.md` exists in any inspected worktree
+   - record every cleanup decision in `Reconciliation Notes`
 
 Registry status meanings:
 
@@ -100,15 +114,44 @@ Hard conflicts:
 
 When a hard conflict exists, do not continue to proposal. Present the conflict and ask whether to resume the existing run, sequence after it, merge scope, or abandon one run.
 
+Boundary confidence:
+
+- `HIGH`: exact files, routes, APIs, data models, tests, and external surfaces are identified from repository evidence.
+- `MEDIUM`: primary files and surfaces are known, but secondary effects remain possible.
+- `LOW`: the boundary is inferred mostly from names, broad directories, or incomplete discovery.
+
+Do not present an approval proposal with `LOW` boundary confidence unless the proposal explicitly asks the user to choose between narrowing discovery or accepting the overlap risk.
+
+Minimum boundary evidence:
+
+- files or directories likely to change
+- user-visible routes, screens, or commands
+- APIs, server actions, jobs, or functions
+- data models, migrations, seed data, generated clients, and fixtures
+- auth, billing, permissions, analytics, email, or external-provider surfaces
+- tests and browser flows that prove the boundary
+
+## Existing Run Decisions
+
+When an incoming run conflicts with an existing registry entry, offer only these choices:
+
+1. Resume existing run: switch to the existing worktree, read `handoff.md`, `progress.md`, `plan.md`, `shared-contract.md`, and `verification.md`, then continue the next unblocked graph node.
+2. Sequence after existing run: record the incoming idea as `proposed` with `Blocked by: <existing slug>` and do not start implementation.
+3. Merge scope: update the existing approval proposal or shared contract, then get user approval before expanding implementation.
+4. Narrow blocked reservation: keep the blocked entry, but reduce its forbidden overlap to the exact files, routes, APIs, data, or provider surfaces proven blocked.
+5. Abandon existing run: require explicit user approval, mark the old entry `abandoned`, record the reason, then continue registry checks.
+
 ## Registry Failure Modes
 
 The registry is coordination evidence, not a perfect distributed scheduler. Counter these failure modes every run:
 
 - Stale entries: reconcile registry status against worktree paths, branches, `progress.md`, and `handoff.md` before scoring opportunities.
 - Simultaneous proposals: re-read the registry immediately before writing a proposal and immediately after user approval.
-- Underdeclared scope: record files, routes, APIs, data models, migrations, env names, tests, and deployment surfaces, not only a feature title.
+- Underdeclared scope: record minimum boundary evidence and boundary confidence, not only a feature title.
 - Duplicate wording: compare goals semantically, not only by slug.
 - Overblocking: block only hard conflicts. If the work is likely independent but evidence is incomplete, mark the conflict `BLOCKED` and ask.
+- Owner-checkout confusion: always report the current checkout and registry owner checkout before writing the registry.
+- Registry noise: keep the registry local-only by default and run cleanup after successful final delivery.
 
 ## Stage 0: Worktree Setup
 
@@ -139,6 +182,8 @@ Write `plans/<slug>/discovery-report.md` from `assets/templates/discovery-report
 
 Include the registry snapshot and active-conflict decision in the discovery report.
 
+Include boundary confidence and the evidence used to decide the work is non-overlapping.
+
 Do not edit product code in this stage.
 
 ## Stage 2: Opportunity Discovery Matrix
@@ -157,6 +202,8 @@ Score every opportunity using the fixed scoring table in `assets/templates/appro
 
 Exclude opportunities with hard conflicts. Add a registry overlap check to every scored opportunity.
 
+Score only opportunities with `HIGH` or `MEDIUM` boundary confidence unless the proposal asks the user for an explicit risk decision.
+
 ## Stage 3: Approval Proposal
 
 Write `plans/<slug>/approval-proposal.md` from `assets/templates/approval-proposal.md`.
@@ -172,7 +219,8 @@ Present the numbered proposal to the user with the exact fields:
 7. Risks
 8. Dependencies
 9. Registry overlap
-10. Score
+10. Boundary confidence
+11. Score
 
 Recommend one option.
 
@@ -195,6 +243,7 @@ The shared contract must define:
 9. Rollback risk
 10. External dependency status
 11. Registry reservation and forbidden overlap
+12. Boundary confidence and evidence
 
 Do not launch workers until this file is complete.
 
@@ -362,7 +411,7 @@ The demo package must include:
 
 Use `feature-proof` before final delivery. Write `plans/<slug>/verification.md` and `plans/<slug>/final-delivery.md`.
 
-Before final response, update `plans/progress-registry.md` in the registry owner checkout to `complete` or `blocked` with final evidence.
+Before final response, update `plans/progress-registry.md` in the registry owner checkout to `complete` or `blocked` with final evidence. If the result is successful, run registry cleanup. Do not stage or commit the registry unless the user explicitly approved shared registry state.
 
 The final response must use this exact numbered shape:
 

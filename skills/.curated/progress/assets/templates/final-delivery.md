@@ -4,6 +4,8 @@ Status: PASS | PASS WITH RISKS | BLOCKED | FAIL
 Date: {YYYY-MM-DD}
 Worktree: {absolute path}
 Branch: codex/{slug}
+Registry status: complete | blocked
+Registry storage policy: LOCAL ONLY unless explicitly approved for commit
 
 ## 1. Approved Goal
 {goal}
@@ -40,3 +42,10 @@ Branch: codex/{slug}
 
 ## 10. Recommended Next Step
 {next step}
+
+## 11. Registry Cleanup
+| Cleanup action | Result | Evidence |
+| --- | --- | --- |
+| Mark current run complete/blocked | {result} | {evidence} |
+| Archive stale complete/abandoned entries | {result} | {evidence} |
+| Abandon stale proposed entries with no matching evidence | {result} | {evidence} |

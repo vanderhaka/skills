@@ -11,12 +11,25 @@ Implementation worktree: PENDING APPROVAL
 ## 0. Active Work Registry
 Registry path: {absolute path}/plans/progress-registry.md
 Registry owner checkout: {absolute path}
+Registry storage policy: LOCAL ONLY unless explicitly approved for commit
 Registry status: READY | BLOCKED
 Conflict decision: NO HARD CONFLICT | HARD CONFLICT
 
-| Active slug | Status | Worktree | Product area | Write boundaries | Conflict with this run |
-| --- | --- | --- | --- | --- | --- |
-| {slug} | {status} | {path} | {area} | {paths} | YES/NO |
+| Active slug | Status | Worktree | Product area | Boundary confidence | Write boundaries | Conflict with this run |
+| --- | --- | --- | --- | --- | --- | --- |
+| {slug} | {status} | {path} | {area} | HIGH/MEDIUM/LOW | {paths} | YES/NO |
+
+## 0.1 Boundary Evidence
+Boundary confidence: HIGH | MEDIUM | LOW
+
+| Boundary | Evidence | Notes |
+| --- | --- | --- |
+| Files/directories | {paths} | {notes} |
+| Routes/screens/commands | {surfaces} | {notes} |
+| APIs/jobs/functions | {surfaces} | {notes} |
+| Data/migrations/fixtures | {surfaces} | {notes} |
+| External providers/env | {env names only} | {notes} |
+| Tests/browser flows | {commands/routes} | {notes} |
 
 ## 1. Product Summary
 1. {what the app does}
