@@ -16,6 +16,9 @@ Branch: codex/{slug}
 - Evidence: {evidence}
 - Assumptions: {assumptions}
 - Out of scope: {scope}
+- Registry entry: {slug}
+- Registry hard-conflict check: PASS | BLOCKED
+- Forbidden overlap for other runs: {files/routes/apis/data/providers}
 
 ## Dependency Graph
 | Node | Title | Type | Tier | Depends On | Parallel Group | Blocking Class | Shared-State Risk | Status |
@@ -52,4 +55,3 @@ Browser gate: {check or NOT APPLICABLE}
 Boundary gate: {check or NOT APPLICABLE}
 Exit evidence: {evidence}
 Blocked on: none
-

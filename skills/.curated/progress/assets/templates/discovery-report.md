@@ -8,6 +8,16 @@ Base commit: {sha}
 Discovery checkout: {absolute path}
 Implementation worktree: PENDING APPROVAL
 
+## 0. Active Work Registry
+Registry path: {absolute path}/plans/progress-registry.md
+Registry owner checkout: {absolute path}
+Registry status: READY | BLOCKED
+Conflict decision: NO HARD CONFLICT | HARD CONFLICT
+
+| Active slug | Status | Worktree | Product area | Write boundaries | Conflict with this run |
+| --- | --- | --- | --- | --- | --- |
+| {slug} | {status} | {path} | {area} | {paths} | YES/NO |
+
 ## 1. Product Summary
 1. {what the app does}
 2. {primary users}
@@ -35,4 +45,3 @@ Implementation worktree: PENDING APPROVAL
 
 ## 5. No-Code-Edit Confirmation
 Code edited during discovery: NO
-

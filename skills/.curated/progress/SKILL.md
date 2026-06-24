@@ -1,6 +1,6 @@
 ---
 name: progress
-description: Strict production progress protocol for existing internal products, SaaS apps, dashboards, and tools. Use when the user wants Codex to discover the best real improvement, get one approval, create a fresh worktree, execute through a dependency graph with safe parallel worker waves, QA the result, and deliver a repeatable demo-ready package.
+description: Strict production progress protocol for existing internal products, SaaS apps, dashboards, and tools. Use when the user wants Codex to discover the best real improvement, coordinate concurrent worktrees, get one approval, execute through a dependency graph with safe parallel worker waves, QA the result, and deliver a repeatable demo-ready package.
 ---
 
 # Progress
@@ -9,7 +9,7 @@ description: Strict production progress protocol for existing internal products,
 
 Run a fixed production-progress protocol. The project changes; the workflow, artifacts, headings, tables, and stop points stay the same.
 
-Use this skill to turn an existing product into one approved, production-ready improvement. Do not use it for greenfield apps, pure code review, one-line fixes, read-only launch audits, or chat-only planning.
+Use this skill to turn an existing product into one approved, production-ready improvement while avoiding overlap with other active progress runs. Do not use it for greenfield apps, pure code review, one-line fixes, read-only launch audits, or chat-only planning.
 
 ## Core Rule
 
@@ -34,8 +34,15 @@ plans/<slug>/
   agent-runs/
 ```
 
+Every run must also create or update this repo-level coordination artifact:
+
+```text
+plans/progress-registry.md
+```
+
 Use the bundled templates in `assets/templates/`:
 
+- `progress-registry.md`
 - `discovery-report.md`
 - `approval-proposal.md`
 - `shared-contract.md`
@@ -45,31 +52,92 @@ Use the bundled templates in `assets/templates/`:
 
 If a section cannot be completed, write `BLOCKED`, `SKIPPED`, or `NOT APPLICABLE` in the matching field with the reason. Do not remove the section.
 
+## Stage -1: Active Work Registry
+
+Before opportunity scoring, approval, worktree creation, or product-code edits, build an active-work inventory.
+
+1. Resolve the repo root with `git rev-parse --show-toplevel`.
+2. Inspect current `git status --short`, current branch, and `git worktree list --porcelain`.
+3. Treat the first `worktree` entry from `git worktree list --porcelain` as the registry owner checkout unless the user explicitly names a different coordination checkout.
+4. Read active-work evidence from every worktree path:
+   - `plans/progress-registry.md`
+   - `plans/*/shared-contract.md`
+   - `plans/*/plan.md`
+   - `plans/*/progress.md`
+   - `plans/*/handoff.md`
+5. Create `plans/progress-registry.md` from `assets/templates/progress-registry.md` in the registry owner checkout when it does not exist.
+6. From the registry owner checkout, acquire a write lock before editing the registry owner copy:
+
+```bash
+mkdir -p plans
+mkdir plans/.progress-registry.lock
+```
+
+7. After acquiring the lock, write `plans/.progress-registry.lock/owner.md` with the run slug, timestamp, current thread context, and intended registry edit.
+8. If the lock command fails, do not edit the registry. Read the existing registry and lock evidence, then stop with the exact blocker unless the user explicitly approves clearing the stale lock.
+9. Release the lock after the registry write by removing only `plans/.progress-registry.lock` that this run created.
+10. Before presenting the approval proposal, add or update a `proposed` registry entry for the recommended work.
+11. After approval, update the entry to `approved`, then `active` once the implementation worktree exists.
+12. Update the entry after every completed graph node and at final delivery with status `blocked`, `complete`, or `abandoned`.
+
+Registry status meanings:
+
+- `proposed`: soft reservation. Do not duplicate the same proposal without telling the user a proposal already exists.
+- `approved`: hard reservation. Do not propose or start overlapping work.
+- `active`: hard reservation. Do not propose or start overlapping work.
+- `blocked`: hard reservation until the user abandons it or the blocker is removed.
+- `complete`: historical record. It does not block new work unless the new work reopens the same code path.
+- `abandoned`: historical record. It does not block new work.
+
+Hard conflicts:
+
+- same or substantially equivalent approved goal
+- same implementation worktree or branch
+- overlapping write boundaries
+- overlapping route, API, data model, migration, auth, billing, deployment, or external-provider surface
+- shared mutable test database, seed data, generated client, lockfile, or environment contract
+- any overlap that cannot be proven disjoint from the available evidence
+
+When a hard conflict exists, do not continue to proposal. Present the conflict and ask whether to resume the existing run, sequence after it, merge scope, or abandon one run.
+
+## Registry Failure Modes
+
+The registry is coordination evidence, not a perfect distributed scheduler. Counter these failure modes every run:
+
+- Stale entries: reconcile registry status against worktree paths, branches, `progress.md`, and `handoff.md` before scoring opportunities.
+- Simultaneous proposals: re-read the registry immediately before writing a proposal and immediately after user approval.
+- Underdeclared scope: record files, routes, APIs, data models, migrations, env names, tests, and deployment surfaces, not only a feature title.
+- Duplicate wording: compare goals semantically, not only by slug.
+- Overblocking: block only hard conflicts. If the work is likely independent but evidence is incomplete, mark the conflict `BLOCKED` and ask.
+
 ## Stage 0: Worktree Setup
 
-1. Inspect current `git status --short`, current branch, and `git worktree list --porcelain`.
-2. Discovery can run in the current checkout.
-3. After approval, create or reuse exactly one sibling worktree for the approved target:
+1. Confirm Stage -1 is complete and the registry has no hard conflict for the approved goal.
+2. Inspect current `git status --short`, current branch, and `git worktree list --porcelain`.
+3. Discovery can run in the current checkout.
+4. After approval, create or reuse exactly one sibling worktree for the approved target:
 
 ```text
 ../<repo-name>-<slug>
 ```
 
-4. Use branch:
+5. Use branch:
 
 ```text
 codex/<slug>
 ```
 
-5. Do not implement in the original checkout unless the user explicitly says to use the current worktree.
-6. Record the worktree path, branch, base commit, and slug in `decisions.md`.
-7. Preserve unrelated dirty files. Do not reset, clean, checkout away, or overwrite unrelated changes.
+6. Do not implement in the original checkout unless the user explicitly says to use the current worktree.
+7. Record the worktree path, branch, base commit, slug, and registry entry id in `decisions.md`.
+8. Preserve unrelated dirty files. Do not reset, clean, checkout away, or overwrite unrelated changes.
 
 ## Stage 1: Project Context Report
 
 Inspect the repo, docs, routes, data models, API calls, database usage, tests, scripts, environment names, deployment hints, and existing conventions.
 
 Write `plans/<slug>/discovery-report.md` from `assets/templates/discovery-report.md`.
+
+Include the registry snapshot and active-conflict decision in the discovery report.
 
 Do not edit product code in this stage.
 
@@ -87,6 +155,8 @@ Identify real progress opportunities. Each opportunity must:
 
 Score every opportunity using the fixed scoring table in `assets/templates/approval-proposal.md`.
 
+Exclude opportunities with hard conflicts. Add a registry overlap check to every scored opportunity.
+
 ## Stage 3: Approval Proposal
 
 Write `plans/<slug>/approval-proposal.md` from `assets/templates/approval-proposal.md`.
@@ -101,7 +171,8 @@ Present the numbered proposal to the user with the exact fields:
 6. Demo proof
 7. Risks
 8. Dependencies
-9. Score
+9. Registry overlap
+10. Score
 
 Recommend one option.
 
@@ -123,6 +194,7 @@ The shared contract must define:
 8. Demo path
 9. Rollback risk
 10. External dependency status
+11. Registry reservation and forbidden overlap
 
 Do not launch workers until this file is complete.
 
@@ -208,6 +280,7 @@ Use `feature-integrator` discipline to merge worker outputs into one coherent fe
 
 Verify:
 
+- registry entry status and scope still match the implemented work
 - data contract
 - API contract
 - UI rendering
@@ -288,6 +361,8 @@ The demo package must include:
 ## Stage 12: Final Delivery
 
 Use `feature-proof` before final delivery. Write `plans/<slug>/verification.md` and `plans/<slug>/final-delivery.md`.
+
+Before final response, update `plans/progress-registry.md` in the registry owner checkout to `complete` or `blocked` with final evidence.
 
 The final response must use this exact numbered shape:
 

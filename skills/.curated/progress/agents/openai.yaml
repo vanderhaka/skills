@@ -1,4 +1,4 @@
 interface:
   display_name: "Progress"
   short_description: "Strict production progress protocol"
-  default_prompt: "Use progress to discover, approve, execute, QA, and package one production-ready improvement in a fresh worktree."
+  default_prompt: "Use progress to discover, coordinate active worktrees, approve, execute, QA, and package one production-ready improvement."

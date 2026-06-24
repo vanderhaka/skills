@@ -50,5 +50,17 @@ Rollback path: {path}
 ## 10. External Dependency Status
 | Dependency | Status | Required action |
 | --- | --- | --- |
-| {dependency} | READY | BLOCKED | NOT APPLICABLE | {action} |
+| {dependency} | READY/BLOCKED/NOT APPLICABLE | {action} |
 
+## 11. Registry Reservation And Forbidden Overlap
+Registry path: {absolute path}/plans/progress-registry.md
+Registry entry status: approved/active
+Registry entry id: {slug}
+
+| Boundary | This run owns | Other runs must not touch |
+| --- | --- | --- |
+| Files | {paths} | {paths} |
+| Routes | {routes} | {routes} |
+| APIs/functions | {apis} | {apis} |
+| Data/migrations | {models} | {models} |
+| External providers/env | {providers/env names} | {providers/env names} |

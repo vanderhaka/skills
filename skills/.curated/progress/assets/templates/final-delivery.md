@@ -22,12 +22,12 @@ Branch: codex/{slug}
 ## 5. Tests Run
 | Command/check | Result | Evidence |
 | --- | --- | --- |
-| {command} | PASS | FAIL | SKIPPED | {evidence} |
+| {command} | PASS/FAIL/SKIPPED | {evidence} |
 
 ## 6. QA Checks Completed
 | Check | Result | Evidence |
 | --- | --- | --- |
-| {check} | PASS | FAIL | SKIPPED | {evidence} |
+| {check} | PASS/FAIL/SKIPPED | {evidence} |
 
 ## 7. How To Demo It In Under 60 Seconds
 {demo}
@@ -40,4 +40,3 @@ Branch: codex/{slug}
 
 ## 10. Recommended Next Step
 {next step}
-

@@ -17,7 +17,7 @@ Branch: codex/{slug}
 ## 3. Required Data
 | Data | Source | Status |
 | --- | --- | --- |
-| {data} | {source} | READY | BLOCKED | NOT APPLICABLE |
+| {data} | {source} | READY/BLOCKED/NOT APPLICABLE |
 
 ## 4. Expected Result
 {result}
@@ -31,4 +31,3 @@ Branch: codex/{slug}
 | Limitation | Impact | Follow-up |
 | --- | --- | --- |
 | {limitation} | {impact} | {follow-up} |
-
