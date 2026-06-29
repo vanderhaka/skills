@@ -44,6 +44,7 @@ skills/
     ├── cap/
     ├── codebase-design/
     ├── code-review/
+    ├── dashboard-ui-ux/
     ├── feature-graph-plan/
     ├── feature-integrator/
     ├── feature-intake-grill/
@@ -82,6 +83,7 @@ templates/
 - `cap` — verify, commit, and push intended work safely without sweeping unrelated files, with a focused fast mode for tiny changes.
 - `codebase-design` — shared architecture discipline for deep modules, clean interfaces, seams, adapters, and test surfaces.
 - `code-review` — unified review workflow with correctness, safety, tests, and maintainability lanes.
+- `dashboard-ui-ux` — dense SaaS dashboard design and critique guidance with collapsible sidebars, card contrast, table tooling, chart interactions, and browser proof.
 - `feature-orchestrator` — coordinate whole-feature delivery through one canonical graph, progress file, parallel-safe worker waves, and final proof.
 - `feature-intake-grill` — clear product, data, permission, money, migration, external-contract, and live-risk decisions before graph planning.
 - `feature-graph-plan` — turn a feature brief and decisions into RGR-ready dependency graph nodes, waves, write boundaries, and gates.

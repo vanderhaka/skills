@@ -1,0 +1,4 @@
+interface:
+  display_name: "Dashboard UI/UX"
+  short_description: "Dense SaaS dashboard design guidance"
+  default_prompt: "Use $dashboard-ui-ux to design or critique a production SaaS dashboard from supplied data and workflows."
