@@ -7,6 +7,7 @@
 ## Use It When
 
 - The user wants a complete feature shipped, not just a plan.
+- The user has issue-fix-strategy triage, review findings, logs, UX complaints, or another messy issue source and wants the accepted fixes delivered.
 - Work spans multiple slices or agents.
 - Parallel execution would help, but write boundaries need control.
 - TDD/Red-Green-Refactor discipline and proof gates matter.
@@ -14,10 +15,11 @@
 
 ## How It Works
 
-The skill creates or reuses `plans/<feature-slug>/`. It records decisions, builds a dependency graph, launches every safe unblocked worker wave, verifies worker reports, updates progress, and runs final proof before marking the feature complete.
+The skill creates or reuses `plans/<feature-slug>/`. If the request starts as a messy issue set, it uses `issue-fix-strategy` as chat-only intake first, then records accepted issue IDs, priorities, fix waves, decisions, graph nodes, worker waves, verification, and final proof in the canonical folder.
 
 The stage skills are:
 
+- `issue-fix-strategy`
 - `feature-intake-grill`
 - `feature-graph-plan`
 - `feature-plan-grill`
@@ -36,7 +38,7 @@ The stage skills are:
 
 ## Not For
 
-Use `issue-fix-strategy` first when you have issues but have not decided what should be fixed or in what order. Use `thin-slice-plan` when you explicitly want planning only.
+Use standalone `issue-fix-strategy` when you have issues but only want a decision-ready strategy. Use `thin-slice-plan` when you explicitly want planning only.
 
 ## Install
 

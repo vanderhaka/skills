@@ -1,4 +1,4 @@
 interface:
   display_name: "Feature Orchestrator"
-  short_description: "Parallel dependency-graph feature delivery"
-  default_prompt: "Use $feature-orchestrator to build this feature through a tracked dependency graph with parallel agents, strict RGR gates, and fresh proof."
+  short_description: "Ship features and issue sets via a graph"
+  default_prompt: "Use $feature-orchestrator to turn this feature or issue set into a tracked dependency graph, parallel worker waves, strict RGR gates, and fresh proof."

@@ -1,6 +1,6 @@
 ---
 name: feature-orchestrator
-description: End-to-end feature delivery orchestration through one canonical dependency graph and progress file. Use when the user wants a whole feature implemented, a broad multi-slice fix shipped, many parallel agents coordinated, strict TDD/Red-Green-Refactor coding standards enforced, or a tracked "keep going until complete" feature flow with dependency-aware parallel execution, browser/boundary verification, and final proof.
+description: End-to-end feature delivery orchestration through one canonical dependency graph and progress file. Use when the user wants a whole feature implemented, issue-fix-strategy triage or messy issue sources turned into completed work, a broad multi-slice fix shipped, many parallel agents coordinated, strict TDD/Red-Green-Refactor coding standards enforced, or a tracked "keep going until complete" feature flow with dependency-aware parallel execution, browser/boundary verification, and final proof.
 ---
 
 # Feature Orchestrator
@@ -35,6 +35,7 @@ Read `references/graph-and-progress.md` before creating or changing the canonica
 
 Use these stage skills when the stage is substantial enough to benefit from a focused pass:
 
+- `issue-fix-strategy` - normalize messy issue sets before graph planning when the user wants the resulting fixes delivered.
 - `feature-intake-grill` - clear decisions and write `decisions.md`.
 - `feature-graph-plan` - create or update `plan.md` and `progress.md`.
 - `feature-plan-grill` - stress-test the graph before worker launch.
@@ -64,6 +65,7 @@ Do not create a separate `plans/*-tdd/` or `plans/*-stepwise/` flow for the same
 Inbound:
 
 - `issue-fix-strategy` triage output and `code-review` findings are valid seed material. Carry their issue list, priorities, regression protections, and proof requirements into the working brief, `decisions.md`, and the graph, so every accepted issue maps to at least one node. Do not re-litigate priority calls the triage already made unless repo evidence contradicts them.
+- When the user invokes both `issue-fix-strategy` and `feature-orchestrator`, run the chat-only triage first, then continue directly into the canonical orchestrator folder. Do not stop at "Next Suggested Step" unless the triage reveals a material decision blocker.
 - A direct feature request with no prior triage enters at the intake stage as normal.
 
 Outbound:
@@ -74,6 +76,19 @@ Outbound:
 
 When ending a response with a handoff, recommend exactly one next step. When another route is genuinely defensible, list it as an alternative with a one-line tradeoff; never list more than two alternatives.
 
+## Issue-Fix Intake Contract
+
+Use this contract when the starting point is review findings, UX complaints, screenshots, logs, failing tests, audit output, customer complaints, pasted strategy prompts, or other messy issue sources.
+
+1. Run `issue-fix-strategy` first when there is no accepted triage yet. Keep it chat-only: no plan artifacts, code edits, migrations, or repo files are created during triage.
+2. Preserve the triage IDs (`I1`, `I2`, ...), priorities (`P0`-`P3`), root-cause calls, fix waves, regression protections, proof requirements, and confidence notes.
+3. Drop or downgrade weak, stale, duplicated, unverifiable, or tool-noise findings before graph planning. Do not turn every complaint into a node.
+4. Ask only for decisions that could materially change scope, user-visible behavior, permissions, ownership, money, state, migrations, destructive actions, customer-visible records, external contracts, deploy risk, or live-data handling.
+5. Map every accepted issue ID to at least one graph node. A node may cover multiple issue IDs only when they share the same actor/trigger, behavior, invariant, write boundary, and proof gate.
+6. Preserve fix waves in the dependency graph: blockers and root causes first, important correctness/UX/reliability second, polish and cleanup later.
+7. For measurement-driven issue sources, separate source-of-truth evidence from proxy evidence and record the difference in `decisions.md` or `verification.md`. Do not claim success from proxy signals alone.
+8. If the issue source says to execute only the first safe slice, create the graph for the broader fix but execute only that slice until the user asks to continue.
+
 ## Workflow
 
 ### 1. Resolve State
@@ -82,6 +97,7 @@ When ending a response with a handoff, recommend exactly one next step. When ano
 2. Find or create the canonical flow folder.
 3. If existing `plan.md` or `progress.md` exists, treat it as authoritative unless current source evidence contradicts it.
 4. Inspect the current worktree before relying on prior context.
+5. If the input is a messy issue set and no accepted triage exists, run `issue-fix-strategy` first; then ingest its issue IDs, priorities, waves, regression protections, and proof requirements into this flow.
 
 ### 2. Intake And Decision Gate
 
@@ -91,6 +107,7 @@ Build or update a working brief:
 Feature:
 Primary actors:
 Core invariant:
+Accepted issue IDs:
 Previous intended behaviors:
 Intentional behavior changes:
 Unsafe outcomes:
@@ -107,7 +124,7 @@ For vague, novel, customer-facing, or design-heavy features, slow down enough to
 
 ### 3. Build The Dependency Graph
 
-Represent the feature as graph nodes, not a loose checklist. A node is valid only when it has one primary actor/trigger, one observable behavior, one protected invariant, explicit prior behavior preservation, expected files, write boundaries, dependencies, tests, verification gates, and exit evidence.
+Represent the feature as graph nodes, not a loose checklist. A node is valid only when it has one primary actor/trigger, one observable behavior, one protected invariant, explicit prior behavior preservation, expected files, write boundaries, dependencies, tests, verification gates, exit evidence, and originating issue IDs when seeded by triage.
 
 Classify every node:
 
