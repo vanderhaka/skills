@@ -1,53 +1,20 @@
----
-name: thin-slice-plan
-description: Planning-only workflow for decomposing a broad feature, multi-step fix, safety hardening effort, audit report, or vague implementation request into a detailed dependency-ordered thin-slice plan with explicit progress tracking. Use when the user explicitly asks to plan, slice, sequence, review an existing plan, or stop before implementation. For whole-feature plan-and-execute work with canonical progress, dependency-graph orchestration, and parallel agents, prefer feature-orchestrator.
----
+# Plan-Only Mode
 
-# Thin Slice Plan
+This reference carries the planning-only discipline absorbed from the former standalone `thin-slice-plan` skill. Load it whenever the request classifies as `needs-plan` and the user wants planning output only (no implementation), or when reviewing an existing plan artifact.
+
+For the working brief format, risk tier definitions, interview gate style, subagent reasoning budget (`gpt-5.5`, medium reasoning), hard rules, and the confidence-scoring bands, use the main `SKILL.md` — they are shared and not repeated here. This file covers what is unique to producing and maintaining the plan artifact itself.
 
 ## Purpose
 
-Turn broad work into a concrete, progress-tracked plan made of small, safe, independently verifiable slices.
+Turn broad work into a concrete, progress-tracked plan made of small, safe, independently verifiable slices. In plan-only mode this skill plans only. It does not implement code, run migrations, deploy, or mark work complete without evidence. It decomposes into a dependency-ordered thin-slice plan with progress tracking, then stops.
 
-This skill plans only. It does not implement code, run migrations, deploy, or mark work complete without evidence.
+## When To Use Plan-Only Mode
 
-For normal whole-feature plan-and-execute work, use `feature-orchestrator` as the unified workflow: it creates or updates `plans/<feature-slug>/plan.md` and `progress.md`, then executes eligible dependency-graph nodes with parallel-safe workers. Use this standalone planning skill when the user explicitly wants planning-only output, asks to review or repair a plan artifact, or says not to start implementation.
+- The user explicitly asks to plan, slice, sequence, or stop before implementation.
+- The user asks to review an existing plan without implementing it.
+- A `needs-plan` classification applies and the user wants the plan only, not the execution loop.
 
-## Core Principle
-
-Optimize for safe sequencing: preserve the feature invariant, expose product decisions before coding, keep each slice narrow enough to test, and make progress visible in a file that future agents can resume from.
-
-Do not hide a large feature inside one "slice". If a step changes multiple boundaries, split it until each slice has one primary actor/action, one acceptance signal, one main invariant, and a small expected file surface.
-
-## When To Use
-
-Use this skill when the user wants a plan rather than immediate implementation and:
-
-- A feature or fix obviously spans multiple implementation steps.
-- The user asks for a plan, slice breakdown, wave plan, multi-step fix, tracked progress, or implementation roadmap.
-- A `safe-feature-slice` request is too broad to execute as one slice.
-- Work touches multiple risk surfaces such as auth, ownership, money, status, destructive writes, webhooks, queues, external adapters, migrations, or customer-visible records.
-- Existing planning docs are too vague, too monolithic, missing progress, or unsafe for a loop/agent runner.
-- The input is an audit report (UX persona review, security scan, accessibility audit, manual walkthrough, gap report) with multiple findings that need triage before any can be fixed.
-
-Do not use this skill for tiny one-file fixes where the next safe implementation step is already obvious.
-
-## Audit-Driven Planning
-
-A common input to this skill is an audit artifact — a gap report, persona review, security scan, lighthouse pass, or any document listing many findings. Audits are not plans. Treat them as input that must be triaged before slicing.
-
-For an audit-driven plan, add a triage pass before decomposition:
-
-1. Re-verify each finding against the current code. Audits go stale; the next commit invalidates a portion of every audit. Drop findings that no longer reproduce. Note the verification method per finding.
-2. Classify what each finding needs:
-   - `code-only` — implementable without product or content input; eligible to slice now.
-   - `needs-product-decision` — blocked by a small set of questions for the user; surface in `Blocked decisions`.
-   - `needs-content` — blocked on a human (founder, copywriter, designer) producing real content; create a parallel content brief, do not invent copy.
-   - `false-alarm` — finding does not reproduce or is an artifact of the audit tool itself; record the verification and drop.
-3. For audits that captured screenshots, watch for screenshot-only artifacts: `position: fixed` elements rendered mid-page in `fullPage` captures, dev-only indicators (Next.js build badge, Vercel toolbar), scroll-reveal animation pre-states, browser-extension overlays. These are not bugs real users see.
-4. Slice only the verified, actionable findings. Surface the rest in the plan's `Blocked decisions` and `Out of scope` sections so future agents do not re-scope them.
-
-A useful follow-up pattern is **lens-per-pass**: each gap-finding lens (render correctness via crawler, UX via persona review, security via deep audit, a11y via WCAG pass, scope drift via doc diff) produces its own audit. Plan one lens at a time. Do not bundle findings from different lenses into one slice plan — they have different acceptance signals, different specialist evidence, and benefit from independent triage.
+Do not use plan-only mode for tiny one-file fixes where the next safe implementation step is already obvious — that is `single-slice` in the main skill.
 
 ## Required Output Artifact
 
@@ -59,16 +26,9 @@ plans/<feature-slug>/slice-plan.md
 
 Use a stable slug based on the feature or fix. If the repo already has a relevant `plans/<slug>/` folder, update that folder instead of creating a duplicate.
 
-The plan must be resumable. A future agent should be able to read only this file plus the referenced source files and know:
+The plan must be resumable. A future agent should be able to read only this file plus the referenced source files and know: what is in scope, what is out of scope, what has been proven, what is blocked, which slice is next, and which checks are required before progress can move.
 
-- what is in scope
-- what is out of scope
-- what has been proven
-- what is blocked
-- which slice is next
-- which checks are required before progress can move
-
-## Initial Read
+## Initial Read (Plan-Only)
 
 Before writing or updating the plan, read only the relevant evidence needed to plan safely:
 
@@ -84,67 +44,24 @@ Prefer bounded reads. Do not broad-read secret-bearing files. For env or deploym
 
 If a repo has canonical planning/status files, use them as the source of truth instead of inventing a parallel plan.
 
-## Working Brief
-
-Start every plan with a short working brief:
-
-```text
-Feature or fix:
-[what outcome the user wants]
-
-Primary actors:
-[who can do the work or is affected]
-
-Core invariant:
-[the rule that must remain true through every slice]
-
-Previous intended behaviours:
-[existing goals or guarantees that must be preserved unless a slice explicitly changes them]
-
-Unsafe outcomes:
-[what must never happen]
-
-Current evidence:
-[docs/files/tests/runtime evidence used]
-
-Assumptions:
-[safe assumptions, labelled explicitly]
-
-Out of scope:
-[what this plan intentionally does not cover]
-```
-
 If the invariant cannot be stated, pause and ask the smallest set of questions needed to make the plan safe.
 
-## Interview Gate
+## Audit-Driven Planning
 
-Ask before finalizing the plan when a missing answer could change:
+A common input to plan-only mode is an audit artifact — a gap report, persona review, security scan, lighthouse pass, or any document listing many findings. Audits are not plans. Treat them as input that must be triaged before slicing. This goes beyond the main skill's per-finding reproduction step (see `Audit-Driven Slice Inputs` in `SKILL.md`) by classifying and sequencing the surviving findings into slices.
 
-- who is allowed to perform an action
-- ownership, org/customer boundary, role, price, amount, status, or destructive behavior
-- state-transition rules
-- data model or migration direction
-- external contracts, webhooks, sync behavior, retries, or idempotency
-- customer-visible records, notifications, audit logs, or manual review paths
-- deploy, backfill, or live-data risk
+For an audit-driven plan, add a triage pass before decomposition:
 
-Keep the interview short:
+1. Re-verify each finding against the current code. Audits go stale; the next commit invalidates a portion of every audit. Drop findings that no longer reproduce. Note the verification method per finding.
+2. Classify what each finding needs:
+   - `code-only` — implementable without product or content input; eligible to slice now.
+   - `needs-product-decision` — blocked by a small set of questions for the user; surface in `Blocked decisions`.
+   - `needs-content` — blocked on a human (founder, copywriter, designer) producing real content; create a parallel content brief, do not invent copy.
+   - `false-alarm` — finding does not reproduce or is an artifact of the audit tool itself; record the verification and drop.
+3. For audits that captured screenshots, watch for screenshot-only artifacts: `position: fixed` elements rendered mid-page in `fullPage` captures, dev-only indicators (Next.js build badge, Vercel toolbar), scroll-reveal animation pre-states, browser-extension overlays. These are not bugs real users see.
+4. Slice only the verified, actionable findings. Surface the rest in the plan's `Blocked decisions` and `Out of scope` sections so future agents do not re-scope them.
 
-- Ask 1-5 numbered questions.
-- Phrase each question as the decision needed.
-- Include the safest default and the consequence of using it.
-- Do not ask questions that repo evidence can answer.
-- If the user asked not to be interrupted, record assumptions and mark unsafe undecided slices as `BLOCKED`.
-
-## Risk Tiers
-
-Classify the whole plan and each slice:
-
-- Tier 1: money, permissions, data ownership, state transitions, destructive writes, webhooks, accepted/customer-facing records.
-- Tier 2: external adapters, background jobs, queues, sync logic, admin workflows, migrations, operational tooling.
-- Tier 3: UI display, copy, layout, simple filters, low-risk polish.
-
-Tier 1 slices require explicit unsafe-outcome tests or proof. Tier 2 slices require integration-boundary checks. Tier 3 slices should stay proportionate and must not absorb unrelated domain work.
+A useful follow-up pattern is **lens-per-pass**: each gap-finding lens (render correctness via crawler, UX via persona review, security via deep audit, a11y via WCAG pass, scope drift via doc diff) produces its own audit. Plan one lens at a time. Do not bundle findings from different lenses into one slice plan — they have different acceptance signals, different specialist evidence, and benefit from independent triage.
 
 ## Decomposition Rules
 
@@ -197,7 +114,7 @@ Never parallelize:
 - multiple agents writing the same files
 - broad refactors across shared contracts
 
-For every implementation slice, list the intended independent worker ownership. Default worker config is model `gpt-5.5`, medium reasoning, fastest available medium profile when the runtime exposes speed/profile controls. For every `parallel-safe` slice, list write boundaries and evidence expected from a specialist agent.
+For every implementation slice, list the intended independent worker ownership. Default worker config is model `gpt-5.5`, medium reasoning, fastest available medium profile when the runtime exposes speed/profile controls (same default as the main skill's Subagent Orchestration Gate). For every `parallel-safe` slice, list write boundaries and evidence expected from a specialist agent.
 
 ## Plan File Template
 
@@ -300,7 +217,7 @@ Blocked on:
 
 ## Slice Detail Requirements
 
-Each slice must say enough for `safe-feature-slice` to execute it without re-planning the whole feature. The `S1` slice template above carries most of this; every implementation slice must also make these explicit:
+Each slice must say enough for `safe-feature-slice` build mode to execute it without re-planning the whole feature. The `S1` slice template above carries most of this; every implementation slice must also make these explicit:
 
 - Allowed scope: the expected files/folders/modules the slice may touch
 - Integration risk: what this slice could break
@@ -320,7 +237,7 @@ When creating the plan:
 - blocked slices must name the blocker
 - the next recommended slice must be explicit
 
-When executing later:
+When executing later (in build mode, outside plan-only mode):
 
 - update the `Progress` table before starting a slice if work begins
 - update it again after verification
@@ -342,7 +259,7 @@ For each slice, specify the minimum proof needed:
 - Computer Use verification for desktop, OS dialogs, native windows, file pickers, or cross-app flows
 - current official docs or Context7 checks for third-party APIs, SDKs, frameworks, cloud services, or standards where behavior may have changed
 
-If runtime verification is required but cannot be performed safely, mark the affected slice `blocked` or give it a `PASS WITH RISKS` execution gate for the later implementing skill. The plan itself should not claim the feature is safe.
+If runtime verification is required but cannot be performed safely, mark the affected slice `blocked` or give it a `PASS WITH RISKS` execution gate for the later implementing work. The plan itself should not claim the feature is safe.
 
 ## Migrations And Data
 
@@ -354,11 +271,11 @@ During planning:
 - mark destructive or live-data mutations as `decision-needed`
 - include non-destructive migration execution as an implementation gate when project rules require it
 
-Do not execute migrations from this planning skill. A read-only planning-time migration check (dry run or diff) is allowed only when the user explicitly asks for it. Actual migration execution belongs to the implementing slice or cap/deploy flow.
+Do not execute migrations from plan-only mode. A read-only planning-time migration check (dry run or diff) is allowed only when the user explicitly asks for it. Actual migration execution belongs to build mode or the cap/deploy flow.
 
 ## Subagent Plan
 
-If the implementation will benefit from agents, include a `Subagent Plan` section:
+If the implementation will benefit from agents, include a `Subagent Plan` section in the plan artifact:
 
 ```markdown
 ## Subagent Plan
@@ -397,9 +314,9 @@ Use `PASS`, `PASS WITH RISKS`, `BLOCKED`, or `FAIL` for the plan itself:
 - `BLOCKED`: missing decisions or prerequisites prevent safe execution
 - `FAIL`: plan is unsafe, too broad, unverifiable, or likely to cause shared-state collisions
 
-## Final Response
+## Plan-Only Final Response
 
-After creating or updating the plan, respond with:
+After creating or updating the plan in plan-only mode, respond with this format instead of the main skill's Final Response format:
 
 ```text
 Summary:
@@ -436,27 +353,19 @@ Status:
 PASS / PASS WITH RISKS / BLOCKED / FAIL
 
 Confidence:
-[0-100]% absolute confidence in the plan's executability, with one sentence explaining the evidence and biggest remaining uncertainty. Score with the evidence bands below.
+[0-100]% absolute confidence in the plan's executability, with one sentence explaining the evidence and biggest remaining uncertainty. Use the confidence bands in the main SKILL.md.
 
 Commit/push recommendation:
 [COMMIT + PUSH / COMMIT ONLY / DO NOT COMMIT / DO NOT PUSH YET], with the reason. For planning-only changes, say whether the plan artifact itself is worth committing now or should wait for missing decisions/evidence.
 
 Next action:
-[the single best next action: commit/push the plan, answer a blocker, start the required slice execution loop with `safe-feature-slice`, run a missing evidence read, or stop because the user asked for planning only]
+[the single best next action: commit/push the plan, answer a blocker, start the required slice execution loop in build mode, run a missing evidence read, or stop because the user asked for planning only]
 ```
 
-Do not include optional follow-up implementation when the user asked for planning only. If the user asked to implement the work, hand off into the required slice execution loop instead of stopping after the plan.
-
-The confidence score is evidence-based:
-
-- 95-100: plan is grounded in current source evidence, all slices are narrow, dependencies are explicit, no high-risk decisions are unresolved, and verification gates are complete enough for execution.
-- 85-94: plan is executable with strong evidence, but has minor assumptions or non-critical verification gaps.
-- 70-84: useful plan, but one or more slices need refinement, repo evidence is incomplete, or parallel/shared-state risks need care.
-- 50-69: rough plan only; important evidence or decisions are missing.
-- 0-49: blocked, unsafe, too broad, stale, or not executable.
+Do not include optional follow-up implementation when the user asked for planning only. If the user asked to implement the work, hand off into the required slice execution loop (build mode) instead of stopping after the plan.
 
 Do not recommend `COMMIT + PUSH` for a plan when high-risk decisions remain unresolved or the plan is not ready for another agent to execute. Recommend `COMMIT ONLY` when the plan is useful as a checkpoint but execution should wait. Recommend `DO NOT COMMIT` when the plan is speculative, stale, or likely to mislead future work.
 
-## Lessons And Memory Routing
+## The Hard Wall
 
-Do not create or append `LESSONS.md` beside this installed skill. Use the active environment's global lessons and memory system instead. Lessons are for mistakes, corrections, and reusable failure-prevention rules; memories are for durable user, project, or workflow context when the active instructions allow memory updates. Keep entries concise and redact secrets, tokens, customer data, and private details.
+In plan-only mode this skill never implements code, never runs migrations, never deploys, and never marks a slice `done` without evidence supplied by the user or an already-completed run. It decomposes into a dependency-ordered thin-slice plan with progress tracking and stops. Handing off into execution requires an explicit user request to build, at which point control passes to the main `SKILL.md` build mode (or `feature-orchestrator` for whole-feature graph execution).

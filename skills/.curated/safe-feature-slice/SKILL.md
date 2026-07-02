@@ -1,6 +1,6 @@
 ---
 name: safe-feature-slice
-description: Safety-first workflow for planning, building, continuing, or reviewing one or more feature slices while preserving invariants. Use for single safe slices, existing slice-plan continuation, audits, reviews, or feature work touching money, permissions, data ownership, destructive actions, webhooks, state transitions, migrations, integrations, or customer-visible records. For whole-feature delivery through a canonical dependency graph, progress.md, and maximum safe parallel agents, prefer feature-orchestrator.
+description: Safety-first workflow for planning, building, continuing, or reviewing one or more feature slices while preserving invariants. Use for single safe slices, existing slice-plan continuation, audits, reviews, or feature work touching money, permissions, data ownership, destructive actions, webhooks, state transitions, migrations, integrations, or customer-visible records. Also use in plan-only mode when the user explicitly asks to plan, slice, sequence, review an existing plan, or stop before implementation. For whole-feature delivery through a canonical dependency graph, progress.md, and maximum safe parallel agents, prefer feature-orchestrator.
 ---
 
 # Safe Feature Slice
@@ -70,6 +70,7 @@ Before coding or reviewing, classify the request as one of:
 - `single-slice`: one actor/trigger, one main action, one invariant, one acceptance signal, small expected file surface.
 - `planned-slice`: the request points at an existing `plans/<feature-slug>/slice-plan.md` slice or the repo already has a relevant slice plan with a clear next eligible slice.
 - `needs-plan`: broad feature, multi-step fix, roadmap, hardening sweep, or work spanning several independently verifiable steps.
+- `plan-only`: the user explicitly asks to plan, slice, sequence, review an existing plan, or stop before implementation. Decompose and write the plan artifacts, never implement; load `references/plan-only-mode.md`.
 
 ### Auto-Routing Rules
 
@@ -95,7 +96,7 @@ Create or update `plans/<feature-slug>/slice-plan.md` inside this workflow when 
 - define each slice with actor/trigger, action, invariant, intentional behaviour changes, previous behaviours preserved, unsafe outcomes, dependencies, expected files, write boundaries, tests, runtime verification, migration/external notes, acceptance criteria, exit evidence, and parallelization notes
 - mark destructive or live-data mutations as blocked until explicitly approved
 
-Use the standalone `thin-slice-plan` skill only when the user explicitly wants planning-only output, asks to review a plan without implementation, or the active workflow should stop after creating a plan.
+Switch to `plan-only` mode — and load `references/plan-only-mode.md` for the full artifact format, decomposition rules, dependency-graph classification, audit-triage table, subagent plan table, and plan-only final response — when the user explicitly wants planning-only output, asks to plan, slice, sequence, or review an existing plan without implementation, or the active workflow should stop after creating a plan. In `plan-only` mode this skill never implements: it decomposes into a dependency-ordered thin-slice plan with progress tracking and stops.
 
 After the plan exists, continue in this skill for one selected slice at a time inside a continuing execution loop unless the user asked for planning only or for review/audit only. Do not silently expand the active slice to absorb adjacent plan items. If implementation reveals new required work, update the slice plan rather than hiding it inside the current slice, then continue through the revised eligible slice list unless blocked or told otherwise.
 
@@ -104,6 +105,7 @@ If classification is ambiguous, prefer the safest reversible path:
 - If the work could affect money, permissions, ownership, destructive writes, state transitions, webhooks, migrations, or customer-visible records, treat it as `needs-plan` unless repo evidence proves it is one slice.
 - If the user named an exact failing test, file, route, or behavior and the blast radius is narrow, treat it as `single-slice`.
 - If a plan artifact exists and has a clear next slice, treat it as `planned-slice`.
+- If the user's phrasing explicitly asks to plan, slice, sequence, review an existing plan, or stop before implementation, treat it as `plan-only` regardless of scope.
 
 ### Routing Examples
 
@@ -114,6 +116,8 @@ If classification is ambiguous, prefer the safest reversible path:
 | "Continue the quote approval plan" with `plans/quote-approval/slice-plan.md` present | `planned-slice` | Pick the next eligible slice from the plan. |
 | "Review this PR for payment state safety" | `single-slice` if PR is narrow, otherwise `needs-plan` | Classify after the initial read. |
 | "Implement all remaining slices" | `planned-slice` | Execute the next eligible slice, then keep going until the required slice set is done, skipped, or blocked. |
+| "Plan out this hardening sweep, don't build it yet" | `plan-only` | Load `references/plan-only-mode.md`, write/update the slice plan, stop before implementation. |
+| "Review this existing slice plan for gaps" | `plan-only` | Load `references/plan-only-mode.md`, run Existing Plan Review Mode, report PASS/PASS WITH RISKS/BLOCKED/FAIL on the plan. |
 
 ## Interview Gate
 

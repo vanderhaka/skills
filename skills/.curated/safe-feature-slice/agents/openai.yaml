@@ -1,4 +1,4 @@
 interface:
   display_name: "Safe Feature Slice"
-  short_description: "Plan and execute safe feature slices"
-  default_prompt: "Use $safe-feature-slice to plan, build, review, or continue safe feature work; create a slice plan first when scope is broad, then execute eligible slices with invariant and behaviour-preservation checks."
+  short_description: "Plan and execute safe feature slices, or plan only"
+  default_prompt: "Use $safe-feature-slice to plan, build, review, or continue safe feature work; create a slice plan first when scope is broad, then execute eligible slices with invariant and behaviour-preservation checks. When the user explicitly asks to plan, slice, sequence, review an existing plan, or stop before implementation, use plan-only mode: decompose into a dependency-ordered thin-slice plan with progress tracking and stop before implementing."
