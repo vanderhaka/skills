@@ -18,6 +18,7 @@ skills/
 ├── .curated/
 │   └── skill-name/
 │       ├── SKILL.md
+│       ├── README.md
 │       ├── agents/openai.yaml
 │       ├── scripts/
 │       ├── references/
@@ -34,11 +35,12 @@ Use `.curated` for skills that are ready for other agents. Use `.experimental` f
 2. Confirm the skill folder name, frontmatter `name`, and install path match.
 3. Keep frontmatter to `name` and `description`. The description must include the capability and the concrete triggers, because Codex sees it before loading the body.
 4. Keep `SKILL.md` under 500 lines when practical. Move long docs into one-level `references/` files and link them from `SKILL.md`.
-5. Add scripts only for deterministic, repeatable operations. Test each script or a representative sample.
-6. Add assets only when they are used in generated output.
-7. Read `references/public-safety-checklist.md` before publishing public repos or converting local/private skills.
-8. Run `scripts/audit_skill_repo.py <repo-root>` before finalizing.
-9. If the repo has a root validator, run it too.
+5. Give each curated skill a plain-English `README.md` with what it does, when to use it, and install instructions.
+6. Add scripts only for deterministic, repeatable operations. Test each script or a representative sample.
+7. Add assets only when they are used in generated output.
+8. Read `references/public-safety-checklist.md` before publishing public repos or converting local/private skills.
+9. Run this skill's `scripts/audit_skill_repo.py <repo-root>` before finalizing.
+10. If the repo has a root validator, run it too.
 
 ## Public Conversion Rules
 

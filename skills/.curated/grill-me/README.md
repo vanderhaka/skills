@@ -24,7 +24,7 @@ The skill classifies each possible question before asking it. Routine technical 
 
 ## Not For
 
-Use `feature-intake-grill` when you only need the orchestrator decision gate. Use `issue-fix-strategy` when you want the agent to make the calls and ask only blocking questions.
+Use `grill-with-docs` when the answers should also update durable docs (`CONTEXT.md`, ADRs, decision records). Use `feature-intake-grill` when you only need the orchestrator decision gate. Use `issue-fix-strategy` when you want the agent to make the calls and ask only blocking questions.
 
 ## Install
 

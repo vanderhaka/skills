@@ -13,7 +13,7 @@ Core rule: no completion claim without fresh verification evidence. If the proof
 
 ## Workflow
 
-1. Read the original request, `plan.md`, `progress.md`, `decisions.md`, and all relevant `agent-runs/*.md`.
+1. Read the original request and, from `plans/<feature-slug>/`: `plan.md`, `progress.md`, `decisions.md`, and all relevant `agent-runs/*.md`.
 2. Derive explicit requirements from the request and plan.
 3. For each requirement, identify authoritative evidence:
    - source files
@@ -30,7 +30,7 @@ Core rule: no completion claim without fresh verification evidence. If the proof
    - browser smoke for user-visible flows
    - boundary checks for DB/API/filesystem/third-party/auth/payment nodes
    - non-destructive migrations when required
-6. Write `verification.md`.
+6. Write `plans/<feature-slug>/verification.md` using the template in `feature-orchestrator/references/graph-and-progress.md` when installed, including behavior preservation confidence 0-100.
 7. Set final verdict:
    - `PASS`
    - `PASS WITH RISKS`
@@ -39,11 +39,13 @@ Core rule: no completion claim without fresh verification evidence. If the proof
 
 ## Completion Bar
 
-Mark `PASS` only when current evidence proves every in-scope requirement and all required nodes are `DONE` or explicitly `SKIPPED` with accepted reasons.
+Mark `PASS` only when current evidence proves every in-scope requirement and all required nodes are `DONE`, `ALREADY_RESOLVED` with fresh evidence, or explicitly `SKIPPED` with accepted reasons.
 
 Use lower confidence when evidence is indirect, skips are material, previous intended behaviors are not strongly protected, or runtime proof could not run.
 
 Use `PASS WITH RISKS` when the requested behavior appears implemented but proof is incomplete, broad checks are skipped, previous behavior preservation is weak, or runtime/provider/browser verification could not run.
+
+Use `BLOCKED` when verification of an in-scope requirement cannot proceed: missing decision, credentials, environment, or an unsafe live check. Use `FAIL` when fresh evidence shows an in-scope requirement unmet or an invariant broken.
 
 ## Rules
 

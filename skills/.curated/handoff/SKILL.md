@@ -7,7 +7,7 @@ description: End-of-session handoff that gathers repo status, checks build healt
 
 ## Overview
 
-Write a concise HANDOFF.md in the project root with the minimum context needed to resume work next session.
+Write a concise HANDOFF.md in the project root with the minimum context needed to resume work next session. Also give the user a copyable prompt and a short copyable handoff summary they can paste into a fresh chat.
 
 ## Workflow
 
@@ -29,7 +29,7 @@ Write a single `HANDOFF.md` file with this exact structure:
 {One sentence: what was being worked on}
 
 ## Status
-{clean build | N errors to fix | uncommitted changes}
+{clean build | N errors to fix | no build check}; {clean tree | uncommitted changes}
 
 ## Key files
 - {5-10 files most relevant to resuming work, with 1-line descriptions}
@@ -45,17 +45,38 @@ Write a single `HANDOFF.md` file with this exact structure:
 If there are uncommitted changes, ask:
 "You have uncommitted changes. Want me to commit before ending?"
 
-4) Confirm
-Tell the user: "Wrote HANDOFF.md - paste `HANDOFF.md continue` in your next session to pick up."
+4) Confirm and provide copyable next-session material
+- Tell the user where `HANDOFF.md` was written.
+- Include a "Next-session prompt" section with a fenced plain-text code block the user can copy directly.
+- The prompt must include the absolute project root and instruct the next session to read `HANDOFF.md` first before editing.
+- Keep the prompt concise and standalone. Use this shape:
+
+```text
+Continue work in {ABSOLUTE_PROJECT_ROOT}. Read HANDOFF.md first, inspect the current git status, preserve unrelated changes, and resume from the listed next steps. Verify the current repo state before making claims or edits.
+```
+- Include a "Copyable handoff summary" section with a second fenced plain-text block.
+- The summary must be short, standalone, and useful even if pasted without surrounding chat context.
+- The summary must point to `HANDOFF.md` and the most important docs/plans/status files from "Key files" and "Active plans" so the next chat can open the right source documents quickly.
+- Use this shape:
+
+```text
+Project: {ABSOLUTE_PROJECT_ROOT}
+Read first: HANDOFF.md
+Docs/plans: {repo-relative docs/plans/status paths, comma-separated}
+State: {one sentence current state}
+Next: {one sentence next action}
+```
 
 ## Rules
 
 - Always write to `HANDOFF.md` in the project root (overwrite if it exists).
+- Use `YYYY-MM-DD` for `{DATE}`.
 - Keep the file under 30 lines; brevity is the point.
 - Only list files relevant to resuming, not every file touched.
 - One HANDOFF.md per project; always overwritten.
 - Add `HANDOFF.md` to `.gitignore` if not already there.
 - Never assume project type; detect from config files.
+- Always include both the copyable next-session prompt and the copyable handoff summary in the final response; do not only say `HANDOFF.md continue`.
 
 ## Lessons And Memory Routing
 

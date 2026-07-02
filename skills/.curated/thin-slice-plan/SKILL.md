@@ -21,7 +21,7 @@ Do not hide a large feature inside one "slice". If a step changes multiple bound
 
 ## When To Use
 
-Use this skill when:
+Use this skill when the user wants a plan rather than immediate implementation and:
 
 - A feature or fix obviously spans multiple implementation steps.
 - The user asks for a plan, slice breakdown, wave plan, multi-step fix, tracked progress, or implementation roadmap.
@@ -300,42 +300,14 @@ Blocked on:
 
 ## Slice Detail Requirements
 
-Each slice must say enough for `safe-feature-slice` to execute it without re-planning the whole feature:
+Each slice must say enough for `safe-feature-slice` to execute it without re-planning the whole feature. The `S1` slice template above carries most of this; every implementation slice must also make these explicit:
 
-```text
-Slice:
-[one narrow behavior]
-
-Allowed scope:
-[expected files/folders/modules]
-
-Invariant protected:
-[safety rule]
-
-Intentional behaviour changes:
-[what this slice is allowed to change]
-
-Previous intended behaviours preserved:
-[older goals or guarantees this slice must keep true]
-
-Dependencies:
-[prior slices or repo prerequisites]
-
-Integration risk:
-[what this could break]
-
-Tests first:
-[the failing/characterization test to write or locate]
-
-Unsafe cases:
-[wrong user, wrong org, stale version, duplicate request, invalid transition, etc.]
-
-Runtime verification:
-[browser/computer-use/manual proof required, or not required with reason]
-
-Exit evidence:
-[commands, screenshots, logs, DB checks, or code references required before done]
-```
+- Allowed scope: the expected files/folders/modules the slice may touch
+- Integration risk: what this slice could break
+- Tests first: the failing or characterization test to write or locate before code
+- Unsafe cases: wrong user, wrong org, stale version, duplicate request, invalid transition, etc.
+- Runtime verification: browser/computer-use/manual proof required, or not required with reason
+- Exit evidence: commands, screenshots, logs, DB checks, or code references required before done
 
 ## Progress Discipline
 
@@ -382,7 +354,7 @@ During planning:
 - mark destructive or live-data mutations as `decision-needed`
 - include non-destructive migration execution as an implementation gate when project rules require it
 
-Do not run migrations from this planning skill unless the user explicitly asks this skill to both plan and perform a safe planning-time migration check. Actual migration execution belongs to the implementing slice or cap/deploy flow.
+Do not execute migrations from this planning skill. A read-only planning-time migration check (dry run or diff) is allowed only when the user explicitly asks for it. Actual migration execution belongs to the implementing slice or cap/deploy flow.
 
 ## Subagent Plan
 
@@ -464,7 +436,7 @@ Status:
 PASS / PASS WITH RISKS / BLOCKED / FAIL
 
 Confidence:
-[0-100]% absolute confidence in the plan's executability, with one sentence explaining the evidence and biggest remaining uncertainty. Do not give 90%+ unless the plan is grounded in current repo evidence, has clear dependencies, contains verification gates, and has no unresolved high-risk decisions.
+[0-100]% absolute confidence in the plan's executability, with one sentence explaining the evidence and biggest remaining uncertainty. Score with the evidence bands below.
 
 Commit/push recommendation:
 [COMMIT + PUSH / COMMIT ONLY / DO NOT COMMIT / DO NOT PUSH YET], with the reason. For planning-only changes, say whether the plan artifact itself is worth committing now or should wait for missing decisions/evidence.

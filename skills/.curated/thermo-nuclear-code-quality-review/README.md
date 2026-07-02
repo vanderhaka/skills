@@ -1,4 +1,4 @@
-# Thermo Nuclear Code Quality Review
+# Thermo-Nuclear Code Quality Review
 
 ## What This Skill Does
 
@@ -24,7 +24,7 @@ The skill reviews code quality with a high bar. It flags structural regressions,
 
 ## Not For
 
-Use `code-review` for general correctness and merge-readiness. Use `one-major-issue` when the user wants only one confirmed issue.
+Use `code-review` for general correctness and merge-readiness — its `strict` mode applies this same structural bar inside a broader review, so this skill is only for a standalone maintainability-only audit. Use `one-major-issue` when the user wants only one confirmed issue.
 
 ## Install
 

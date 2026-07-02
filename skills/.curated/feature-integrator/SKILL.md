@@ -11,7 +11,7 @@ Accept or reject worker outputs and advance the dependency graph. This stage is 
 
 ## Workflow
 
-1. Read `plan.md`, `progress.md`, and the relevant `agent-runs/*.md`.
+1. Read `plans/<feature-slug>/plan.md`, `progress.md`, and the relevant `agent-runs/*.md` from the same folder.
 2. For each worker report, run two review passes:
    - Spec pass: assigned behavior, acceptance criteria, decisions, intentional behavior changes, and previous behavior preservation are satisfied.
    - Quality pass: changed files stayed inside write boundaries, dependencies were satisfied before work began, tests are meaningful, contracts still fit, and no unrelated work was absorbed.
@@ -21,7 +21,7 @@ Accept or reject worker outputs and advance the dependency graph. This stage is 
 6. Update `progress.md`:
    - `DONE` only when evidence is accepted
    - `BLOCKED` with exact blocker
-   - `NEEDS ATTENTION` or keep `IN_PROGRESS` when evidence is weak
+   - keep `IN_PROGRESS` or set `VERIFYING` when evidence is weak; a worker's `NEEDS ATTENTION` is a recommendation, not a node status
 7. Add newly discovered required work as new graph nodes.
 8. Recompute eligible next-wave nodes.
 9. Recommend or launch the next safe parallel wave when the main orchestrator requests it.

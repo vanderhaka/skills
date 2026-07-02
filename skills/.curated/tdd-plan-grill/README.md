@@ -6,7 +6,7 @@
 
 ## Use It When
 
-- A `plans/{slug}-tdd/plan.md` exists.
+- A `plans/{slug}-tdd/plan.md` or `plans/{slug}/plan.md` exists.
 - You want to harden a test-first plan before coding.
 - The test strategy, dependencies, or acceptance criteria may be weak.
 - You need focused questions and plan edits before implementation.
@@ -25,7 +25,7 @@ The skill reviews the plan for completeness, ambiguity, feasibility, test qualit
 
 ## Not For
 
-Use `feature-plan-grill` for `feature-orchestrator` dependency graphs. Use `thin-slice-plan` when no TDD plan exists yet.
+Inside a running `feature-orchestrator` flow, prefer its dedicated `feature-plan-grill` stage; this skill can still review a `plans/{slug}/plan.md` graph standalone. Use `thin-slice-plan` when no plan exists yet.
 
 ## Install
 

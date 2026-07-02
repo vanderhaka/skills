@@ -9,7 +9,7 @@ description: Pre-launch catastrophic-risk audit for finding confirmed P0/P1 laun
 
 Find confirmed launch-blocking issues before a production release or client go-live. This is the heavier sibling of `$one-major-issue`: it sweeps more surfaces, uses stricter risk framing, and may report a small set of catastrophic blockers instead of only one issue.
 
-The output should answer: **Can this launch safely, or is there a confirmed issue that could seriously hurt customers, the client, James, revenue, data, security, or operational trust?**
+The output should answer: **Can this launch safely, or is there a confirmed issue that could seriously hurt customers, the client, the business, revenue, data, security, or operational trust?**
 
 Use this skill when the user asks for:
 
@@ -28,7 +28,7 @@ If the user appends extra instruction after the skill call, treat it as binding 
 
 ## Operating Mode
 
-Default to read-only investigation. Do not edit code, write migrations, change data, reformat files, deploy, or mutate external services unless the user explicitly asks for fixes or launch execution.
+Default to read-only investigation. Do not edit code, write migrations, change shared or production data, reformat files, deploy, or mutate external services unless the user explicitly asks for fixes or launch execution.
 
 Tests, builds, typechecks, lint, local app runs, browser checks, and local migrations are allowed only when they do not mutate shared state or violate the user's constraint. If migrations are non-destructive and local/test-scoped, run them when needed to verify launch readiness.
 
@@ -165,7 +165,7 @@ Look for:
 
 ## Output Detail Standard
 
-For every confirmed blocker, give enough detail that James can decide whether to stop launch, brief a client, or hand the issue to a fixer without re-running the whole investigation.
+For every confirmed blocker, give enough detail that the user can decide whether to stop launch, brief a client, or hand the issue to a fixer without re-running the whole investigation.
 
 Do not bury the finding in vague severity language. Spell out:
 

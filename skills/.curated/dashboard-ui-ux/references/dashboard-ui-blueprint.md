@@ -35,7 +35,7 @@ Use this reference for tactical dashboard construction and critique. The active 
 
 ### Iconography
 
-- Prefer Phosphor, Lucide, or the repo's existing icon set.
+- Prefer the repo's existing icon set; otherwise Lucide or Phosphor.
 - Do not use emojis or mismatched icon line weights.
 - Icon size should match adjacent text line-height. For 14px text on 20px line-height, use a 20x20 icon.
 

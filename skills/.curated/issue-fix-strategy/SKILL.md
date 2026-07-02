@@ -205,6 +205,7 @@ Also viable:
 - 10 issues or fewer: use the full per-issue template for every issue.
 - More than 10 issues: keep the full template for P0 and P1 issues only. Summarize P2 and P3 issues in one compact table — `ID | Priority | Issue | Fix direction | Routing` — and expand a P2/P3 issue to the full template only when its fix is risky, counterintuitive, or decision-blocked.
 - Compacting never deletes triage judgement: every priority still needs a reason, and a compacted issue that routes onward keeps its ID so regression protections and proof requirements can be derived at planning time.
+- In `Recommended Fix Order`, omit empty waves; collapse to a single wave when sequencing adds nothing.
 
 Issue IDs are the traceability handle for the rest of the flow. When routing to `feature-graph-plan`, every accepted issue ID must map to at least one graph node.
 

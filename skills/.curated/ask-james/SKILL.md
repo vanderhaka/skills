@@ -27,6 +27,7 @@ Keep summaries short. Do not include plugin/system skills unless the user explic
 - `cap` — verify, exact-stage, commit, and push intended work safely.
 - `code-review` — harsh correctness, safety, test, and maintainability review.
 - `codebase-design` — design deeper modules, cleaner interfaces, seams, adapters, and test surfaces.
+- `dashboard-ui-ux` — build, critique, or polish dense production dashboards, admin panels, and analytics UIs.
 - `fallow` — run read-only JS/TS structural analysis with Fallow.
 - `feature-graph-plan` — turn a feature brief into dependency graph nodes and progress tracking.
 - `feature-intake-grill` — resolve material feature decisions before graph planning.
@@ -42,6 +43,7 @@ Keep summaries short. Do not include plugin/system skills unless the user explic
 - `launch-critical-sweep` — find confirmed P0/P1 blockers before launch.
 - `logic-ripple` — map all surfaces affected by a business-rule change.
 - `one-major-issue` — find only the single biggest confirmed issue.
+- `progress` — discover and deliver one approved production-ready improvement through a fixed worktree, graph, QA, and demo protocol.
 - `prototype` — build disposable UI or logic experiments before real implementation.
 - `safe-feature-slice` — plan and execute risky or narrow feature slices safely.
 - `skill-repo-maintainer` — create, validate, scrub, and publish public-safe skill folders.
@@ -64,6 +66,8 @@ If the user only asked for advice, stop after the recommendation. If the user as
 
 Use `feature-orchestrator` when the user wants a complete feature, broad multi-slice fix, many agents coordinated, canonical `plans/<feature-slug>/progress.md`, or "keep going until complete" execution.
 
+Use `progress` when the user wants Codex to find the best product improvement first, get one approval, create a fresh worktree, execute through a strict dependency graph, self-QA, and produce a demo-ready delivery package.
+
 Use `safe-feature-slice` when the work is one narrow feature/fix or a small risky slice touching money, permissions, ownership, destructive actions, state transitions, webhooks, migrations, integrations, or customer-visible records.
 
 Use `thin-slice-plan` when the user explicitly wants planning only and no implementation yet.
@@ -79,6 +83,8 @@ Use `feature-intake-grill` when the only missing piece is the orchestrator's dec
 Use `codebase-design` when the task is mainly about module shape, architecture vocabulary, interface design, seam placement, adapters, or making code easier to test before implementation.
 
 Use `prototype` when the next best step is a disposable UI or logic experiment to answer a design, state, data-shape, or workflow question before full implementation.
+
+Use `dashboard-ui-ux` when the ask is dashboard, admin-panel, or analytics UI design, critique, or tactical polish — layout, tables, KPI cards, charts, sidebars, filters, or a mock-data dashboard proof. For whole-feature dashboard delivery, route to `feature-orchestrator` and apply `dashboard-ui-ux` as the UI standard.
 
 ### Issues, Reviews, And Bugs
 
@@ -121,6 +127,7 @@ Also viable: <one alternative or "None">
 - Prefer `issue-fix-strategy` before planning when the input is a pile of findings.
 - Prefer `grill-with-docs` before graph planning when product/domain decisions need to survive the chat.
 - Prefer `feature-orchestrator` for whole-feature execution.
+- Prefer `progress` before `feature-orchestrator` when the product target still needs discovery and one approval.
 - Prefer `safe-feature-slice` for one risky slice.
 - Prefer `cap` only after the work is ready to verify, commit, and push.
 - Prefer discussion over action when the source evidence is too weak to route safely.

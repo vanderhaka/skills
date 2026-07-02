@@ -16,7 +16,7 @@
 
 The skill starts by writing a rule contract, then searches by meaning rather than only text. It classifies every candidate as `Must Fix`, `Probably Same Rule`, `Canonicalization Candidate`, `Intentionally Different`, `Do Not Touch`, or `Research Recommended`.
 
-When research is needed and the user did not already ask for it, the skill stops and asks whether to research before promoting ambiguous items into the fix menu.
+When research is needed and the user did not already ask for it, the skill keeps ambiguous items out of the fix menu and asks with the final report whether to research before promoting them.
 
 ## What You Get
 

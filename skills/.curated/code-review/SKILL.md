@@ -22,7 +22,8 @@ Do not approve code merely because behavior appears correct. If the implementati
 works but makes the codebase harder to reason about, call that out directly.
 
 Backticked skill names in this document (`fallow`, `cap`, `safe-feature-slice`,
-`bug-ripple`, `launch-critical-sweep`) refer to installed skills. Invoke them
+`bug-ripple`, `launch-critical-sweep`, `issue-fix-strategy`,
+`feature-orchestrator`) refer to installed skills. Invoke them
 through the active environment's skill mechanism (slash command, skill tool, or
 equivalent).
 
@@ -34,6 +35,10 @@ Infer the mode from the user request and repo evidence:
 - `full`: broader repo/PR review with parallel lanes and a ranked plan.
 - `one`: return only the single strongest confirmed issue.
 - `strict`: normal review plus maximum structural pressure.
+
+When the request is ambiguous (for example "review this" or "normal review"),
+default by scope: `quick` for a current diff or named files, `full` for a PR,
+branch, or repo-area review.
 
 If the request is actually go-live safety, refactor execution, a sibling-bug
 sweep, or shipping, do not force a review mode — route per Specialist Routing.
@@ -334,15 +339,14 @@ Keep only genuinely different workflows standalone:
   reason for `quick` and `one`.
 - Use `launch-critical-sweep` for go-live, release readiness, catastrophic-risk,
   or "is this safe to launch?" questions.
-- Use `safe-feature-slice` when the user wants behavior-preserving
+- Use `safe-feature-slice` for one narrow fix or hardening task on a risky
+  surface once the finding is clear, or when the user wants behavior-preserving
   refactor/cleanup with characterization tests and implementation.
 - Use `bug-ripple` after diagnosing one concrete bug when similar sibling bugs
   may exist.
 - Use `issue-fix-strategy` when the review produces multiple findings with mixed
   priorities and the user needs an executive triage, fix order, and routing call
   before implementation.
-- Use `safe-feature-slice` for one narrow fix or hardening task on a risky
-  surface once the finding is clear.
 - Use `feature-orchestrator` when the required fixes are already clear but span
   multiple slices, files, or waves and should run as a tracked dependency graph
   with parallel workers.
@@ -409,6 +413,9 @@ Severity labels:
 - `MODERATE`: real issue, but can be scheduled if risk is understood.
 - `MINOR`: include only when no higher-value findings exist.
 
+Classify deterministically: a confirmed Ranking-item-1 failure, or an Approval
+Bar presumptive blocker without an accepted justification, is `BLOCKER`.
+
 For review-only requests, do not edit files. For implementation requests, finish
 the review judgment first, then move into the appropriate fix workflow.
 
@@ -417,7 +424,8 @@ exactly one; when another route is genuinely defensible, list it as an
 alternative with a one-line tradeoff, and never list more than two alternatives:
 
 - `Use safe-feature-slice to fix [specific issue]` for one narrow fix or
-  hardening task.
+  hardening task, or for behavior-preserving refactor with characterization
+  tests.
 - `Use issue-fix-strategy to triage these findings` when there are multiple
   findings with mixed priorities and the fix order or routing needs an
   executive call before implementation.
@@ -425,8 +433,6 @@ alternative with a one-line tradeoff, and never list more than two alternatives:
   already clear but span multiple slices and deserve a tracked dependency graph
   with parallel workers.
 - `Use launch-critical-sweep` when the real decision is go-live safety.
-- `Use safe-feature-slice` when the next move is behavior-preserving refactor
-  with characterization tests.
 - `Use bug-ripple` when one confirmed bug implies likely sibling bugs.
 - `Use cap` when the code is reviewed and the user asks to verify, commit, push,
   or ship.

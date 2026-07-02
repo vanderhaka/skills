@@ -82,7 +82,7 @@ Use the existing plan when the request is `planned-slice`:
 - Otherwise select the first `pending` slice whose dependencies are `done` or not required.
 - If a `blocked` slice appears unblocked from new evidence or a user decision, update the plan blocker first, then select it.
 - Move only the selected slice into the active working context.
-- After that slice reaches `PASS`/`done`, update the plan and continue to the next eligible required slice unless the user explicitly said to stop after the current slice or a stop condition applies.
+- After that slice reaches `PASS`/`done`, update the plan and continue to the next eligible required slice unless the user explicitly said to stop after the current slice or a stop condition applies (a slice ends `BLOCKED` or `FAIL`, a required decision is missing, or a destructive/live-data mutation needs approval).
 - Do not merge later slices into the current slice just because they are listed.
 - Update the plan progress before starting and after verification when edits are made.
 
@@ -97,7 +97,7 @@ Create or update `plans/<feature-slug>/slice-plan.md` inside this workflow when 
 
 Use the standalone `thin-slice-plan` skill only when the user explicitly wants planning-only output, asks to review a plan without implementation, or the active workflow should stop after creating a plan.
 
-After the plan exists, continue in this skill for one selected slice at a time inside a continuing execution loop unless the user asked for planning only. Do not silently expand the active slice to absorb adjacent plan items. If implementation reveals new required work, update the slice plan rather than hiding it inside the current slice, then continue through the revised eligible slice list unless blocked or told otherwise.
+After the plan exists, continue in this skill for one selected slice at a time inside a continuing execution loop unless the user asked for planning only or for review/audit only. Do not silently expand the active slice to absorb adjacent plan items. If implementation reveals new required work, update the slice plan rather than hiding it inside the current slice, then continue through the revised eligible slice list unless blocked or told otherwise.
 
 If classification is ambiguous, prefer the safest reversible path:
 
@@ -163,7 +163,7 @@ When delegating, give each subagent a specialist brief with role, exact goal, re
 
 Do not parallelize shared-state operations: git checkout/merge/push, package lockfile edits, migrations against the same database, test runs sharing one mutable database, deploys, or multiple agents writing the same files. Do not delegate unresolved product decisions; use the Interview Gate instead.
 
-Subagents must report concise evidence: files read or changed, commands run, tests/checks performed, findings, unresolved risks, and handoff notes. The main agent owns integration, final judgment, and the final `PASS`/`BLOCKED`/`FAIL` status.
+Subagents must report concise evidence: files read or changed, commands run, tests/checks performed, findings, unresolved risks, and handoff notes. The main agent owns integration, final judgment, and the final `PASS`/`PASS WITH RISKS`/`BLOCKED`/`FAIL` status.
 
 ## Build Mode
 
@@ -356,7 +356,7 @@ Status:
 PASS / PASS WITH RISKS / BLOCKED / FAIL
 
 Confidence:
-[0-100]% absolute confidence in the current slice state, with one sentence explaining the evidence and the biggest remaining uncertainty. Do not give 90%+ unless the relevant automated checks, required runtime verification, and integration/migration gates are complete.
+[0-100]% absolute confidence in the current slice state, with one sentence explaining the evidence and the biggest remaining uncertainty. Do not give 95%+ unless the relevant automated checks, required runtime verification, and integration/migration gates are complete.
 
 Behaviour preservation confidence:
 [0-100]% confidence that previous intended behaviours still hold except for explicitly requested changes. Explain the regression evidence, intentional changes, and any unknown prior intent.

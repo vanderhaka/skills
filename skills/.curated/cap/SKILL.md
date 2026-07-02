@@ -1,6 +1,6 @@
 ---
 name: cap
-description: Check, repair safe verification failures, commit exact intended files, and push safely. Use when the user says cap, asks to commit and push, wants one safe check/commit/push flow, asks for cap fast / fast cap for tiny focused changes, cap dry-run for a no-mutation rehearsal, cap verify for checks only, cap watch for post-push deployment watching, or cap release for the full verify/commit/push/deploy-recovery flow.
+description: Check, repair safe verification failures, commit exact intended files, and push safely. Use when the user says cap, asks to commit and push, wants one safe check/commit/push flow, asks for cap cleanup after landing, asks for cap fast / fast cap for tiny focused changes, cap dry-run for a no-mutation rehearsal, cap verify for checks only, cap only for committing just the session or named file set, cap watch for post-push deployment watching, or cap release for the full verify/commit/push/deploy-recovery flow.
 ---
 
 # Cap
@@ -35,9 +35,10 @@ Choose one mode before running commands.
 - `cap dry-run`: no mutation rehearsal. Inspect scope, choose checks, run safe read-only checks when useful, identify env drift, propose staging, and draft the commit message. Do not stage, commit, push, deploy, create branches, mutate continuity files, run auto-fix commands, or update memory/lesson files.
 - `cap fast`, `fast cap`, `/cap fast`: tiny bounded change. Use focused verification plus exact staging, branch-intent gate, commit, freshness guard, and push. Skip branch inventory and long deployment watch unless the change is deployment-critical, env-related, or the user asked for release proof.
 - `cap verify`: verification only. Run the repo-appropriate checks and safe read-only diagnostics. Do not stage, commit, push, deploy, or mutate files except safe generated outputs produced by the checks themselves.
-- `cap only`: commit only changes made in this session or the explicitly requested file set. If the file set is ambiguous, ask which files to include.
+- `cap only`: restrict the staging set to changes made in this session or the explicitly requested file set, then run the plain `cap` flow (including push) for that set. If the file set is ambiguous, ask which files to include.
 - `cap watch`: post-push deployment/status watch only. Use this after a commit is already pushed or when the user only wants deployment follow-through.
 - `cap release`: full-fat path. Verify, repair, resolve branch intent, commit, push, branch snapshot, deployment watch, and bounded automatic deployment recovery.
+- `cap cleanup`: plain cap plus post-land cleanup. Saying `cleanup` alongside any other mode that pushes adds the same cleanup to that mode. After the target push succeeds, remove cap-created temporary worktrees and safe merged local/remote feature branches tied to this run or explicitly named by the user.
 - plain `cap`: standard path. Verify, repair safe local failures, exact-stage, resolve branch intent, commit, run post-commit memory checklist, push, and do a short post-push deployment status check when the repo is linked. Escalate to `cap release` when the user asked for production proof, the repo memory says release watch is expected, the change touches deployment/env/public runtime behavior, or the latest deployment reports `Error`/`Canceled`.
 
 If a mode discovers broader impact than its contract allows, escalate to the next stronger mode or stop before mutation and explain the missing evidence.
@@ -62,6 +63,7 @@ Suggested loading by mode:
 - `cap only`: preflight, verification, commit, push, output.
 - `cap watch`: deploy, output.
 - `cap release`: all references relevant to the repo.
+- `cap cleanup`: preflight, verification, commit, push, output.
 - plain `cap`: preflight, verification, commit, push, output, plus repo special cases when detected.
 
 ## High-Level Workflow

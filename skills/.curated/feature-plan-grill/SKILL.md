@@ -11,7 +11,7 @@ Challenge the canonical feature graph before code is written. This stage is adve
 
 ## Workflow
 
-1. Read `plans/<feature-slug>/plan.md`, `progress.md`, and `decisions.md`.
+1. Read `plans/<feature-slug>/plan.md`, `progress.md`, and `decisions.md`. If `plan.md` does not exist, stop and route to `feature-graph-plan` instead of reviewing from memory.
 2. Inspect the relevant codebase surface; do not ask questions the repo can answer.
 3. Review the plan across:
    - completeness against the feature brief
@@ -26,7 +26,7 @@ Challenge the canonical feature graph before code is written. This stage is adve
    - root-cause/debugging expectations for failure nodes
    - final proof and behavior preservation confidence
 4. Ask focused plan-changing questions in rounds only when needed.
-5. Write `plans/<feature-slug>/grill-review.md`.
+5. Write `plans/<feature-slug>/grill-review.md` with the findings, required plan edits, and the verdict.
 6. Update `plan.md` and `progress.md` only after decisions are resolved or safe assumptions are recorded.
 
 ## Verdicts

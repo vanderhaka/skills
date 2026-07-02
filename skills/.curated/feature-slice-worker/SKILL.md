@@ -13,7 +13,7 @@ Implement one assigned graph node safely. The worker owns the node implementatio
 
 - Assigned node from `plans/<feature-slug>/plan.md`.
 - `plans/<feature-slug>/decisions.md`.
-- `feature-orchestrator/references/worker-contract.md` from the installed skills set.
+- `feature-orchestrator/references/worker-contract.md` from the installed skills set, when installed; if absent, follow the contract restated in the worker brief.
 - Relevant source and tests inside the assigned read/write scope.
 
 ## Workflow
@@ -41,7 +41,7 @@ Implement one assigned graph node safely. The worker owns the node implementatio
 9. Boundary/Migration Gate:
    - run DB/API/filesystem/third-party/auth/payment checks when required
    - run non-destructive migrations when required and safe
-10. Write or return an `agent-runs/<node>-<attempt>.md` report.
+10. Write or return a `plans/<feature-slug>/agent-runs/<node>-<attempt>.md` report.
 
 ## Rules
 
@@ -50,6 +50,6 @@ Implement one assigned graph node safely. The worker owns the node implementatio
 - Do not commit, push, or run any git mutation; the orchestrator owns git.
 - Do not revert unrelated changes.
 - Do not weaken assertions, mock the dangerous part, or widen scope.
-- Do not mark `DONE`; recommend `DONE`, `BLOCKED`, or `NEEDS ATTENTION` with evidence.
-- Do not stack fixes on top of failed fixes. If the same error or failed fix repeats twice, stop, research current official docs or reputable current sources, and report the chosen fix with reasoning.
+- Do not mark the node `DONE` in `progress.md`; in the report, recommend `DONE`, `BLOCKED`, or `NEEDS ATTENTION` with evidence.
+- Do not stack fixes on top of failed fixes. If the same error or failed fix repeats twice, stop, research current official docs or reputable current sources, then apply one evidence-backed fix and report the reasoning.
 - Do not use old output, expectations, or confidence as proof. Evidence must come from commands, browser checks, or boundary checks run for this node attempt.

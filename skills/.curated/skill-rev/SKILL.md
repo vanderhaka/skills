@@ -95,6 +95,9 @@ git rev-list --left-right --count HEAD...origin/main
 git pull --ff-only origin main
 ```
 
+If the working tree is dirty or the branch has diverged, do not pull. Report
+the drift and the command the user should run instead.
+
 3. Create a dated audit for every curated skill and compare against both
    installed skill dirs:
 

@@ -1,4 +1,4 @@
 interface:
   display_name: "Feature Graph Plan"
   short_description: "Create the orchestration dependency graph"
-  default_prompt: "Use $feature-graph-plan to create the canonical feature dependency graph, progress file, worker briefs, and evidence gates."
+  default_prompt: "Use $feature-graph-plan to create the canonical feature dependency graph, progress file, worker-ready nodes, and evidence gates."

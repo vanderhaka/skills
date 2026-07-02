@@ -20,7 +20,7 @@ The worker reads the assigned node, decisions, worker contract, and relevant sou
 - Implementation for one graph node.
 - Targeted RED/GREEN/REFACTOR evidence.
 - Required gate results.
-- `agent-runs/<node>-<attempt>.md` report.
+- `plans/<feature-slug>/agent-runs/<node>-<attempt>.md` report.
 - Recommendation: `DONE`, `BLOCKED`, or `NEEDS ATTENTION`.
 
 ## Not For

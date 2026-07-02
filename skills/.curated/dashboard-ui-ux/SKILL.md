@@ -17,11 +17,13 @@ Use this skill to produce dense, polished dashboard interfaces that feel operati
 4. Keep advanced controls behind disclosure. Put search, filters, sort, date range, and bulk action affordances where users expect them.
 5. Verify the interface in browser with desktop and narrow/mobile widths before calling it done.
 
+For critique-only or review-only requests where nothing is built or runnable, apply the Layout and Component rules as audit criteria and skip the build and browser-proof steps.
+
 ## Layout Rules
 
 - Use a 4px spacing system. Keep 32px between distinct layout blocks.
 - Keep dashboard typography compact. Use one sans-serif family; cap prominent dashboard text at 24px.
-- Keep `letter-spacing: 0` when current frontend standards prohibit negative tracking. Use weight, line-height, and spacing for polish instead.
+- Keep `letter-spacing: 0`; do not use negative tracking. Use weight, line-height, and spacing for polish instead.
 - Avoid page-section cards and nested cards. Use cards only for repeated items, metrics, modals, and genuinely framed tools.
 - Make the dashboard canvas visibly distinct from cards through background contrast, borders, and restrained shadow; cards should read as foreground without looking floaty.
 - Prefer quiet, scan-friendly density over oversized hero sections, decorative panels, or explanatory feature copy.
@@ -30,7 +32,7 @@ Use this skill to produce dense, polished dashboard interfaces that feel operati
 
 - Sidebar: profile card at top, grouped ghost-button navigation in the middle, settings/help/billing at bottom, clear active indicator, and a real collapse/expand control on desktop unless the product intentionally forbids it.
 - Buttons: horizontal padding should be about 2x vertical padding. Include hover, active, disabled, and loading states for real actions.
-- Iconography: use Lucide or the repo's icon library when available. Match icon size to adjacent text line-height. Do not use emojis.
+- Iconography: use the repo's existing icon library when available; otherwise Lucide or Phosphor. Match icon size to adjacent text line-height. Do not use emojis.
 - KPI cards: group summary numbers once; do not repeat the same KPI elsewhere.
 - Data cards: top-left identifier, top-right critical metric/status, body label, bottom metadata.
 - Tables: use subtle dividers and whitespace, not heavy grid lines. Include search, filtering, sorting, row actions, and a contextual bulk-action surface when selection exists.

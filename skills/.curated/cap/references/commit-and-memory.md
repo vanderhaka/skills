@@ -82,7 +82,7 @@ Rules:
 
 ## Legacy Local Cap Lessons
 
-The local `cap/LESSONS.md` may contain useful historical routing notes, but do not let it become an always-on slow gate and do not append new entries there.
+A legacy `LESSONS.md` may exist beside an older installed copy of this skill. It may contain useful historical routing notes, but do not let it become an always-on slow gate and do not append new entries there.
 
 - Read recent cap lessons when a cap run hits a familiar repo, a repeated failure, or an ambiguous mode choice.
 - Write new reusable cap routing, staging, verification, or deploy lessons to the active environment's global lessons system when the active instructions permit it.

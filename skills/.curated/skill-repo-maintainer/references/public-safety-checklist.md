@@ -33,11 +33,13 @@ Keep:
 
 ## Final Check
 
-Run:
+From the repo root, run the root validator (when the repo has one) and this skill's audit script:
 
 ```bash
 python3 scripts/validate_skills.py
 python3 skills/.curated/skill-repo-maintainer/scripts/audit_skill_repo.py .
 git status --short
 ```
+
+Adjust the audit script path to wherever this skill's `scripts/audit_skill_repo.py` lives in the target repo.
 

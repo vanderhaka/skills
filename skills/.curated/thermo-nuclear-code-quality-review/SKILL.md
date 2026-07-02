@@ -7,16 +7,22 @@ description: Run an extremely strict maintainability review for abstraction qual
 
 Use this skill for an unusually strict review focused on implementation quality, maintainability, abstraction quality, and codebase health.
 
+Boundary with `code-review`: that skill applies this same structural bar in its
+`strict` mode and never routes here. Use this skill only when invoked directly
+for a maintainability-only audit; when correctness, security, tests, or
+merge-readiness are also in scope, use `code-review` instead.
+
 Above all, this skill should push the reviewer to be **ambitious** about code structure. Do not merely identify local cleanup opportunities. Actively search for "code judo" moves: restructurings that preserve behavior while making the implementation dramatically simpler, smaller, more direct, and more elegant.
 
-For TypeScript/JavaScript repos, use Fallow as optional structural evidence for
-unused code, dependency drift, duplication, complexity, circular imports, and
-architecture boundaries. Treat the output as a map of where to inspect, not as a
-replacement for source review or behavior-preservation proof.
+For TypeScript/JavaScript repos, use the `fallow` skill as optional structural
+evidence for unused code, dependency drift, duplication, complexity, circular
+imports, and architecture boundaries. Treat the output as a map of where to
+inspect, not as a replacement for source review or behavior-preservation proof.
 
 ## Core Prompt
 
-Start from this baseline:
+Start from this baseline, substituting the user's stated scope for "the current
+branch's changes" when one is given:
 
 > Perform a deep code quality audit of the current branch's changes.
 > Rethink how to structure / implement the changes to meaningfully improve code quality without impacting behavior.

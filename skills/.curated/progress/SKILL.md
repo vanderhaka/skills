@@ -1,6 +1,6 @@
 ---
 name: progress
-description: Strict production progress protocol for existing internal products, SaaS apps, dashboards, and tools. Use when the user wants Codex to discover the best real improvement, coordinate concurrent worktrees, get one approval, execute through a dependency graph with safe parallel worker waves, QA the result, and deliver formal plus plain-English demo-ready summaries.
+description: Strict production progress protocol for existing internal products, SaaS apps, dashboards, and tools. Discover the best real improvement, coordinate concurrent worktrees through a progress registry, get one approval, execute through a dependency graph with safe parallel worker waves, QA the result, and deliver formal plus plain-English demo-ready summaries. Triggers on "progress", "make progress", "run progress", "find and ship the best improvement", or "continue the progress run".
 ---
 
 # Progress
@@ -32,7 +32,7 @@ plans/<slug>/
   demo.md
   final-delivery.md
   plain-english-after.md
-  handoff.md
+  handoff.md            (incomplete runs only; see Handoff)
   agent-runs/
 ```
 
@@ -103,7 +103,7 @@ Before opportunity scoring, approval, worktree creation, or product-code edits, 
    - `plans/*/handoff.md`
 6. Create `plans/progress-registry.md` from `assets/templates/progress-registry.md` in the registry owner checkout when it does not exist.
 7. If `plans/progress-registry.md` is untracked, keep it local-only and ensure `.git/info/exclude` contains the registry and lock patterns.
-8. From the registry owner checkout, acquire a write lock before editing the registry owner copy:
+8. From the registry owner checkout, acquire a write lock before each edit to the registry owner copy, including later status updates and cleanup:
 
 ```bash
 mkdir -p plans
@@ -112,10 +112,10 @@ mkdir plans/.progress-registry.lock
 
 9. After acquiring the lock, write `plans/.progress-registry.lock/owner.md` with the run slug, timestamp, current thread context, and intended registry edit.
 10. If the lock command fails, do not edit the registry. Read the existing registry and lock evidence, then stop with the exact blocker unless the user explicitly approves clearing the stale lock.
-11. Release the lock after the registry write by removing only `plans/.progress-registry.lock` that this run created.
+11. Release the lock after each registry write by deleting the `plans/.progress-registry.lock/` directory this run created, including `owner.md` inside it.
 12. Before presenting the approval proposal, add or update a `proposed` registry entry for the recommended work.
 13. After approval, update the entry to `approved`, then `active` once the implementation worktree exists.
-14. Update the entry after every completed graph node and at final delivery with status `blocked`, `complete`, or `abandoned`.
+14. Refresh the entry's `Last updated` after every completed graph node. At final delivery set status `blocked`, `complete`, or `abandoned`.
 15. After a successful final delivery, run registry cleanup:
    - mark this run `complete`
    - move stale `complete` and `abandoned` entries into the archive section
@@ -125,8 +125,7 @@ mkdir plans/.progress-registry.lock
 Registry status meanings:
 
 - `proposed`: soft reservation. Do not duplicate the same proposal without telling the user a proposal already exists.
-- `approved`: hard reservation. Do not propose or start overlapping work.
-- `active`: hard reservation. Do not propose or start overlapping work.
+- `approved` and `active`: hard reservations. Do not propose or start overlapping work.
 - `blocked`: hard reservation until the user abandons it or the blocker is removed.
 - `complete`: historical record. It does not block new work unless the new work reopens the same code path.
 - `abandoned`: historical record. It does not block new work.
@@ -253,6 +252,8 @@ Present the numbered proposal to the user with the exact fields:
 Recommend one option.
 
 Stop for approval. Accept replies like `Do 1`, `Do 1 and 3`, `Everything except 4`, or `Change 2 to include X`.
+
+If the user approves multiple options, merge them into one approved goal with one slug, one worktree, one branch, and one registry entry, or confirm a sequenced order of separate runs before continuing.
 
 ## Stage 4: Shared Contract
 

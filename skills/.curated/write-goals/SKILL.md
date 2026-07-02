@@ -21,11 +21,10 @@ Do not recommend `/goal` for:
 
 - a loose backlog of unrelated tasks
 - pure research, discussion, or brainstorming with no artifact
-- live-data, payment, destructive, or provider-changing work without explicit approval boundaries
+- live-data, payment, destructive, provider-changing, or otherwise unbounded external-action work (spending, notifications, live-data mutation) without explicit caps and approval gates
 - tasks with no observable end state
 - work where Codex should stop after planning only
 - work where success is mainly taste-dependent or requires repeated human preference choices
-- work that could trigger unbounded external actions, spending, notifications, live-data mutation, or provider changes without explicit caps and approval gates
 
 If the goal would exceed 4,000 characters, or the supporting brief needs more than a few compact paragraphs, keep `/goal` short and point it at a plan or brief file.
 

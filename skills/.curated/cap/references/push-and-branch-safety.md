@@ -103,21 +103,27 @@ Summarize each branch in one line with:
 
 Flag branches untouched for 2 or more weeks as stale.
 
-Branch cleanup is opt-in, except option `1` in the branch-target menu opts into safe merged-local cleanup after the default-branch push succeeds. Do not delete branches automatically outside those conditions.
+Branch cleanup is opt-in, except option `1` in the branch-target menu opts into safe merged-local cleanup after the default-branch push succeeds. When the user says `cleanup` in the cap request, cleanup is part of the requested work and should be completed after a successful landing instead of reported as a follow-up.
 
-When the user asks for cleanup, first report candidates:
+Always clean up temporary worktrees created by the cap run before the final response. Use `git worktree remove <path>` for known temporary worktrees created by this run, then `git worktree prune` to drop stale administrative records. Do not remove pre-existing user worktrees unless the user explicitly named them or they are missing on disk and `git worktree prune` can safely clear the stale record.
+
+When the user asks for cleanup, collect candidates before deletion and report what was removed in the final response:
 
 ```bash
-git branch --merged "$default_branch"
-git branch --no-merged "$default_branch"
+git fetch --prune
+git branch --merged "origin/$default_branch"
+git branch --no-merged "origin/$default_branch"
+git branch -r --merged "origin/$default_branch"
 ```
 
-If the local default branch is missing or stale, fetch first and compare against `origin/$default_branch` instead.
+Compare mergedness against `origin/$default_branch`, not the local default branch, whenever the local default branch is stale, behind, dirty, missing, or not currently checked out.
 
 Cleanup rules:
 
 - Never delete the current branch, the default branch, protected/release branches, or unmerged branches without an explicit branch-by-branch confirmation.
-- For option `1`, local branches that are already merged into the default branch may be deleted with non-force deletion after the successful default-branch push, excluding the current/default/protected branches.
-- Remote branch deletion requires a separate explicit request and fresh remote evidence.
-- Use non-force deletion for local branches first. If Git refuses because a branch is unmerged, report that refusal instead of escalating to force deletion.
+- For option `1`, local branches that are already merged into `origin/$default_branch` may be deleted with non-force deletion after the successful default-branch push, excluding the current/default/protected branches.
+- If non-force local deletion refuses only because local `HEAD` or local default branch is stale, first set the candidate branch upstream to `origin/$default_branch` or otherwise make Git compare against `origin/$default_branch`, then retry non-force deletion. Do not escalate to force deletion.
+- If the user said `cleanup`, remote feature branches tied to this cap run or explicitly named by the user should be deleted after fresh remote evidence proves they are merged into `origin/$default_branch`. Use `git push origin --delete <branch>` only for non-current, non-default, non-protected remote branches with matching fresh evidence.
+- Do not delete arbitrary old remote branches just because they are merged. Report them as candidates unless they were created/pushed by this cap run or explicitly named by the user.
+- Use non-force deletion for local branches. If Git still refuses after the `origin/$default_branch` comparison retry, report that refusal instead of escalating to force deletion.
 - After cleanup, run a fresh branch snapshot and report what changed.

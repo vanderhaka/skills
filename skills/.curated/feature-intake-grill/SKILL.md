@@ -58,4 +58,5 @@ Clear the decisions that would make a feature graph unsafe or ambiguous. This st
 - Do not ask questions that code, docs, tests, schema, or existing product copy can answer.
 - Do not batch decisions that affect money, permissions, ownership, state, destructive writes, migrations, external contracts, or operational risk.
 - Do not invent product decisions for workers.
+- Finish when every mapped decision is confirmed, safely defaulted, or recorded as an open question or blocked node. Asking zero questions is a valid outcome when repo evidence answers everything.
 - If the user asks not to be interrupted, record safe assumptions and mark unsafe nodes blocked for `feature-orchestrator`.

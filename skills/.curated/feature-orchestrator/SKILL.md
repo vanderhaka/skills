@@ -7,7 +7,7 @@ description: End-to-end feature delivery orchestration through one canonical dep
 
 ## Purpose
 
-Deliver a complete feature through a tracked dependency graph. The orchestrator owns the plan, launches as many independent workers as safely possible, enforces strict RED -> GREEN -> REFACTOR and verification gates for every slice, integrates evidence, and keeps going until every required graph node is `DONE`, `SKIPPED`, or `BLOCKED`.
+Deliver a complete feature through a tracked dependency graph. The orchestrator owns the plan, launches as many independent workers as safely possible, enforces strict RED -> GREEN -> REFACTOR and verification gates for every slice, integrates evidence, and keeps going until every required graph node is `DONE`, `ALREADY_RESOLVED`, `SKIPPED`, or `BLOCKED`.
 
 This is the front door for broad feature implementation. Use helper skills as stage tools, but keep one canonical flow folder and one canonical `progress.md`.
 
@@ -207,7 +207,7 @@ If a node fails, keep it `IN_PROGRESS` or mark it `BLOCKED` with the exact faili
 
 Before `COMPLETE`, prove every explicit requirement:
 
-- All required nodes are `DONE` or explicitly `SKIPPED` with accepted reasons.
+- All required nodes are `DONE`, `ALREADY_RESOLVED` with fresh evidence, or explicitly `SKIPPED` with accepted reasons.
 - No blocker remains for in-scope work.
 - Targeted tests passed for changed areas.
 - Full tests, typecheck, lint, and build ran when practical, or each skip has a reason.

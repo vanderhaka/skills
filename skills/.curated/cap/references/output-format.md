@@ -6,7 +6,7 @@ Use this structure for completed or stopped cap runs.
 ## Cap Summary
 
 ### Scope
-- Mode: fast | standard | verify | dry-run | only | watch | release
+- Mode: fast | standard | verify | dry-run | only | watch | release | cleanup
 - Files to commit: ...
 - Excluded unrelated changes: ...
 - Verification repairs: <list or "none">

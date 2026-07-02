@@ -1,6 +1,6 @@
 ---
 name: grill-me
-description: Interview the user about a plan or design until reaching shared understanding, while defaulting routine technical and reversible low-risk decisions to established best practice. Use when user wants to stress-test a plan, get grilled on their design, or mentions "grill me". Ask only material product, business, risk, or external-contract questions that cannot be safely decided from best practice or repo context.
+description: Interview the user about a plan or design until reaching shared understanding, while defaulting routine technical and reversible low-risk decisions to established best practice. Use when user wants to stress-test a plan, get grilled on their design, or mentions "grill me". Ask only material product, business, risk, or external-contract questions that cannot be safely decided from best practice or repo context. When the answers must also update durable docs such as CONTEXT.md or ADRs, use grill-with-docs instead.
 ---
 
 Interview me relentlessly about the decisions that actually require my judgment. The goal is shared understanding, not making me reinvent common practice.
@@ -16,7 +16,7 @@ Ask only user-material decisions. These include material scope or positioning ch
 
 Do not batch-confirm routine defaultable choices during the interview. Choose the default, keep a "Model defaults for review" log, and continue to the next material decision. If the user objects to a default at review time, update the decision log and revisit only dependent decisions.
 
-When asking a user-material question, walk down the design tree and resolve dependencies one by one. After each answer, decide which downstream branch is now relevant before asking again.
+When asking a user-material question, walk down the design tree and resolve dependencies one by one. After each answer, decide which downstream branch is now relevant before asking again. If the user defers a question ("you decide", "don't know"), choose the best-practice answer, log it under model defaults, and move on — do not re-ask.
 
 If a question can be answered by exploring the codebase, explore the codebase instead.
 

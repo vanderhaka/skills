@@ -9,7 +9,7 @@ description: Map the blast radius of a business/domain logic change before imple
 
 Use this skill when a change to one business rule, domain invariant, calculation, permission, entitlement, state transition, validation, or provider contract may need to be applied elsewhere.
 
-This is not a bug hunt around one broken line. It is a rule-equivalence investigation: where does this rule exist, where should it exist, where is it duplicated inconsistently, and where does similar-looking logic mean something different?
+This is not a bug hunt around one broken line — when the trigger is an observed bug rather than a planned rule change, use `bug-ripple`. This skill is a rule-equivalence investigation: where does this rule exist, where should it exist, where is it duplicated inconsistently, and where does similar-looking logic mean something different?
 
 Default output is a strong read-only report and fix menu. Do not change code until the user approves the proposed scope.
 
@@ -158,7 +158,7 @@ If the user did not ask for research, add a `Research Recommended` section and s
 |---|---|---|---|---|
 ```
 
-Ask:
+Ask, alongside the final report rather than as a separate mid-flow stop:
 
 ```text
 Do you want external research before I classify these as must-fix, intentionally-different, or probably-same-rule?
@@ -251,7 +251,7 @@ Use this output shape:
 Mode: parallel fanout / partial fanout / single-agent fallback
 Lanes completed:
 Lanes skipped/failed:
-Verdict: BLOCKED / FAIL / PASS WITH RISKS / NO REQUIRED RIPPLE FOUND
+Verdict: BLOCKED (any BLOCKER finding) / FAIL (MAJOR findings, no BLOCKER) / PASS WITH RISKS (MODERATE findings or residual risk only) / NO REQUIRED RIPPLE FOUND
 Hard call: one direct sentence on the real scope.
 
 ### Rule Contract

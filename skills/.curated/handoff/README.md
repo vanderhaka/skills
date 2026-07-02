@@ -9,11 +9,11 @@
 - The user asks for a handoff, wrap-up, session summary, or continuation note.
 - Work is paused and needs clear next steps.
 - A future agent needs repo status, recent changes, checks, blockers, and risks.
-- You are resuming from an existing `HANDOFF.md`.
+- You want a copyable prompt that starts the next session correctly.
 
 ## How It Works
 
-The skill gathers current repo status, relevant changed files, commands run, verification evidence, blockers, and the next recommended action. It follows repo conventions and avoids overwriting existing handoff structure without reason.
+The skill gathers current git status, uncommitted changes, the last commit, active STATUS/PLAN files, and a quick build check, then writes a fixed-structure `HANDOFF.md` (one per project, always overwritten) plus a copyable next-session prompt.
 
 ## What You Get
 
@@ -21,7 +21,9 @@ The skill gathers current repo status, relevant changed files, commands run, ver
 - Current git and verification state.
 - Known blockers and residual risks.
 - Next actions.
-- A handoff artifact when the repo uses one.
+- `HANDOFF.md` written to the project root (overwritten each run).
+- A copyable next-session prompt that points a fresh session at the project and `HANDOFF.md`.
+- A short copyable handoff summary that names `HANDOFF.md` and the key docs/plans/status files to read first.
 
 ## Not For
 

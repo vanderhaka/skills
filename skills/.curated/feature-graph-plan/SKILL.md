@@ -13,7 +13,7 @@ Convert a feature brief and decisions into one executable dependency graph for `
 
 - `plans/<feature-slug>/decisions.md` if present.
 - Relevant repo docs, schema, routes/actions, services, UI entry points, tests, migrations, and external adapters.
-- `feature-orchestrator/references/graph-and-progress.md` from the installed skills set.
+- `feature-orchestrator/references/graph-and-progress.md` from the installed skills set. If that reference is not installed, mirror the structure of an existing `plans/<slug>/` flow in the repo; do not invent a new format.
 
 ## Workflow
 

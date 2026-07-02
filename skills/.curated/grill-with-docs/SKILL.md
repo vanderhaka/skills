@@ -1,6 +1,6 @@
 ---
 name: grill-with-docs
-description: Docs-backed decision grilling for codebase work. Use when a feature, refactor, architecture choice, or product/design plan needs material decisions clarified while updating project domain language, assumptions, ADR-worthy decisions, and plans/<feature-slug>/decisions.md as the discussion resolves.
+description: Docs-backed decision grilling for codebase work. Use when the user says "grill with docs", or when a feature, refactor, architecture choice, or product/design plan needs material decisions clarified while updating project domain language, assumptions, ADR-worthy decisions, and plans/<feature-slug>/decisions.md as the discussion resolves. Use grill-me instead when no durable docs need updating.
 ---
 
 # Grill With Docs
@@ -21,7 +21,7 @@ For a normal `feature-orchestrator` flow, write decisions to `plans/<feature-slu
 
 ## Workflow
 
-1. Read nearby repo instructions, existing `CONTEXT.md`, `CONTEXT-MAP.md`, `docs/adr/`, and any existing `plans/<feature-slug>/decisions.md` that applies.
+1. Read nearby repo instructions, existing `CONTEXT.md`, `docs/adr/`, and any existing `plans/<feature-slug>/decisions.md` that applies.
 2. Inspect code, docs, tests, schema, routes, and product copy before asking questions the repo can answer.
 3. Use `references/domain-modeling.md` when the discussion changes domain language, actors, lifecycle states, ownership, or business rules.
 4. Use the `grill-me` decision standard:

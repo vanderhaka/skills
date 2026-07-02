@@ -2,7 +2,7 @@
 
 ## What This Skill Does
 
-`codebase-design` gives James's skill stack one shared architecture vocabulary for deep modules, interfaces, seams, adapters, and test surfaces.
+`codebase-design` gives your skill stack one shared architecture vocabulary for deep modules, interfaces, seams, adapters, and test surfaces.
 
 ## Use It When
 

@@ -1,6 +1,6 @@
 ---
 name: tdd-plan-grill
-description: Stress-test a test-first or feature-orchestrator plan before implementation. Review `plans/{slug}-tdd/plan.md` or `plans/{slug}/plan.md` across completeness, scope, dependency graph, feasibility, test strategy, gates, and ambiguity; ask focused questions; record decisions in `grill-review.md`; and update the plan when approved. Use when the user wants to grill or harden a test-first plan, slice plan, or orchestrated feature graph.
+description: Stress-test a test-first or feature-orchestrator plan before implementation. Review `plans/{slug}-tdd/plan.md` or `plans/{slug}/plan.md` across completeness, scope, dependency graph, feasibility, test strategy, gates, and ambiguity; ask focused questions; record decisions in `grill-review.md`; and update the plan when approved. Use when the user wants to grill or harden a test-first plan, slice plan, or orchestrated feature graph. Inside a running feature-orchestrator flow, prefer feature-plan-grill.
 ---
 
 # TDD Plan Grill
@@ -15,15 +15,15 @@ Be adversarial about the plan, not the user. Surface gaps that would change issu
 
 Accept any of these:
 
-- `plans/{slug}-tdd/`
-- `plans/{slug}-tdd/plan.md`
-- `$tdd-plan-grill` when there is exactly one likely test-first plan in `plans/`
+- `plans/{slug}-tdd/` or `plans/{slug}-tdd/plan.md`
+- `plans/{slug}/` or `plans/{slug}/plan.md` (feature-orchestrator graph)
+- `$tdd-plan-grill` when there is exactly one likely plan in `plans/`
 - Optional focus areas such as completeness, dependencies, or test strategy
 
 ## Output Files
 
-- `plans/{slug}-tdd/grill-review.md`
-- Updated `plans/{slug}-tdd/plan.md` when the user approves changes
+- `grill-review.md` in the reviewed plan's folder
+- Updated `plan.md` in that folder when the user approves changes
 
 ## Codex-Only Rules
 
@@ -63,7 +63,7 @@ If the file does not exist, create it with:
 ```markdown
 # Grill Review: {feature name}
 
-Plan: plans/{slug}-tdd/plan.md
+Plan: {path to the reviewed plan.md}
 Date: {YYYY-MM-DD}
 Status: IN_PROGRESS
 

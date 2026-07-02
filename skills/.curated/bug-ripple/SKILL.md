@@ -1,6 +1,6 @@
 ---
 name: bug-ripple
-description: Diagnose one reported bug with a disciplined reproduce/minimize/hypothesize loop, define its root cause and blast radius, then run a strict, findings-first, read-only sibling-bug ripple sweep with parallel Codex agents when explicitly authorized and available. Use when the user says bug ripple, sibling bugs, what else could break, fix and sweep, or asks for likely related failures after a bug.
+description: Diagnose one reported bug with a disciplined reproduce/minimize/hypothesize loop, define its root cause and blast radius, then run a strict, findings-first, read-only sibling-bug ripple sweep with parallel read-only agents when explicitly authorized and available. Use when the user says bug ripple, sibling bugs, what else could break, fix and sweep, or asks for likely related failures after a bug.
 ---
 
 # Bug Ripple
@@ -8,6 +8,8 @@ description: Diagnose one reported bug with a disciplined reproduce/minimize/hyp
 ## Purpose
 
 Use this skill when one concrete bug is a signal that nearby code may contain related failures. First diagnose the reported bug precisely with a tight debugging loop, then search the same mental-model gap and feature area for sibling bugs. The default output is a findings-first report and fix menu, not code changes.
+
+The trigger is an observed bug. When the trigger is a planned business-rule or invariant change that must be applied consistently across the codebase, use `logic-ripple` instead.
 
 The review posture is strict but bounded. Be blunt about confirmed risk, bad invariants, weak tests, and messy structure that makes sibling bugs likely. Do not turn this into a repo-wide maintainability review, and do not pad the report with speculative nits.
 
@@ -118,7 +120,7 @@ Also create `SEARCH_PATTERNS` from the diagnosed root cause. Examples:
 
 If subagents are available and explicitly authorized, spawn the independent read-only agents in one parallel batch when possible. Use `explorer` agents for codebase questions. Do not assign overlapping write work because this skill is read-only.
 
-Use as many lanes as make sense for the stack and blast radius. Three agents is the minimum useful fanout; six to nine is appropriate for launch-critical or high-blast-radius bugs.
+Use as many lanes as make sense for the stack and blast radius. When three or more lanes apply, three agents is the minimum useful fanout; six to nine is appropriate for launch-critical or high-blast-radius bugs. Never pad with irrelevant lanes to reach a count.
 
 Recommended lanes:
 
@@ -218,7 +220,7 @@ Use this output shape:
 Mode: parallel fanout / partial fanout / single-agent fallback
 Agents or lanes completed: ...
 Agents or lanes failed/skipped: ...
-Verdict: BLOCKED / FAIL / PASS WITH RISKS / NO SIBLING BUGS FOUND
+Verdict: BLOCKED (any BLOCKER finding) / FAIL (MAJOR findings, no BLOCKER) / PASS WITH RISKS (MODERATE findings or residual risk only) / NO SIBLING BUGS FOUND
 Hard call: the most important decision from the review in one direct sentence
 
 ### Original Bug

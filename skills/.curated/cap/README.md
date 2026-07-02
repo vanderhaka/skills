@@ -11,7 +11,7 @@ The skill now routes the run through the smallest mode that honestly proves the 
 - You want current work checked, committed, and pushed.
 - You want a clean commit without sweeping unrelated dirty files into it.
 - You want verification failures fixed when the repair is safe and deterministic.
-- You say `cap`, `cap fast`, `fast cap`, `cap dry-run`, `cap verify`, `cap only`, `cap watch`, or `cap release`.
+- You say `cap`, `cap cleanup`, `cap fast`, `fast cap`, `cap dry-run`, `cap verify`, `cap only`, `cap watch`, or `cap release`.
 
 ## How It Works
 
@@ -23,6 +23,7 @@ Fast mode keeps checks focused for tiny changes. Dry-run mode stops before mutat
 
 - `cap fast`: tiny docs, skills, copy, metadata, or focused one-file changes.
 - `cap`: normal verification, exact commit, push, and short linked-deployment status check.
+- `cap cleanup`: normal cap plus safe cleanup of cap-created worktrees and merged local/remote feature branches tied to the run or explicitly named by you.
 
 ## Specialist Calls
 

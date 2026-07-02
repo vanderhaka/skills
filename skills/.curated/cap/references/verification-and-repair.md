@@ -66,6 +66,8 @@ For auth-capable web apps, sanity-check public URL and auth redirect envs:
 
 When a required check fails, first decide whether it is safe to repair locally, even if the failure is outside the user's intended diff.
 
+In `cap dry-run` and `cap verify`, do not apply repairs. Report the failures and the repair plan instead.
+
 - Keep requested changes and verification-repair changes distinct in reasoning and staging.
 - Do not stop at the first "unrelated existing file" failure if restoring green is straightforward and reviewable.
 

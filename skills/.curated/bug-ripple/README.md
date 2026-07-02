@@ -26,7 +26,7 @@ The skill first reproduces or identifies the tightest feedback loop, minimizes t
 
 ## Not For
 
-Use `code-review` or `launch-critical-sweep` for broader audits. Use `safe-feature-slice` when you are ready to fix the confirmed issues.
+Use `logic-ripple` when the trigger is a planned business-rule or invariant change rather than an observed bug. Use `code-review` or `launch-critical-sweep` for broader audits. Use `safe-feature-slice` when you are ready to fix the confirmed issues.
 
 ## Install
 
