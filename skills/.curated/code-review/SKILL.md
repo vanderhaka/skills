@@ -1,6 +1,6 @@
 ---
 name: code-review
-description: Harsh unified code review workflow for PRs, current diffs, changed files, focused repo areas, or implementation plans. Use when the user asks for code review, review this branch, audit current changes, find issues, compare reviewers, run a normal or strict review, assess merge safety, decide whether code is ready, or demand thermo-level maintainability scrutiny without invoking a separate thermo skill. For JS/TS reviews, this skill runs the fallow skill for read-only structural analysis before finalizing (mandatory in full and strict modes).
+description: Harsh unified code review workflow for PRs, current diffs, changed files, focused repo areas, or implementation plans. Use when the user asks for code review, review this branch, audit current changes, find issues, compare reviewers, run a normal or strict review, assess merge safety, decide whether code is ready, wants the single biggest problem, one high-impact finding, or one actionable issue instead of a backlog, or demands a thermo-nuclear code quality review, thermonuclear review, deep code quality audit, or especially harsh maintainability review. For JS/TS reviews, this skill runs the fallow skill for read-only structural analysis before finalizing (mandatory in full and strict modes).
 ---
 
 # Code Review
@@ -22,7 +22,7 @@ Do not approve code merely because behavior appears correct. If the implementati
 works but makes the codebase harder to reason about, call that out directly.
 
 Backticked skill names in this document (`fallow`, `cap`, `safe-feature-slice`,
-`bug-ripple`, `launch-critical-sweep`, `issue-fix-strategy`,
+`ripple`, `launch-critical-sweep`, `issue-fix-strategy`,
 `feature-orchestrator`) refer to installed skills. Invoke them
 through the active environment's skill mechanism (slash command, skill tool, or
 equivalent).
@@ -33,8 +33,16 @@ Infer the mode from the user request and repo evidence:
 
 - `quick`: current diff or named files, concise findings only.
 - `full`: broader repo/PR review with parallel lanes and a ranked plan.
-- `one`: return only the single strongest confirmed issue.
-- `strict`: normal review plus maximum structural pressure.
+- `one`: return only the single strongest confirmed issue. Load
+  `references/one-mode.md` and follow its read-only operating boundary,
+  evidence bar, single-issue ranking rubric, safe-fix handoff, and the two
+  output shapes (confirmed finding / honest no-finding) exactly. Trigger `one`
+  mode on requests for the single biggest problem, one high-impact finding, or
+  one actionable issue instead of a backlog.
+- `strict`: normal review plus maximum structural pressure. Load
+  `references/strict-structural-bar.md` in addition to the Structural
+  Standards below and apply its core prompt and Primary Review Questions
+  checklist.
 
 When the request is ambiguous (for example "review this" or "normal review"),
 default by scope: `quick` for a current diff or named files, `full` for a PR,
@@ -43,10 +51,13 @@ branch, or repo-area review.
 If the request is actually go-live safety, refactor execution, a sibling-bug
 sweep, or shipping, do not force a review mode — route per Specialist Routing.
 
-Do not route strict maintainability review to another skill. `code-review` owns
-that standard. If the user asks for a "thermo", "thermo-nuclear", "harsh",
-"brutal", "code-judo", "spaghetti", or "1k-line" review, run this skill in
-`strict` mode and apply the structural standards below.
+`code-review` owns the strict maintainability standard directly — there is no
+separate thermo skill to route to. If the user asks for a "thermo",
+"thermo-nuclear code quality review", "thermonuclear review", "deep code
+quality audit", "especially harsh maintainability review", "harsh", "brutal",
+"code-judo", "spaghetti", or "1k-line" review, run this skill in `strict` mode,
+load `references/strict-structural-bar.md`, and apply the structural
+standards below.
 
 ## Preflight
 
@@ -293,8 +304,9 @@ Rank by this order unless the user requested a specific lens:
 6. Test gaps that hide a realistic serious regression.
 7. Performance, observability, DX, and maintainability concerns.
 
-For `one` mode, return only the strongest confirmed issue. For `full` mode, keep
-the list high-signal and deduplicated.
+For `one` mode, return only the strongest confirmed issue per the ranking
+rubric in `references/one-mode.md`. For `full` mode, keep the list high-signal
+and deduplicated.
 
 ## Approval Bar
 
@@ -342,8 +354,8 @@ Keep only genuinely different workflows standalone:
 - Use `safe-feature-slice` for one narrow fix or hardening task on a risky
   surface once the finding is clear, or when the user wants behavior-preserving
   refactor/cleanup with characterization tests and implementation.
-- Use `bug-ripple` after diagnosing one concrete bug when similar sibling bugs
-  may exist.
+- Use `ripple` in bug mode after diagnosing one concrete bug when similar
+  sibling bugs may exist.
 - Use `issue-fix-strategy` when the review produces multiple findings with mixed
   priorities and the user needs an executive triage, fix order, and routing call
   before implementation.
@@ -353,8 +365,9 @@ Keep only genuinely different workflows standalone:
 - Use `cap` when the user asks to verify, commit, push, deploy, or finish the
   branch.
 
-Do not route to a separate thermo-nuclear skill. The harsh structural review bar
-lives here.
+There is no separate thermo-nuclear skill to route to. The harsh structural
+review bar lives here — run `strict` mode and load
+`references/strict-structural-bar.md`.
 
 When routing to a non-review workflow, explain the reason in one line and continue
 with the specialist only if the current request clearly matches it.
@@ -433,7 +446,7 @@ alternative with a one-line tradeoff, and never list more than two alternatives:
   already clear but span multiple slices and deserve a tracked dependency graph
   with parallel workers.
 - `Use launch-critical-sweep` when the real decision is go-live safety.
-- `Use bug-ripple` when one confirmed bug implies likely sibling bugs.
+- `Use ripple in bug mode` when one confirmed bug implies likely sibling bugs.
 - `Use cap` when the code is reviewed and the user asks to verify, commit, push,
   or ship.
 - `No action` when there are no material findings.
