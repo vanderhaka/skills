@@ -1,6 +1,6 @@
 # Domain Modeling Checklist
 
-Use this reference when `grill-with-docs` is changing domain language, not merely reading it.
+Use this reference when `grill-me` docs mode is changing domain language, not merely reading it.
 
 ## What To Challenge
 
