@@ -1,0 +1,4 @@
+interface:
+  display_name: "Ripple"
+  short_description: "Diagnose a bug or rule change and sweep for ripple effects"
+  default_prompt: "Use $ripple to diagnose this trigger (bug or business-rule change) with a tight feedback loop, define the blast radius or rule surface, and search for sibling failures or ripple fixes without broadening into a repo-wide review."
