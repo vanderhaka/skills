@@ -44,6 +44,7 @@ skills/
     ├── cap/
     ├── codebase-design/
     ├── code-review/
+    ├── constructive-criticism/
     ├── dashboard-ui-ux/
     ├── feature-graph-plan/
     ├── feature-integrator/
@@ -60,6 +61,7 @@ skills/
     ├── launch-critical-sweep/
     ├── logic-ripple/
     ├── one-major-issue/
+    ├── progress/
     ├── prototype/
     ├── safe-feature-slice/
     ├── skill-repo-maintainer/
@@ -83,6 +85,7 @@ templates/
 - `cap` — verify, commit, and push intended work safely without sweeping unrelated files, with a focused fast mode for tiny changes.
 - `codebase-design` — shared architecture discipline for deep modules, clean interfaces, seams, adapters, and test surfaces.
 - `code-review` — unified review workflow with correctness, safety, tests, and maintainability lanes.
+- `constructive-criticism` — maximum-effort verified critique of any work at any scale, producing a fix-ready report with an execution contract and a paste-ready handoff prompt.
 - `dashboard-ui-ux` — dense SaaS dashboard design and critique guidance with collapsible sidebars, card contrast, table tooling, chart interactions, and browser proof.
 - `feature-orchestrator` — coordinate whole-feature delivery through one canonical graph, progress file, parallel-safe worker waves, and final proof.
 - `feature-intake-grill` — clear product, data, permission, money, migration, external-contract, and live-risk decisions before graph planning.
@@ -99,6 +102,7 @@ templates/
 - `launch-critical-sweep` — find confirmed P0/P1 launch blockers before go-live.
 - `logic-ripple` — map every surface touched by a business-rule change before fixing or canonicalizing it.
 - `one-major-issue` — find at most one confirmed high-impact issue and hand it to a safe fix slice.
+- `progress` — discover the best real product improvement, get one approval, then execute through a fresh worktree, dependency graph, self-QA, and a demo-ready delivery package.
 - `prototype` — build disposable UI or logic prototypes to answer design/state questions before production implementation.
 - `safe-feature-slice` — unified plan-and-execute workflow for invariant-preserving feature work.
 - `tdd-plan-grill` — stress-test a test-first plan before implementation and update it for the current implementation flow.
@@ -131,7 +135,7 @@ Restart Codex after installing new skills.
 
 1. Copy `templates/basic-skill/` into `skills/.curated/<skill-name>/`.
 2. Edit `SKILL.md` so `name` exactly matches the folder name.
-3. Add only the resources the skill genuinely needs.
+3. Add a plain-English `README.md` (and optional `agents/openai.yaml`) beside `SKILL.md`, plus only the resources the skill genuinely needs.
 4. Run:
 
 ```bash

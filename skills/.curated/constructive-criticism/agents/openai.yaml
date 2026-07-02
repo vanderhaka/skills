@@ -1,0 +1,4 @@
+interface:
+  display_name: "Constructive Criticism"
+  short_description: "Maximum-effort verified critique with a fix-ready report and handoff"
+  default_prompt: "Use $constructive-criticism to critique the specified target at maximum depth. Verify every finding with real evidence, write the full report and execution contract to plans/critiques/, and end with the short paste-ready handoff prompt."
