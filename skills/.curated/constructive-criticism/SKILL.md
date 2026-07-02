@@ -1,6 +1,6 @@
 ---
 name: constructive-criticism
-description: Deliver maximum-effort constructive criticism of any work product at any scale — a single function, a route, a feature, a PR, a plan, a document, a design, or an entire repo or product. Use whenever the user asks for constructive criticism, a critique, honest or harsh feedback, "tear this apart", "poke holes in this", "what's wrong with this", "be brutal", devil's advocate, a second opinion, or wants work stress-tested before shipping or sharing — even if they don't say the word "criticism". Runs at maximum depth by default, verifies claims with every available tool, and spawns parallel agents when the target is large enough to warrant them. Produces a findings report file (plans/critiques/) plus a short paste-ready handoff prompt so a junior engineer or fresh agent context can fix every finding without re-investigating.
+description: Deliver maximum-effort constructive criticism of any work product at any scale — a single function, a route, a feature, a PR, a plan, a document, a design, or an entire repo or product. Use whenever the user asks for constructive criticism, a critique, honest or harsh feedback, "tear this apart", "poke holes in this", "what's wrong with this", "be brutal", devil's advocate, a second opinion, or wants work stress-tested before shipping or sharing — even if they don't say the word "criticism". Runs at maximum depth by default, verifies claims with every available tool, and spawns a bounded number of parallel agents when the target is large enough to warrant them. Produces a findings report file (plans/critiques/) plus a short paste-ready handoff prompt so a junior engineer or fresh agent context can fix every finding without re-investigating. When the target is code under review specifically for correctness or merge readiness (a diff, PR, or branch), route to code-review instead — this skill owns everything else (plans, docs, designs, copy, product ideas, mixed work products) and any holistic "tear this apart" request that goes beyond merge review.
 ---
 
 # Constructive Criticism
@@ -12,6 +12,8 @@ Give the user the critique a world-class peer would give: direct, evidence-backe
 This is not a roast and not a compliment sandwich. Flattery wastes the user's time and false negatives cost them real damage later. The kindest possible feedback is the truth, organized so they can act on it.
 
 If the user appends text after invoking the skill, treat it as binding extra instruction (scope, focus area, audience, constraints).
+
+**Boundary with code-review**: when the target is code under review specifically for correctness or merge readiness — a diff, a PR, a branch — route to the `code-review` skill instead. This skill owns everything else: plans, docs, designs, copy, product ideas, mixed work products, and any holistic "tear this apart" request that goes beyond merge review (architecture, product fit, an entire repo, a feature considered end to end).
 
 ## Effort Level
 
@@ -72,7 +74,9 @@ Findings you could not verify are still reportable — label them explicitly as 
 
 Spawn parallel agents when the target is large or multi-faceted enough that one context would go shallow: several lenses over a big diff, a multi-file feature, a plan touching many subsystems, or a product critique needing code reading plus live-app testing simultaneously.
 
-- **Claude Code**: launch one agent per lens (or per subsystem) via the Agent tool, all in a single message so they run concurrently. Give each a self-contained prompt: the exact target, its single lens, the verification standard ("confirm by reading/running, not by guessing"), and the required return shape (findings with file:line or section, severity, why it matters, suggested fix). Critique agents are read-only — say so in the prompt.
+Cap fan-out at 8 concurrent agents per wave. If the natural split (subsystems × lenses) exceeds that, group subsystems into at most 8 batches and run waves sequentially rather than spawning everything at once — never launch an unbounded number of agents in one message.
+
+- **Claude Code**: launch one agent per lens (or per subsystem), up to the cap above, via the Agent tool, all in a single message so they run concurrently. Give each a self-contained prompt: the exact target, its single lens, the verification standard ("confirm by reading/running, not by guessing"), and the required return shape (findings with file:line or section, severity, why it matters, suggested fix). Critique agents are read-only — say so in the prompt.
 - **Codex**: no agent tool — run background `codex exec` subprocesses (read-only sandbox) as workers, or take the lens passes sequentially yourself. Sequential passes at full depth beat one shallow combined pass.
 
 You are the editor, not a courier: verify agents' claims sample-wise, deduplicate, kill anything that doesn't survive scrutiny, and rank what remains. Small targets don't need agents — a single deep pass by you is faster and just as rigorous.
@@ -83,7 +87,7 @@ The critique produces two things: a report file and a handoff prompt. The report
 
 ### 1. The report file
 
-Write the full critique to `plans/critiques/<target-slug>-critique.md` (create the directory if needed; honor a different path if the user gives one). ALWAYS use this structure:
+Write the full critique to `plans/critiques/<target-slug>-critique.md` (create the directory if needed; honor a different path if the user gives one). Derive `<target-slug>` as a short kebab-case name for the target (file/route/feature name, or a 2-4 word summary for a repo-wide or prose target — e.g. `plans/critiques/full-repo-critique.md`, `plans/critiques/checkout-flow-critique.md`). If a file at that path already exists, overwrite it — the report reflects the latest critique of that target, not a history of them. ALWAYS use this structure:
 
 ```
 # Critique: [target]

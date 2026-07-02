@@ -24,7 +24,7 @@ The skill identifies the target, matches its strategy to the scope (single deep 
 
 ## Not For
 
-Use `code-review` for a standard diff/PR review workflow. Use `one-major-issue` when you want exactly one confirmed finding. Use `launch-critical-sweep` for pre-launch P0/P1 blocker coverage.
+Use `code-review` when the target is code under review specifically for correctness or merge readiness — a diff, a PR, a branch. This skill owns everything else (plans, docs, designs, copy, product ideas, mixed work products) plus any holistic "tear this apart" request that goes beyond merge review. Use `code-review` in `one` mode when you want exactly one confirmed finding. Use `launch-critical-sweep` for pre-launch P0/P1 blocker coverage.
 
 ## Install
 
