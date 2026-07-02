@@ -27,7 +27,7 @@ The skill gathers current git status, uncommitted changes, the last commit, acti
 
 ## Not For
 
-Use `cap` when the work should be verified, committed, and pushed. Use `feature-proof` when a feature needs final requirement-level proof before handoff.
+Use `cap` when the work should be verified, committed, and pushed. Use `feature-orchestrator`'s proof stage (`references/stages/proof.md`) when a feature needs final requirement-level proof before handoff.
 
 ## Install
 

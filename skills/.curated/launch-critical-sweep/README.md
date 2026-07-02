@@ -25,7 +25,7 @@ The skill inspects the riskiest launch surfaces and only reports issues that mee
 
 ## Not For
 
-Use `code-review` for normal merge review. Use `thin-slice-plan` or `issue-fix-strategy` for broader backlog triage.
+Use `code-review` for normal merge review. Use `safe-feature-slice` in `plan-only` mode or `issue-fix-strategy` for broader backlog triage.
 
 ## Install
 

@@ -23,34 +23,24 @@ Keep summaries short. Do not include plugin/system skills unless the user explic
 ### Curated Skill Inventory
 
 - `ask-james` — route broad or ambiguous work to the right curated skill.
-- `bug-ripple` — diagnose one concrete bug, then sweep nearby sibling failures.
 - `cap` — verify, exact-stage, commit, and push intended work safely.
-- `code-review` — harsh correctness, safety, test, and maintainability review.
+- `code-review` — harsh correctness, safety, test, and maintainability review, including `one` mode (single biggest issue) and `strict` mode (thermo-nuclear maintainability scrutiny).
 - `codebase-design` — design deeper modules, cleaner interfaces, seams, adapters, and test surfaces.
+- `constructive-criticism` — maximum-effort verified critique of any work product at any scale, producing a fix-ready report and handoff prompt.
 - `dashboard-ui-ux` — build, critique, or polish dense production dashboards, admin panels, and analytics UIs.
 - `fallow` — run read-only JS/TS structural analysis with Fallow.
-- `feature-graph-plan` — turn a feature brief into dependency graph nodes and progress tracking.
-- `feature-intake-grill` — resolve material feature decisions before graph planning.
-- `feature-integrator` — verify worker reports, update progress, and advance feature waves.
-- `feature-orchestrator` — coordinate whole-feature delivery through graph, workers, and proof.
-- `feature-plan-grill` — stress-test a feature plan before worker launch.
-- `feature-proof` — prove final feature requirements and behavior preservation.
-- `feature-slice-worker` — execute one feature graph node with required gates.
-- `grill-me` — interview a plan or design until material decisions are clear.
-- `grill-with-docs` — clarify decisions while updating durable project docs.
+- `feature-orchestrator` — coordinate whole-feature delivery through a canonical dependency graph, worker waves, integration, and final proof (packages the intake-grill, graph-plan, plan-grill, worker, integrator, and proof stages as references).
+- `grill-me` — interview a plan or design until material decisions are clear, including docs mode to keep `CONTEXT.md`/ADRs current as decisions resolve.
 - `handoff` — write or resume concise next-session project handoffs.
 - `issue-fix-strategy` — triage messy issues, findings, logs, screenshots, or diagnostics into a fix order.
 - `launch-critical-sweep` — find confirmed P0/P1 blockers before launch.
-- `logic-ripple` — map all surfaces affected by a business-rule change.
-- `one-major-issue` — find only the single biggest confirmed issue.
 - `progress` — discover and deliver one approved production-ready improvement through a fixed worktree, graph, QA, and demo protocol.
 - `prototype` — build disposable UI or logic experiments before real implementation.
-- `safe-feature-slice` — plan and execute risky or narrow feature slices safely.
+- `ripple` — diagnose one bug and sweep for sibling bugs (bug mode), or map the blast radius of a business/domain logic change (logic mode).
+- `safe-feature-slice` — plan and execute risky or narrow feature slices safely, including `plan-only` mode for a planning-only dependency-ordered slice plan.
 - `skill-repo-maintainer` — create, validate, scrub, and publish public-safe skill folders.
 - `skill-rev` — review skill repo changes and audit installed-vs-source drift.
 - `tdd-plan-grill` — stress-test a test-first or feature-orchestrator plan.
-- `thermo-nuclear-code-quality-review` — extreme maintainability review for sprawl and spaghetti.
-- `thin-slice-plan` — make a planning-only dependency-ordered implementation plan.
 - `write-goals` — draft or critique Codex `/goal` objectives.
 - `wwh` — explain decisions, bugs, plans, or requests in simple who/what/when/where/how/why form.
 
@@ -70,15 +60,17 @@ Use `progress` when the user wants Codex to find the best product improvement fi
 
 Use `safe-feature-slice` when the work is one narrow feature/fix or a small risky slice touching money, permissions, ownership, destructive actions, state transitions, webhooks, migrations, integrations, or customer-visible records.
 
-Use `thin-slice-plan` when the user explicitly wants planning only and no implementation yet.
+Use `safe-feature-slice` in `plan-only` mode when the user explicitly wants planning only and no implementation yet.
 
 ### Decisions Before Work
 
-Use `grill-with-docs` when a codebase feature, refactor, product/design choice, or architecture decision needs material decisions clarified and the results should land in `CONTEXT.md`, ADRs, or `plans/<feature-slug>/decisions.md`.
+Use `grill-me` in docs mode (also triggered by "grill with docs") when a codebase feature, refactor, product/design choice, or architecture decision needs material decisions clarified and the results should land in `CONTEXT.md`, ADRs, or `plans/<feature-slug>/decisions.md`.
 
 Use `grill-me` when the user wants to stress-test a plan or design, but no durable project docs need to be updated.
 
-Use `feature-intake-grill` when the only missing piece is the orchestrator's decision gate before graph planning.
+Use `feature-orchestrator`'s intake-grill stage (`references/stages/intake-grill.md`) when the only missing piece is the orchestrator's decision gate before graph planning.
+
+Use the relevant `feature-orchestrator` stage reference when the ask is shaped like one pipeline stage of an in-flight feature: intake (`references/stages/intake-grill.md`), graph planning (`references/stages/graph-plan.md`), plan review (`references/stages/plan-grill.md`), worker execution (`references/worker-contract.md`), integration (`references/stages/integrator.md`), or final proof (`references/stages/proof.md`).
 
 Use `codebase-design` when the task is mainly about module shape, architecture vocabulary, interface design, seam placement, adapters, or making code easier to test before implementation.
 
@@ -92,11 +84,11 @@ Use `issue-fix-strategy` when the user has a messy issue list, review findings, 
 
 Use `code-review` when the user asks for review, audit, merge readiness, harsh maintainability critique, branch/diff review, or implementation-plan review.
 
-Use `bug-ripple` when one concrete bug may imply sibling bugs nearby, or the user asks what else could break in the same pattern.
+Use `ripple` in bug mode when one concrete bug may imply sibling bugs nearby, or the user asks what else could break in the same pattern.
 
-Use `logic-ripple` when a business/domain rule change may need to be applied consistently across the codebase.
+Use `ripple` in logic mode when a business/domain rule change may need to be applied consistently across the codebase.
 
-Use `one-major-issue` when the user wants only the single biggest confirmed issue, not a backlog.
+Use `code-review` in `one` mode when the user wants only the single biggest confirmed issue, not a backlog.
 
 Use `launch-critical-sweep` when the decision is go-live readiness or catastrophic launch risk.
 
@@ -125,7 +117,7 @@ Also viable: <one alternative or "None">
 ## Routing Bias
 
 - Prefer `issue-fix-strategy` before planning when the input is a pile of findings.
-- Prefer `grill-with-docs` before graph planning when product/domain decisions need to survive the chat.
+- Prefer `grill-me` in docs mode before graph planning when product/domain decisions need to survive the chat.
 - Prefer `feature-orchestrator` for whole-feature execution.
 - Prefer `progress` before `feature-orchestrator` when the product target still needs discovery and one approval.
 - Prefer `safe-feature-slice` for one risky slice.

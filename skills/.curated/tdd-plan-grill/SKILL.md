@@ -1,6 +1,6 @@
 ---
 name: tdd-plan-grill
-description: Stress-test a test-first or feature-orchestrator plan before implementation. Review `plans/{slug}-tdd/plan.md` or `plans/{slug}/plan.md` across completeness, scope, dependency graph, feasibility, test strategy, gates, and ambiguity; ask focused questions; record decisions in `grill-review.md`; and update the plan when approved. Use when the user wants to grill or harden a test-first plan, slice plan, or orchestrated feature graph. Inside a running feature-orchestrator flow, prefer feature-plan-grill.
+description: Stress-test a test-first or feature-orchestrator plan before implementation. Review `plans/{slug}-tdd/plan.md` or `plans/{slug}/plan.md` across completeness, scope, dependency graph, feasibility, test strategy, gates, and ambiguity; ask focused questions; record decisions in `grill-review.md`; and update the plan when approved. Use when the user wants to grill or harden a test-first plan, slice plan, or orchestrated feature graph. Inside a running feature-orchestrator flow, prefer its plan-grill stage.
 ---
 
 # TDD Plan Grill
@@ -47,7 +47,7 @@ Read only when needed:
 - If the user gives `plans/{slug}-tdd/`, use it.
 - If the user gives `plans/{slug}-tdd/plan.md`, use its parent folder.
 - Otherwise inspect `plans/*-tdd/plan.md` and `plans/*/plan.md`.
-- If none exist, stop and tell the user to create a plan with `thin-slice-plan` or `feature-orchestrator` first.
+- If none exist, stop and tell the user to create a plan with `safe-feature-slice` in `plan-only` mode or `feature-orchestrator` first.
 - If more than one exists and no target is obvious, ask which plan to review.
 
 ### 2. Read the real context

@@ -25,7 +25,7 @@ The skill reviews the plan for completeness, ambiguity, feasibility, test qualit
 
 ## Not For
 
-Inside a running `feature-orchestrator` flow, prefer its dedicated `feature-plan-grill` stage; this skill can still review a `plans/{slug}/plan.md` graph standalone. Use `thin-slice-plan` when no plan exists yet.
+Inside a running `feature-orchestrator` flow, prefer its dedicated plan-grill stage (`references/stages/plan-grill.md`); this skill can still review a `plans/{slug}/plan.md` graph standalone. Use `safe-feature-slice` in `plan-only` mode when no plan exists yet.
 
 ## Install
 

@@ -12,7 +12,7 @@ It also supports an inventory mode: use `ask-james list` or ask to list skills t
 - The task is broad or ambiguous.
 - The user asks for the next best workflow step.
 - The user asks for `list`, all curated skills, or what skills are available.
-- You need to decide between `feature-orchestrator`, `safe-feature-slice`, `codebase-design`, `prototype`, `code-review`, `issue-fix-strategy`, `bug-ripple`, `cap`, or another curated skill.
+- You need to decide between `feature-orchestrator`, `safe-feature-slice`, `codebase-design`, `prototype`, `code-review`, `issue-fix-strategy`, `ripple`, `cap`, or another curated skill.
 
 ## How It Works
 

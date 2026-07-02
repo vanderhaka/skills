@@ -7,7 +7,7 @@ description: Pre-launch catastrophic-risk audit for finding confirmed P0/P1 laun
 
 ## Goal
 
-Find confirmed launch-blocking issues before a production release or client go-live. This is the heavier sibling of `$one-major-issue`: it sweeps more surfaces, uses stricter risk framing, and may report a small set of catastrophic blockers instead of only one issue.
+Find confirmed launch-blocking issues before a production release or client go-live. This is the heavier sibling of `code-review`'s `one` mode: it sweeps more surfaces, uses stricter risk framing, and may report a small set of catastrophic blockers instead of only one issue.
 
 The output should answer: **Can this launch safely, or is there a confirmed issue that could seriously hurt customers, the client, the business, revenue, data, security, or operational trust?**
 

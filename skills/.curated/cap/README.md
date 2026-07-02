@@ -44,7 +44,7 @@ Fast mode keeps checks focused for tiny changes. Dry-run mode stops before mutat
 
 ## Not For
 
-Do not use this when you only want a review. Use `code-review`, `one-major-issue`, or `launch-critical-sweep` first if the work is not ready to ship.
+Do not use this when you only want a review. Use `code-review` (including its `one` mode), or `launch-critical-sweep` first if the work is not ready to ship.
 
 ## Install
 

@@ -1,6 +1,6 @@
 ---
 name: issue-fix-strategy
-description: Chat-only executive triage for any set of issues, review findings, UX complaints, screenshots, logs, failing tests, tool diagnostics, or messy context. Use when the user wants plain-English judgement on what each issue is, why it matters, how to fix it, priority, proof needed, and the next suggested workflow step before implementation. Routes broad work to feature-graph-plan/feature-orchestrator, narrow risky fixes to safe-feature-slice, and decision-blocked work to feature-intake-grill without creating plan artifacts.
+description: Chat-only executive triage for any set of issues, review findings, UX complaints, screenshots, logs, failing tests, tool diagnostics, or messy context. Use when the user wants plain-English judgement on what each issue is, why it matters, how to fix it, priority, proof needed, and the next suggested workflow step before implementation. Routes broad work to feature-orchestrator's graph-plan stage, narrow risky fixes to safe-feature-slice, and decision-blocked work to feature-orchestrator's intake-grill stage without creating plan artifacts.
 ---
 
 # Issue Fix Strategy
@@ -90,14 +90,14 @@ End every response with `Next Suggested Step`. Recommend exactly one route.
 When another route is genuinely defensible, list it under `Also viable` with a
 one-line tradeoff. Never list more than two alternatives.
 
-Route to `feature-graph-plan` when:
+Route to `feature-orchestrator`'s graph-plan stage (`references/stages/graph-plan.md`) when:
 
 - the issues are clear enough to become dependency-graph nodes
 - priorities and risk surfaces are understood
 - no unresolved product or safety decision blocks planning
 - the work spans multiple slices, files, or fix waves
 
-`feature-graph-plan` is the planning stage of `feature-orchestrator`; execution
+The graph-plan stage is the planning stage of `feature-orchestrator`; execution
 continues there under one canonical `progress.md`.
 
 Route to `safe-feature-slice` when:
@@ -108,7 +108,7 @@ Route to `safe-feature-slice` when:
 - a full dependency graph would be overhead, but implementing directly would
   skip needed invariant protection
 
-Route to `feature-intake-grill` when:
+Route to `feature-orchestrator`'s intake-grill stage (`references/stages/intake-grill.md`) when:
 
 - a missing decision could materially change scope, risk, data, permissions, money, migration direction, state transitions, external contracts, live-data handling, or user-visible behaviour
 - the issue set is important but unsafe to graph without one or more user decisions
@@ -172,7 +172,7 @@ Proof required:
 [Tests, typecheck, browser smoke, migration proof, deploy proof, provider proof, manual verification, or other evidence.]
 
 Suggested routing:
-[`feature-graph-plan`, `feature-intake-grill`, `safe-feature-slice`, `Implement directly`, or `Stay in discussion`, with reason.]
+[`feature-orchestrator` graph-plan stage, `feature-orchestrator` intake-grill stage, `safe-feature-slice`, `Implement directly`, or `Stay in discussion`, with reason.]
 
 ## Recommended Fix Order
 
@@ -191,7 +191,7 @@ Wave 3:
 
 ## Next Suggested Step
 
-Recommended: [proceed to `feature-graph-plan` (execution continues under `feature-orchestrator`), run `feature-intake-grill`, use `safe-feature-slice`, use `grill-me`, implement directly, or stay in discussion]
+Recommended: [proceed to `feature-orchestrator`'s graph-plan stage (execution continues under `feature-orchestrator`), run `feature-orchestrator`'s intake-grill stage, use `safe-feature-slice`, use `grill-me`, implement directly, or stay in discussion]
 
 Reason:
 [Why this route is the right next move.]
@@ -207,7 +207,7 @@ Also viable:
 - Compacting never deletes triage judgement: every priority still needs a reason, and a compacted issue that routes onward keeps its ID so regression protections and proof requirements can be derived at planning time.
 - In `Recommended Fix Order`, omit empty waves; collapse to a single wave when sequencing adds nothing.
 
-Issue IDs are the traceability handle for the rest of the flow. When routing to `feature-graph-plan`, every accepted issue ID must map to at least one graph node.
+Issue IDs are the traceability handle for the rest of the flow. When routing to `feature-orchestrator`'s graph-plan stage, every accepted issue ID must map to at least one graph node.
 
 ## Rules
 
