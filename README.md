@@ -86,7 +86,7 @@ templates/
 - `ripple` — diagnose one reported bug or one planned business-rule/invariant change, then run a strict, findings-first, read-only ripple sweep, with bug mode and logic mode.
 - `safe-feature-slice` — safety-first workflow for planning, building, continuing, or reviewing one or more feature slices while preserving invariants, including a `plan-only` mode for dependency-ordered slice plans.
 - `skill-repo-maintainer` — maintain and public-safety-check this skills repository.
-- `skill-rev` — lightweight review and dated audit snapshot before pushing skill changes, plus pull/sync audits (`push` and `sync` modes).
+- `skill-rev` — review and distribution flow: pre-push review, and `push`/`pull`/`sync` modes that keep installed `~/.codex/skills` and `~/.claude/skills` in step with the repo.
 - `tdd-plan-grill` — stress-test a test-first plan before implementation and update it for the current implementation flow.
 - `write-goals` — draft, critique, or rewrite Codex `/goal` objectives with clear success criteria and safe activation boundaries.
 - `wwh` — explain a decision, change, bug, issue, incident, plan, or request in simple who/what/when/where/how/why language, omitting irrelevant sections.

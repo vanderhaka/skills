@@ -1,6 +1,6 @@
 ---
 name: skill-repo-maintainer
-description: "Maintain a public Codex skills repository: create, review, validate, scrub, and publish installable SKILL.md folders with lean instructions, safe resources, GitHub-ready layout, and reliable trigger metadata. Use when adding a skill to a repo, converting local skills into public-safe repo skills, auditing a skills catalog before publishing, or preparing install instructions for $skill-installer."
+description: Maintain a public Codex skills repository - create, review, validate, scrub, and publish installable SKILL.md folders with lean instructions, safe resources, GitHub-ready layout, and reliable trigger metadata. Use when adding a skill to a repo, converting local skills into public-safe repo skills, auditing a skills catalog before publishing, or preparing install instructions for $skill-installer.
 ---
 
 # Skill Repo Maintainer

@@ -1,19 +1,21 @@
 ---
 name: skill-rev
-description: Lightweight review for vanderhaka/skills changes before push, plus pull/update audits for all curated skills. Modes — no args runs the full pre-push review, "push" runs pre-push checks only, "sync" runs the pull/update audit comparing installed skills against the repo. Use when skills are about to be pushed, when checking whether repo skills are updated, or when comparing installed local skills against the remote catalog.
+description: Review and distribution flow for vanderhaka/skills. Modes — no args runs the full pre-push review, "push" runs pre-push checks then hands to cap and syncs installed skills after the push lands, "pull" pulls (or clones) the repo on this device then syncs installed skills, "sync" mirrors the curated skills into ~/.codex/skills and ~/.claude/skills. Use when skills are about to be pushed, when pulling skill updates onto a device, when checking whether repo skills are updated, or when installed local skills should match the repo catalog.
 ---
 
 # Skill Rev
 
 ## Role
 
-Run a lightweight pre-push review for this skills repository. This skill checks
-whether skill changes are shaped, documented, installable, and public-safe before
-handoff to `cap` or a normal git push.
+Run the review and distribution flow for this skills repository. This skill
+checks whether skill changes are shaped, documented, installable, and
+public-safe before handoff to `cap`, and keeps the installed skill copies on
+this device (`~/.codex/skills` and `~/.claude/skills`) in step with the repo.
 
-This is intentionally smaller than `cap`. It does not stage, commit, push, repair
-failures, publish, or install skills. It gives a focused review and a dated audit
-snapshot so the next action is obvious.
+This is intentionally smaller than `cap` for git mutation: it never stages,
+commits, or pushes — `cap` does that. It does own installed-skill distribution:
+Device Sync copies curated skills into the installed dirs and removes retired
+ones.
 
 ## Modes
 
@@ -21,10 +23,14 @@ Arguments after the skill name select the flow. Treat the first argument as the
 mode keyword; ignore case.
 
 - (no args) — full review: Pre-Push Review plus the installed-skills comparison
-  in the audit snapshot.
-- `push` — Pre-Push Review only. Skip the installed-skills comparison (run the
-  snapshot without `--installed-dir`).
-- `sync` — Pull / Update Audit only. Skip the pre-push checks.
+  in the audit snapshot. Report only; no sync applied.
+- `push` — Pre-Push Review, then hand the commit/push to `cap`. After the push
+  lands on `main`, run Device Sync so this device's installed skills match what
+  was just published.
+- `pull` — Pull / Update flow: bring the repo checkout up to date on this
+  device (clone it first if absent), then run Device Sync.
+- `sync` — Device Sync only: mirror the curated skills into the installed dirs
+  from the current checkout. Add `dry-run` to report actions without applying.
 
 Any other argument text is extra context (for example a skill name to focus on),
 not a mode.
@@ -76,12 +82,20 @@ python3 skills/.curated/skill-rev/scripts/skill_audit_snapshot.py --installed-di
 The snapshot writes to `.skill-audits/<timestamp>-skill-audit.md`, which is
 ignored by git. Do not commit audit snapshots unless the user explicitly asks.
 
-## Pull / Update Audit
+## Pull / Update Flow
 
-Use this for `sync` mode, when the user asks whether repo skills are updated, or
-wants a pull check before syncing local installed skills.
+Use this for `pull` mode, or when the user asks to bring this device's skills up
+to date.
 
-1. Fetch remote state:
+1. Locate the checkout. Default path: `~/Desktop/Development/vanderhaka-skills`.
+   If it does not exist on this device, clone it there:
+
+```bash
+git clone git@github.com:vanderhaka/skills.git ~/Desktop/Development/vanderhaka-skills \
+  || git clone https://github.com/vanderhaka/skills.git ~/Desktop/Development/vanderhaka-skills
+```
+
+2. Fetch remote state:
 
 ```bash
 git fetch origin main
@@ -89,25 +103,45 @@ git status --short --branch
 git rev-list --left-right --count HEAD...origin/main
 ```
 
-2. If the repo is behind and the working tree is clean, fast-forward only:
+3. If the repo is behind and the working tree is clean, fast-forward only:
 
 ```bash
 git pull --ff-only origin main
 ```
 
 If the working tree is dirty or the branch has diverged, do not pull. Report
-the drift and the command the user should run instead.
+the drift and the command the user should run instead, and skip Device Sync —
+never distribute a checkout that is not cleanly on `main`.
 
-3. Create a dated audit for every curated skill and compare against both
-   installed skill dirs:
+4. Run Device Sync (below).
+
+For an audit without applying anything, run the snapshot instead:
 
 ```bash
 python3 skills/.curated/skill-rev/scripts/skill_audit_snapshot.py --fetch --installed-dir ~/.codex/skills --installed-dir ~/.claude/skills
 ```
 
-The audit records repo HEAD, remote HEAD, ahead/behind counts, per-skill package
-timestamps, README/agent metadata presence, and installed-vs-repo drift for each
-installed dir.
+## Device Sync
+
+Mirror the curated skills into this device's installed skill dirs. Runs at the
+end of `push` (after the push lands) and `pull`, or standalone as `sync`.
+
+```bash
+python3 skills/.curated/skill-rev/scripts/sync_installed_skills.py --repo-root .
+```
+
+What the script does per installed dir (`~/.codex/skills`, `~/.claude/skills`):
+
+- Installs or updates every curated repo skill (full mirror by default; pass
+  `--update-only` to touch only skills already installed there).
+- Removes installed folders whose skill was retired from the repo, tracked via
+  `.vanderhaka-skills-manifest.json` in each installed dir — unrelated local
+  skills that never came from this repo are never touched.
+- Skips an installed dir entirely when it does not exist on this device.
+- `--dry-run` reports every install/update/remove without applying.
+
+Report the per-dir counts and every installed/removed skill name. Remind the
+user that new or removed skills take effect in new sessions.
 
 ## Output
 
@@ -115,12 +149,13 @@ Report in this compact shape:
 
 ```text
 Skill rev: PASS | WARN | FAIL | BLOCKED
-Mode: full | push | sync
+Mode: full | push | pull | sync
 Scope: <changed skills or all skills>
-Audit: <path to dated audit>
+Audit: <path to dated audit, or n/a>
 Checks: validate=<pass/fail>, public-safety=<pass/fail>, diff-check=<pass/fail>, scripts=<pass/fail/skipped>
+Sync: <per-dir installed/updated/removed counts, or not run>
 Findings: <highest-signal issues only>
-Next: <push with cap | fix issues | pull --ff-only | reinstall/sync local skills>
+Next: <push with cap | fix issues | pull --ff-only | restart sessions to pick up synced skills>
 ```
 
 Do not bury the result in a long narrative. If checks fail, state the failing

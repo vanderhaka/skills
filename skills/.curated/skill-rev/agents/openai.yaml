@@ -1,4 +1,4 @@
 interface:
   display_name: "Skill Rev"
-  short_description: "Review skills before repo push or sync check"
-  default_prompt: "Run a skill-rev review with a dated audit snapshot."
+  short_description: "Review skill changes and sync installed skills with the repo"
+  default_prompt: "Run a skill-rev review with a dated audit snapshot. Use $skill-rev push to review then hand off to cap and sync installed skills after the push, $skill-rev pull to update this device's checkout and installed skills, and $skill-rev sync to mirror curated skills into ~/.codex/skills and ~/.claude/skills."

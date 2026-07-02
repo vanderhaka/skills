@@ -39,7 +39,7 @@ Keep summaries short. Do not include plugin/system skills unless the user explic
 - `ripple` — diagnose one bug and sweep for sibling bugs (bug mode), or map the blast radius of a business/domain logic change (logic mode).
 - `safe-feature-slice` — plan and execute risky or narrow feature slices safely, including `plan-only` mode for a planning-only dependency-ordered slice plan.
 - `skill-repo-maintainer` — create, validate, scrub, and publish public-safe skill folders.
-- `skill-rev` — review skill repo changes and audit installed-vs-source drift.
+- `skill-rev` — review skill repo changes and push/pull/sync installed skills with the repo.
 - `tdd-plan-grill` — stress-test a test-first or feature-orchestrator plan.
 - `write-goals` — draft or critique Codex `/goal` objectives.
 - `wwh` — explain decisions, bugs, plans, or requests in simple who/what/when/where/how/why form.
@@ -102,7 +102,7 @@ Use `write-goals` when the user wants a durable Codex `/goal` objective or needs
 
 Use `skill-repo-maintainer` when creating, editing, publishing, or public-safety-checking skills.
 
-Use `skill-rev` when reviewing skill repo changes before push or auditing installed-vs-source skill drift.
+Use `skill-rev` when reviewing skill repo changes before push, pulling skill updates onto a device, or syncing installed skills with the repo.
 
 ## Output Shape
 
