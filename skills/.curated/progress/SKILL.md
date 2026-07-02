@@ -278,9 +278,9 @@ Do not launch workers until this file is complete.
 
 ## Stage 5: Execution Graph
 
-Use `feature-orchestrator` for the canonical dependency graph and progress model. Read its `SKILL.md` and required references before creating or changing `plan.md` or `progress.md`.
+Use `feature-orchestrator` for the canonical dependency graph and progress model. Read its `SKILL.md` and `references/graph-and-progress.md` before creating or changing `plan.md` or `progress.md`.
 
-Write `plans/<slug>/plan.md` using the fixed graph shape from `assets/templates/execution-graph.md` plus the `feature-orchestrator` graph contract.
+Write `plans/<slug>/plan.md` using the fixed graph shape from `assets/templates/execution-graph.md` plus the graph contract in `feature-orchestrator/references/graph-and-progress.md`.
 
 Every node must include:
 
@@ -340,7 +340,7 @@ Do not parallelize:
 
 Default maximum: 4 workers per wave.
 
-Each worker brief must follow the worker-contract format from `feature-orchestrator`. Workers write reports under `agent-runs/` and never edit `progress.md`.
+Each worker brief must follow the worker contract in `feature-orchestrator/references/worker-contract.md`. Workers write reports under `agent-runs/` and never edit `progress.md`.
 
 ## Stage 7: Implementation
 
@@ -350,13 +350,13 @@ Execute each node through:
 RED -> GREEN -> REFACTOR -> Repo Gate -> Browser Gate -> Boundary Gate -> Worker Report
 ```
 
-Use `feature-slice-worker` for substantial implementation nodes. Use existing project patterns. Keep changes scoped to the approved goal.
+Use the worker contract in `feature-orchestrator/references/worker-contract.md` for substantial implementation nodes. Use existing project patterns. Keep changes scoped to the approved goal.
 
 Do not invent new architecture unless the current architecture blocks the approved work. Record that reason in `decisions.md` before making the architectural change.
 
 ## Stage 8: Integration
 
-Use `feature-integrator` discipline to merge worker outputs into one coherent feature.
+Apply the integrator discipline from `feature-orchestrator/references/stages/integrator.md` to merge worker outputs into one coherent feature.
 
 Verify:
 
@@ -440,7 +440,7 @@ The demo package must include:
 
 ## Stage 12: Final Delivery
 
-Use `feature-proof` before final delivery. Write `plans/<slug>/verification.md` and `plans/<slug>/final-delivery.md`.
+Apply the proof discipline from `feature-orchestrator/references/stages/proof.md` before final delivery. Write `plans/<slug>/verification.md` and `plans/<slug>/final-delivery.md`.
 
 Write `plans/<slug>/plain-english-after.md` from `assets/templates/plain-english-after.md`.
 

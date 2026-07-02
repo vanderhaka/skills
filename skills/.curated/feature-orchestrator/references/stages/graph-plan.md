@@ -1,8 +1,3 @@
----
-name: feature-graph-plan
-description: Dependency-graph planning stage for feature-orchestrator flows. Use to create or update plans/<feature-slug>/plan.md and progress.md with thin RGR-ready graph nodes, risk tiers, dependencies, parallel groups, write boundaries, gates, and canonical progress tracking before workers launch.
----
-
 # Feature Graph Plan
 
 ## Purpose
@@ -13,7 +8,7 @@ Convert a feature brief and decisions into one executable dependency graph for `
 
 - `plans/<feature-slug>/decisions.md` if present.
 - Relevant repo docs, schema, routes/actions, services, UI entry points, tests, migrations, and external adapters.
-- `feature-orchestrator/references/graph-and-progress.md` from the installed skills set. If that reference is not installed, mirror the structure of an existing `plans/<slug>/` flow in the repo; do not invent a new format.
+- `feature-orchestrator/references/graph-and-progress.md`.
 
 ## Workflow
 

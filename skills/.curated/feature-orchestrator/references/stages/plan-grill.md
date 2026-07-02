@@ -1,8 +1,3 @@
----
-name: feature-plan-grill
-description: Pre-execution review stage for feature-orchestrator plans. Use to stress-test plans/<feature-slug>/plan.md and progress.md for missing decisions, monolithic nodes, unsafe parallelism, weak RGR tests, missing gates, shared-state collisions, and unverifiable completion before workers launch.
----
-
 # Feature Plan Grill
 
 ## Purpose

@@ -14,6 +14,27 @@ Launch a worker only when:
 
 The worker prompt must be self-contained. Include only the context the worker needs, but include enough that it can succeed without relying on the main chat history.
 
+## Worker Execution Rules
+
+The worker owns the node implementation and evidence; the orchestrator owns integration and `progress.md`.
+
+Before starting the required loop:
+
+- Confirm dependencies are satisfied and write boundaries are clear.
+- If another worker owns the same files or shared mutable state, stop and report `BLOCKED`.
+- If the node starts from a bug, test failure, build failure, or unexpected behavior, reproduce it and write the root cause or current evidence-backed hypothesis before changing code.
+
+During and after the required loop:
+
+- Do not edit `progress.md`.
+- Do not spawn child agents or nested agent processes.
+- Do not commit, push, or run any git mutation; the orchestrator owns git.
+- Do not revert unrelated changes.
+- Do not weaken assertions, mock the dangerous part, or widen scope with bonus fixes.
+- Do not mark the node `DONE` in `progress.md`; in the report, recommend `DONE`, `BLOCKED`, or `NEEDS ATTENTION` with evidence.
+- Do not stack fixes on top of failed fixes. If the same error or failed fix repeats twice, stop, research current official docs or reputable current sources, then apply one evidence-backed fix and report the reasoning.
+- Do not use old output, expectations, or confidence as proof. Evidence must come from commands, browser checks, or boundary checks run for this node attempt.
+
 ## Worker Brief Template
 
 ```text

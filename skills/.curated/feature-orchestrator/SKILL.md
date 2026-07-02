@@ -9,7 +9,7 @@ description: End-to-end feature delivery orchestration through one canonical dep
 
 Deliver a complete feature through a tracked dependency graph. The orchestrator owns the plan, launches as many independent workers as safely possible, enforces strict RED -> GREEN -> REFACTOR and verification gates for every slice, integrates evidence, and keeps going until every required graph node is `DONE`, `ALREADY_RESOLVED`, `SKIPPED`, or `BLOCKED`.
 
-This is the front door for broad feature implementation. Use helper skills as stage tools, but keep one canonical flow folder and one canonical `progress.md`.
+This is the front door for broad feature implementation. Use the packaged stage references and helper skills as stage tools, but keep one canonical flow folder and one canonical `progress.md`.
 
 ## Canonical Folder
 
@@ -27,33 +27,34 @@ Required artifacts:
 - `verification.md` - final proof, skipped checks, behavior preservation confidence.
 - `agent-runs/` - one report per worker attempt.
 
-Only orchestrator-owned stages edit `progress.md`: the main orchestrator and `feature-integrator`. Workers write reports under `agent-runs/`; the orchestrator or integrator verifies the report and then updates progress.
+Only orchestrator-owned stages edit `progress.md`: the main orchestrator and the integrator stage (`references/stages/integrator.md`). Workers write reports under `agent-runs/`; the orchestrator or integrator verifies the report and then updates progress.
 
 Read `references/graph-and-progress.md` before creating or changing the canonical artifacts.
 
 ## Stage Skill Map
 
-Use these stage skills when the stage is substantial enough to benefit from a focused pass:
+The six pipeline stages are packaged inside this skill as references. When a stage is substantial enough to benefit from a focused pass, load its reference file and execute it in-session rather than invoking a separate skill:
 
-- `issue-fix-strategy` - normalize messy issue sets before graph planning when the user wants the resulting fixes delivered.
-- `feature-intake-grill` - clear decisions and write `decisions.md`.
-- `feature-graph-plan` - create or update `plan.md` and `progress.md`.
-- `feature-plan-grill` - stress-test the graph before worker launch.
-- `feature-slice-worker` - execute one graph node with RGR and gates.
-- `feature-integrator` - verify worker reports, update `progress.md`, and advance waves.
-- `feature-proof` - run final requirement-level proof and write `verification.md`.
+- Decision intake - load `references/stages/intake-grill.md` and execute it in-session to clear decisions and write `decisions.md`.
+- Graph planning - load `references/stages/graph-plan.md` and execute it in-session to create or update `plan.md` and `progress.md`.
+- Plan review - load `references/stages/plan-grill.md` and execute it in-session to stress-test the graph before worker launch.
+- Worker execution - assemble worker briefs from `references/worker-contract.md` (unchanged); workers execute RGR and gates per the brief.
+- Integration - load `references/stages/integrator.md` and execute it in-session to verify worker reports, update `progress.md`, and advance waves.
+- Final proof - load `references/stages/proof.md` and execute it in-session to run final requirement-level proof and write `verification.md`.
+
+`issue-fix-strategy` remains a separate skill: normalize messy issue sets before graph planning when the user wants the resulting fixes delivered.
 
 The main `feature-orchestrator` coordinates these stages and owns the end-to-end status.
 
 ## Helper Skill Map
 
-- Use `grill-with-docs` when product, data, permission, money, state, migration, external contract, or UX decisions need durable documentation before graph planning.
+- Use `grill-me` in docs mode when product, data, permission, money, state, migration, external contract, or UX decisions need durable documentation before graph planning.
 - Use `codebase-design` when a feature depends on a module boundary, interface shape, seam, adapter, or test-surface decision before graph planning.
 - Use `prototype` when a vague UI, state model, workflow, or data-shape question should be answered with a disposable artifact before production implementation.
 - Use `grill-me` patterns for lightweight decision discovery when no project docs need to be updated.
-- Use `thin-slice-plan` discipline for invariants, unsafe outcomes, risk tiers, dependency graph, and progress tracking.
+- Use `safe-feature-slice`'s `plan-only` mode discipline for invariants, unsafe outcomes, risk tiers, dependency graph, and progress tracking.
 - Write each graph node with one observable `When X, then Y`, concrete acceptance criteria, regression guards, and test sketches.
-- `feature-slice-worker` is the canonical per-node worker loop. Do not route feature nodes through retired standalone TDD skills.
+- The worker contract (`references/worker-contract.md`) is the canonical per-node worker loop. Do not route feature nodes through retired standalone TDD skills.
 - For refactor-only nodes, use a constrained `LOCK -> REVIEW -> REFACTOR` loop: lock current behavior with tests or characterization evidence, review the target structure, then refactor behind the same behavior proof.
 - Use systematic debugging discipline when a failure or unexpected behavior appears: reproduce it, find the root cause, compare against a working pattern, and test one hypothesis at a time.
 - Use evidence-before-claims discipline before advancing nodes, reporting success, committing, or marking the feature complete.
@@ -71,7 +72,7 @@ Inbound:
 Outbound:
 
 - When the feature is `COMPLETE`, offer `cap` to verify, commit, and push.
-- When blocked on product decisions, run `feature-intake-grill` rather than guessing.
+- When blocked on product decisions, load `references/stages/intake-grill.md` and run the intake stage rather than guessing.
 - When the user wants independent scrutiny of the delivered work, offer `code-review`.
 
 When ending a response with a handoff, recommend exactly one next step. When another route is genuinely defensible, list it as an alternative with a one-line tradeoff; never list more than two alternatives.

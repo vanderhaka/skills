@@ -17,15 +17,16 @@
 
 The skill creates or reuses `plans/<feature-slug>/`. If the request starts as a messy issue set, it uses `issue-fix-strategy` as chat-only intake first, then records accepted issue IDs, priorities, fix waves, decisions, graph nodes, worker waves, verification, and final proof in the canonical folder.
 
-The stage skills are:
+The six pipeline stages are packaged inside this skill as references under `references/stages/` — there is one dispatcher (`SKILL.md`) and one reference file per stage, loaded and executed in-session rather than invoked as separate skills:
 
-- `issue-fix-strategy`
-- `feature-intake-grill`
-- `feature-graph-plan`
-- `feature-plan-grill`
-- `feature-slice-worker`
-- `feature-integrator`
-- `feature-proof`
+- `references/stages/intake-grill.md` - clear decisions and write `decisions.md`.
+- `references/stages/graph-plan.md` - create or update `plan.md` and `progress.md`.
+- `references/stages/plan-grill.md` - stress-test the graph before worker launch.
+- `references/worker-contract.md` - the single worker contract; assemble worker briefs from it.
+- `references/stages/integrator.md` - verify worker reports, update `progress.md`, and advance waves.
+- `references/stages/proof.md` - run final requirement-level proof and write `verification.md`.
+
+`issue-fix-strategy` remains a separate skill for chat-only triage of messy issue sources before graph planning.
 
 ## What You Get
 
@@ -38,7 +39,7 @@ The stage skills are:
 
 ## Not For
 
-Use standalone `issue-fix-strategy` when you have issues but only want a decision-ready strategy. Use `thin-slice-plan` when you explicitly want planning only.
+Use standalone `issue-fix-strategy` when you have issues but only want a decision-ready strategy. Use `safe-feature-slice` in `plan-only` mode when you explicitly want planning only.
 
 ## Install
 

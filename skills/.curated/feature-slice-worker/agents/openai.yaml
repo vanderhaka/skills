@@ -1,4 +1,0 @@
-interface:
-  display_name: "Feature Slice Worker"
-  short_description: "Execute one graph node with RGR gates"
-  default_prompt: "Use $feature-slice-worker to implement this one graph node with RGR, root-cause discipline when needed, and fresh gate evidence."

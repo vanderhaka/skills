@@ -1,8 +1,3 @@
----
-name: feature-integrator
-description: Integration stage for feature-orchestrator worker waves. Use after one or more feature-slice-worker reports to verify evidence, check write boundaries, reconcile shared contracts, update canonical progress.md, launch the next safe dependency wave, and prevent worker reports from being treated as complete without proof.
----
-
 # Feature Integrator
 
 ## Purpose

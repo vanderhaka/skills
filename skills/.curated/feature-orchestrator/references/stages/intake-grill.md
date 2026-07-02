@@ -1,8 +1,3 @@
----
-name: feature-intake-grill
-description: Decision-intake stage for feature-orchestrator flows. Use to clarify product, UX, data, permission, money, state, migration, external-contract, and live-risk decisions before a dependency graph is finalized. Records confirmed decisions, safe defaults, rejected options, assumptions, and open blockers in plans/<feature-slug>/decisions.md without asking questions the codebase can answer.
----
-
 # Feature Intake Grill
 
 ## Purpose

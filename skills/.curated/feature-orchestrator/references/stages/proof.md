@@ -1,8 +1,3 @@
----
-name: feature-proof
-description: Final proof stage for feature-orchestrator flows. Use when all graph nodes appear complete and the feature needs requirement-by-requirement verification, full relevant checks, browser and boundary proof, migration evidence, skipped-check accounting, behavior preservation confidence, and a final PASS/PASS WITH RISKS/BLOCKED/FAIL verdict in verification.md.
----
-
 # Feature Proof
 
 ## Purpose
@@ -30,7 +25,7 @@ Core rule: no completion claim without fresh verification evidence. If the proof
    - browser smoke for user-visible flows
    - boundary checks for DB/API/filesystem/third-party/auth/payment nodes
    - non-destructive migrations when required
-6. Write `plans/<feature-slug>/verification.md` using the template in `feature-orchestrator/references/graph-and-progress.md` when installed, including behavior preservation confidence 0-100.
+6. Write `plans/<feature-slug>/verification.md` using the template in `feature-orchestrator/references/graph-and-progress.md`, including behavior preservation confidence 0-100.
 7. Set final verdict:
    - `PASS`
    - `PASS WITH RISKS`

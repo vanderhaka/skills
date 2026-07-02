@@ -1,4 +1,0 @@
-interface:
-  display_name: "Feature Integrator"
-  short_description: "Verify workers and advance the graph"
-  default_prompt: "Use $feature-integrator to review worker reports for spec fit, quality, fresh evidence, and canonical progress updates."
